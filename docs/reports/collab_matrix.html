@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 游戏×品牌 合作矩阵分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --bg: #0F0E17;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --text-dim: #5C6378;
+            --border: #2D2D52;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .back-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        .back-portal:hover { border-color: var(--primary); color: var(--primary-light); }
+        
+        .hero {
+            padding: 50px 20px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(253,121,168,0.08) 0%, transparent 50%);
+        }
+        
+        .hero h1 {
+            font-size: 2.4em;
+            background: linear-gradient(135deg, #FD79A8, #FDCB6E, #A29BFE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative; z-index: 1;
+        }
+        .hero .subtitle {
+            color: var(--text-muted); margin-top: 8px; font-size: 1.05em;
+            position: relative; z-index: 1;
+        }
+        .hero .subtitle strong { color: var(--accent2); }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        .section { margin: 32px 0; }
+        .section-title {
+            font-size: 1.4em; font-weight: 700; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-desc {
+            color: var(--text-muted); font-size: 0.9em; margin-bottom: 18px;
+        }
+        
+        /* 统计摘要 */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px; margin-bottom: 30px;
+        }
+        .summary-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 20px; text-align: center;
+            transition: all 0.3s;
+        }
+        .summary-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(108,92,231,0.2); }
+        .summary-num { font-size: 2.5em; font-weight: 800; line-height: 1; }
+        .summary-label { color: var(--text-muted); font-size: 0.85em; margin-top: 6px; }
+        
+        /* 配对卡片 */
+        .pairs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 14px;
+        }
+        .pair-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 18px; transition: all 0.3s;
+        }
+        .pair-card:hover {
+            border-color: var(--primary-light);
+            background: var(--bg-card-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108,92,231,0.15);
+        }
+        .pair-header {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .pair-rank {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.85em; flex-shrink: 0;
+        }
+        .pair-names {
+            flex: 1; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap;
+        }
+        .pair-game {
+            font-size: 1.1em; font-weight: 700; color: var(--primary-light);
+        }
+        .pair-x { color: var(--text-dim); font-size: 0.9em; }
+        .pair-brand { font-size: 1.1em; font-weight: 700; }
+        .pair-count {
+            font-size: 1.3em; font-weight: 800; color: var(--accent2);
+        }
+        .pair-meta {
+            display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+        }
+        .pair-cat {
+            padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 600;
+        }
+        .pair-type {
+            color: var(--text-muted); font-size: 0.82em;
+            padding: 3px 0;
+        }
+        .pair-sample {
+            color: var(--text-dim); font-size: 0.82em; margin-top: 8px;
+            line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .pair-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(45,45,82,0.5);
+        }
+        .pair-dates { color: var(--text-dim); font-size: 0.78em; }
+        .pair-link {
+            color: var(--primary-light); text-decoration: none; font-size: 0.82em;
+            transition: color 0.3s;
+        }
+        .pair-link:hover { color: var(--accent); }
+        
+        /* 排行 */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .rank-container {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 20px;
+        }
+        .rank-container h3 {
+            color: var(--primary-light); font-size: 1em; margin-bottom: 14px;
+        }
+        .rank-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 0; border-bottom: 1px solid rgba(45,45,82,0.3);
+        }
+        .rank-row:last-child { border-bottom: none; }
+        .rank-pos {
+            width: 26px; text-align: center; font-weight: 700; font-size: 0.9em;
+            color: var(--text-dim);
+        }
+        .rank-pos.rank-top { color: var(--accent2); }
+        .rank-info { flex: 1; min-width: 0; }
+        .rank-name { font-size: 0.92em; font-weight: 600; }
+        .rank-brands {
+            color: var(--text-dim); font-size: 0.75em; margin-top: 2px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .rank-bar-container {
+            width: 120px; height: 6px; background: rgba(108,92,231,0.1);
+            border-radius: 3px; overflow: hidden; flex-shrink: 0;
+        }
+        .rank-bar { height: 100%; border-radius: 3px; transition: width 0.5s; }
+        .rank-num {
+            width: 32px; text-align: right; font-weight: 700; font-size: 0.9em;
+            color: var(--accent2);
+        }
+        
+        /* 交叉矩阵 */
+        .matrix-wrap { overflow-x: auto; margin: 16px 0; }
+        .matrix-table {
+            width: 100%; border-collapse: collapse; font-size: 0.85em;
+        }
+        .matrix-table th {
+            padding: 12px 14px; text-align: center; font-weight: 600;
+            border-bottom: 2px solid var(--border); white-space: nowrap;
+        }
+        .matrix-corner {
+            text-align: left !important; color: var(--text-muted); font-size: 0.8em;
+        }
+        .matrix-game {
+            text-align: left; font-weight: 600; color: var(--primary-light);
+            padding: 10px 14px; white-space: nowrap;
+        }
+        .matrix-cell {
+            padding: 8px 10px; text-align: center; border-bottom: 1px solid rgba(45,45,82,0.3);
+            border-radius: 6px; transition: all 0.2s;
+        }
+        .matrix-cell.has-data:hover {
+            transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .cell-brands { font-size: 0.82em; font-weight: 500; }
+        .cell-count { font-size: 0.72em; color: var(--text-muted); margin-top: 2px; }
+        .empty-cell { color: var(--text-dim); font-size: 0.8em; }
+        
+        /* 方向建议 */
+        .suggestions-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 12px;
+        }
+        .suggestion-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px; transition: all 0.3s;
+        }
+        .suggestion-card:hover { border-color: var(--primary); }
+        .suggestion-game {
+            font-weight: 700; color: var(--primary-light); margin-bottom: 6px;
+        }
+        .suggestion-text { color: var(--text-muted); font-size: 0.88em; line-height: 1.5; }
+        .suggestion-highlight {
+            color: var(--accent2); font-weight: 600;
+        }
+        
+        /* 筛选 */
+        .filter-bar {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 14px 18px; margin-bottom: 18px;
+            display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+        }
+        .filter-bar input, .filter-bar select {
+            background: var(--bg); border: 1px solid var(--border); color: var(--text);
+            padding: 7px 12px; border-radius: 8px; font-size: 0.88em; outline: none;
+        }
+        .filter-bar input { flex: 1; min-width: 180px; }
+        .filter-bar input:focus, .filter-bar select:focus { border-color: var(--primary); }
+        .filter-btn {
+            background: transparent; color: var(--text-muted); border: 1px solid var(--border);
+            padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85em;
+        }
+        
+        /* footer */
+        .footer {
+            text-align: center; padding: 30px 20px; color: var(--text-dim);
+            font-size: 0.8em; border-top: 1px solid var(--border); margin-top: 40px;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.6em; }
+            .pairs-grid { grid-template-columns: 1fr; }
+            .suggestions-grid { grid-template-columns: 1fr; }
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<a href="../index.html" class="back-portal">← 返回情报站</a>
+
+<div class="hero">
+    <h1>🎯 游戏 × 品牌 合作矩阵</h1>
+    <p class="subtitle">一目了然的合作格局 — 共识别 <strong>33</strong> 组有效配对，覆盖 <strong>20</strong> 款游戏、<strong>30</strong> 个品牌</p>
+</div>
+
+<div class="container">
+    
+    <!-- 统计摘要 -->
+    <div class="section">
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-num" style="color:#A29BFE">33</div>
+                <div class="summary-label">合作配对</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-num" style="color:#FD79A8">20</div>
+                <div class="summary-label">涉及游戏</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-num" style="color:#00B894">30</div>
+                <div class="summary-label">涉及品牌</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-num" style="color:#FDCB6E">8</div>
+                <div class="summary-label">品牌类别</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-num" style="color:#74B9FF">57</div>
+                <div class="summary-label">相关情报</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 交叉矩阵 -->
+    <div class="section">
+        <div class="section-title">📊 游戏×品牌类别 交叉矩阵</div>
+        <div class="section-desc">每个格子显示该游戏在该品牌类别下的合作品牌名称，空格表示尚未覆盖的潜在合作方向</div>
+        <div class="matrix-wrap">
+            <table class="matrix-table">
+                <thead><tr><th class="matrix-corner">游戏 \ 类别</th><th style="color:#74B9FF">3C数码</th><th style="color:#00CEC9">零售电商</th><th style="color:#00B894">汽车出行</th><th style="color:#FF6B6B">餐饮</th><th style="color:#A29BFE">服饰潮牌</th><th style="color:#FDCB6E">快消</th><th style="color:#FAB1A0">金融支付</th></tr></thead>
+                <tbody><tr><td class="matrix-game">王者荣耀</td><td class="matrix-cell has-data" style="background:#74B9FF99" title="王者荣耀 × 3C数码: 荣耀"><div class="cell-brands">荣耀</div><div class="cell-count">20条</div></td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td></tr><tr><td class="matrix-game">原神</td><td class="matrix-cell has-data" style="background:#74B9FF8c" title="原神 × 3C数码: 一加、罗技"><div class="cell-brands">一加、罗技</div><div class="cell-count">4条</div></td><td class="matrix-cell has-data" style="background:#00CEC93f" title="原神 × 零售电商: 泡泡玛特"><div class="cell-brands">泡泡玛特</div><div class="cell-count">1条</div></td><td class="matrix-cell has-data" style="background:#00B8943f" title="原神 × 汽车出行: 长安"><div class="cell-brands">长安</div><div class="cell-count">1条</div></td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell has-data" style="background:#A29BFE3f" title="原神 × 服饰潮牌: 安踏"><div class="cell-brands">安踏</div><div class="cell-count">1条</div></td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell has-data" style="background:#FAB1A03f" title="原神 × 金融支付: 支付宝"><div class="cell-brands">支付宝</div><div class="cell-count">1条</div></td></tr><tr><td class="matrix-game">和平精英</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell has-data" style="background:#00B8943f" title="和平精英 × 汽车出行: 比亚迪"><div class="cell-brands">比亚迪</div><div class="cell-count">1条</div></td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell has-data" style="background:#FDCB6E3f" title="和平精英 × 快消: 东鹏特饮"><div class="cell-brands">东鹏特饮</div><div class="cell-count">1条</div></td><td class="matrix-cell empty-cell">—</td></tr><tr><td class="matrix-game">恋与深空</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td></tr><tr><td class="matrix-game">英雄联盟</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td></tr><tr><td class="matrix-game">尘白禁区</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td></tr><tr><td class="matrix-game">阴阳师</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell has-data" style="background:#FF6B6B3f" title="阴阳师 × 餐饮: 瑞幸"><div class="cell-brands">瑞幸</div><div class="cell-count">1条</div></td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td></tr><tr><td class="matrix-game">逆水寒</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td></tr><tr><td class="matrix-game">蛋仔派对</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td></tr><tr><td class="matrix-game">诛仙</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td><td class="matrix-cell empty-cell">—</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- 所有配对详情 -->
+    <div class="section">
+        <div class="section-title">🤝 全部合作配对一览</div>
+        <div class="section-desc">按情报数量降序排列，点击"查看详情"可跳转原文</div>
+        
+        <div class="filter-bar">
+            <span style="color:var(--text-muted);font-size:0.85em">🔍</span>
+            <input type="text" id="searchInput" placeholder="搜索游戏或品牌..." oninput="filterPairs()">
+            <select id="catFilter" onchange="filterPairs()">
+                <option value="">全部类别</option>
+                <option value="3C数码">3C数码</option><option value="其他">其他</option><option value="零售电商">零售电商</option><option value="汽车出行">汽车出行</option><option value="餐饮">餐饮</option><option value="服饰潮牌">服饰潮牌</option><option value="快消">快消</option><option value="金融支付">金融支付</option>
+            </select>
+            <button class="filter-btn" onclick="resetFilter()">重置</button>
+        </div>
+        
+        <div class="pairs-grid" id="pairsGrid">
+            
+        <div class="pair-card" data-game="王者荣耀" data-brand="荣耀" data-cat="3C数码">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#74B9FF22;color:#74B9FF">#1</div>
+                <div class="pair-names">
+                    <span class="pair-game">王者荣耀</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#74B9FF">荣耀</span>
+                </div>
+                <div class="pair-count">20条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#74B9FF15;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span>
+                <span class="pair-type">线下活动、限定皮肤、跨界礼盒、代言合作</span>
+            </div>
+            <div class="pair-sample">抖音携手《王者荣耀》！社交与内容新拐点来临？</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20 ~ 2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20260215A06NPX00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="一加" data-cat="3C数码">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#74B9FF22;color:#74B9FF">#2</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#74B9FF">一加</span>
+                </div>
+                <div class="pair-count">3条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#74B9FF15;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span>
+                <span class="pair-type">跨界礼盒、联名产品</span>
+            </div>
+            <div class="pair-sample">一加原神新联名曝光！Ace系列新机首发：联动角色今晚揭晓</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20 ~ 2026-03-21</span>
+                <a href="https://view.inews.qq.com/a/20240119A03GJD00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="恋与深空" data-brand="为何频频翻车" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#3</div>
+                <div class="pair-names">
+                    <span class="pair-game">恋与深空</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">为何频频翻车</span>
+                </div>
+                <div class="pair-count">3条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">《尘白禁区》《恋与深空》双双跌倒，游戏跨界联动为何频频翻车？</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20 ~ 2026-03-22</span>
+                <a href="https://www.36kr.com/p/3716553023369984" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="构建用户沟通桥梁" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#4</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">构建用户沟通桥梁</span>
+                </div>
+                <div class="pair-count">2条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">线下活动</span>
+            </div>
+            <div class="pair-sample">大麦娱乐携手2026原神嘉年华，以品牌创新合作构建用户沟通桥梁</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://finance.sina.com.cn/roll/2026-01-08/doc-inhfqpsv1360961.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="阴阳师" data-brand="瑞幸" data-cat="餐饮">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#FF6B6B22;color:#FF6B6B">#5</div>
+                <div class="pair-names">
+                    <span class="pair-game">阴阳师</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#FF6B6B">瑞幸</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#FF6B6B15;color:#FF6B6B;border:1px solid #FF6B6B40">餐饮</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">新品精选：泡泡玛特x瑞幸联名即将来袭；茉莉奶白联名《阴阳师 ...</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20260228A046EK00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="和平精英" data-brand="法拉利新春联名载具重" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#6</div>
+                <div class="pair-names">
+                    <span class="pair-game">和平精英</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">法拉利新春联名载具重</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">开局法拉利开年跃马红！《和平精英》×法拉利新春联名载具重磅上线</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.17173.com/content/02162026/024230632.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="和平精英" data-brand="新军需”" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#7</div>
+                <div class="pair-names">
+                    <span class="pair-game">和平精英</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">新军需”</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">“吃鸡”更新16.3M，除了修复、优化外，还有1个“联名新军需”！</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://view.inews.qq.com/a/20251013A03F9N00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="英雄联盟" data-brand="双城之战联名枪皮" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#8</div>
+                <div class="pair-names">
+                    <span class="pair-game">英雄联盟</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">双城之战联名枪皮</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">原创 无畏契约手游× 双城之战联名枪皮 CG 曝光！3 月 12 日上线限时 ...</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://www.sohu.com/a/993272111_121212001" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="罗技" data-cat="3C数码">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#74B9FF22;color:#74B9FF">#9</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#74B9FF">罗技</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#74B9FF15;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span>
+                <span class="pair-type">联名产品</span>
+            </div>
+            <div class="pair-sample">罗技G517原神联名神里绫华礼盒定制款键鼠套装限时特惠</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://diy.zol.com.cn/1010/10109685.html" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="和平精英" data-brand="东鹏特饮" data-cat="快消">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#FDCB6E22;color:#FDCB6E">#10</div>
+                <div class="pair-names">
+                    <span class="pair-game">和平精英</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#FDCB6E">东鹏特饮</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#FDCB6E15;color:#FDCB6E;border:1px solid #FDCB6E40">快消</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">和平精英，玩得挺大</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20251231A05Z0H00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="逆水寒" data-brand="安塞腰鼓" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#11</div>
+                <div class="pair-names">
+                    <span class="pair-game">逆水寒</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">安塞腰鼓</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">网易《逆水寒》手游3.2.2 版本联动安塞腰鼓，全新剧情预告发布</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://finance.sina.com.cn/tech/digi/2025-11-28/doc-infyxmrn7507173.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="蛋仔派对" data-brand="推出年货大街寻宝活动" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#12</div>
+                <div class="pair-names">
+                    <span class="pair-game">蛋仔派对</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">推出年货大街寻宝活动</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">大润发与蛋仔派对达成深度跨界合作推出年货大街寻宝活动</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://news.pconline.com.cn/2075/20751532.html" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="安踏" data-cat="服饰潮牌">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#A29BFE22;color:#A29BFE">#13</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#A29BFE">安踏</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#A29BFE15;color:#A29BFE;border:1px solid #A29BFE40">服饰潮牌</span>
+                <span class="pair-type">主题门店</span>
+            </div>
+            <div class="pair-sample">安踏携手原神推出联名鞋款 打造破次元运动体验</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://view.inews.qq.com/a/20240529A05WEN00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="泡泡玛特" data-cat="零售电商">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#00CEC922;color:#00CEC9">#14</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#00CEC9">泡泡玛特</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#00CEC915;color:#00CEC9;border:1px solid #00CEC940">零售电商</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">美妆大牌不再“高冷”，牵手原神、泡泡玛特，争夺年轻人市场</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://bank.stockstar.com/IG2025091800009950.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="创造" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#15</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">创造</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">原神：与多邻国联动创造 5 年最佳战绩，这波太牛了！</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://www.sohu.com/a/996504311_122640328" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="赛事突破100万人报" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#16</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">赛事突破100万人报</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">《原神》联名赛事突破100万人报名，Keep奖牌再破圈</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://www.eeo.com.cn/2023/0719/598636.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="长安" data-cat="汽车出行">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#00B89422;color:#00B894">#17</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#00B894">长安</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#00B89415;color:#00B894;border:1px solid #00B89440">汽车出行</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">联动“长安三万里”及“原神”等高人气IP 北京环球度假区探索主题 ...</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="http://www.jjckb.cn/20260204/d2df9a3a0f6a4bf9b5f51ebe87360218/c.html" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="和平精英" data-brand="比亚迪" data-cat="汽车出行">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#00B89422;color:#00B894">#18</div>
+                <div class="pair-names">
+                    <span class="pair-game">和平精英</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#00B894">比亚迪</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#00B89415;color:#00B894;border:1px solid #00B89440">汽车出行</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">仰望开进《和平精英》，年轻人的第一辆本土豪车来了？</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20240712A0982800" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="英雄联盟" data-brand="周杰伦推出告白气球系" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#19</div>
+                <div class="pair-names">
+                    <span class="pair-game">英雄联盟</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">周杰伦推出告白气球系</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">代言合作</span>
+            </div>
+            <div class="pair-sample">在峡谷奏响浪漫！《英雄联盟手游》携手周杰伦推出告白气球系列 ...</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20260213A03V7A00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="诛仙" data-brand="老君山探索文化传承新" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#20</div>
+                <div class="pair-names">
+                    <span class="pair-game">诛仙</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">老君山探索文化传承新</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">《诛仙》手游联动老君山探索文化传承新路径</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://hunan.voc.com.cn/news/202511/30891144.html" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="原神" data-brand="支付宝" data-cat="金融支付">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#FAB1A022;color:#FAB1A0">#21</div>
+                <div class="pair-names">
+                    <span class="pair-game">原神</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#FAB1A0">支付宝</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#FAB1A015;color:#FAB1A0;border:1px solid #FAB1A040">金融支付</span>
+                <span class="pair-type">AR互动</span>
+            </div>
+            <div class="pair-sample">近四个月，手游、小游戏的207起IP联名联动合作盘点｜角研社</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-22</span>
+                <a href="https://news.qq.com/rain/a/20260321A05BBR00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="鸣潮" data-brand="必胜客" data-cat="餐饮">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#FF6B6B22;color:#FF6B6B">#22</div>
+                <div class="pair-names">
+                    <span class="pair-game">鸣潮</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#FF6B6B">必胜客</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#FF6B6B15;color:#FF6B6B;border:1px solid #FF6B6B40">餐饮</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">谁在拿游戏IP联名？这50款游戏一年合作800个品牌</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://view.inews.qq.com/a/20250521A0AD6U00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="我的世界" data-brand="Adidas" data-cat="服饰潮牌">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#A29BFE22;color:#A29BFE">#23</div>
+                <div class="pair-names">
+                    <span class="pair-game">我的世界</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#A29BFE">Adidas</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#A29BFE15;color:#A29BFE;border:1px solid #A29BFE40">服饰潮牌</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">我的世界 x 阿迪带来 6 款鞋！还原游戏元素</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20251224A046DQ00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="以闪亮之名" data-brand="非遗跨界联名突出贡献" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#24</div>
+                <div class="pair-names">
+                    <span class="pair-game">以闪亮之名</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">非遗跨界联名突出贡献</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">《以闪亮之名》获“游戏×非遗跨界联名突出贡献奖”</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.17173.com/content/01142026/185959436.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="QQ炫舞" data-brand="京东" data-cat="零售电商">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#00CEC922;color:#00CEC9">#25</div>
+                <div class="pair-names">
+                    <span class="pair-game">QQ炫舞</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#00CEC9">京东</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#00CEC915;color:#00CEC9;border:1px solid #00CEC940">零售电商</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">（内含福利）【缘定8载一起发】实体黄金，50京东卡，掌炫八周年庆 ...</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20260307A03TYR00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="尘白禁区" data-brand="活动被批“严重擦边”" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#26</div>
+                <div class="pair-names">
+                    <span class="pair-game">尘白禁区</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">活动被批“严重擦边”</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">跨界礼盒</span>
+            </div>
+            <div class="pair-sample">联名活动被批“严重擦边”，中国邮政回应</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20260227A04ZFI00" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="尘白禁区" data-brand="活动" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#27</div>
+                <div class="pair-names">
+                    <span class="pair-game">尘白禁区</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">活动</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">中国邮政称已叫停《尘白禁区》联名活动</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://finance.sina.com.cn/stock/t/2026-02-27/doc-inhpftik6733731.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="三角洲行动" data-brand="荣耀" data-cat="3C数码">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#74B9FF22;color:#74B9FF">#28</div>
+                <div class="pair-names">
+                    <span class="pair-game">三角洲行动</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#74B9FF">荣耀</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#74B9FF15;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">2026年2月份手游流水排行：春节档活动加码，整体有所下滑！</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.17173.com/content/03022026/151321279.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="武林外传" data-brand="宾果电竞耳机联动.." data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#29</div>
+                <div class="pair-names">
+                    <span class="pair-game">武林外传</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">宾果电竞耳机联动..</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">江湖万千事，皆从耳畔生：《武林外传》手游×宾果电竞耳机联动...</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.17173.com/content/11272025/110336021.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="DNF手游" data-brand="长安" data-cat="汽车出行">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#00B89422;color:#00B894">#30</div>
+                <div class="pair-names">
+                    <span class="pair-game">DNF手游</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#00B894">长安</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#00B89415;color:#00B894;border:1px solid #00B89440">汽车出行</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">对话负责人：2026年，让玩家看到DNF手游的“改变”</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-21</span>
+                <a href="https://news.qq.com/rain/a/20260120A062O600" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="PUBG" data-brand="Con" data-cat="其他">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#94A1B222;color:#94A1B2">#31</div>
+                <div class="pair-names">
+                    <span class="pair-game">PUBG</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#94A1B2">Con</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#94A1B215;color:#94A1B2;border:1px solid #94A1B240">其他</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">《PUBG》亮相全球流行文化盛典“ComplexCon Hong Kong 2026”</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-22</span>
+                <a href="https://www.msn.cn/zh-cn/news/other/pubg-%E4%BA%AE%E7%9B%B8%E5%85%A8%E7%90%83%E6%B5%81%E8%A1%8C%E6%96%87%E5%8C%96%E7%9B%9B%E5%85%B8-complexcon-hong-kong-2026/ar-AA1Z1iEc?ocid=BingNewsVerp" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="黑神话悟空" data-brand="天猫" data-cat="零售电商">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#00CEC922;color:#00CEC9">#32</div>
+                <div class="pair-names">
+                    <span class="pair-game">黑神话悟空</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#00CEC9">天猫</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#00CEC915;color:#00CEC9;border:1px solid #00CEC940">零售电商</span>
+                <span class="pair-type">综合合作</span>
+            </div>
+            <div class="pair-sample">《黑神话：悟空》爆火，给了品牌怎样的启示？</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://www.36kr.com/p/2922537343261319" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        <div class="pair-card" data-game="天龙八部" data-brand="天猫" data-cat="零售电商">
+            <div class="pair-header">
+                <div class="pair-rank" style="background:#00CEC922;color:#00CEC9">#33</div>
+                <div class="pair-names">
+                    <span class="pair-game">天龙八部</span>
+                    <span class="pair-x">×</span>
+                    <span class="pair-brand" style="color:#00CEC9">天猫</span>
+                </div>
+                <div class="pair-count">1条</div>
+            </div>
+            <div class="pair-meta">
+                <span class="pair-cat" style="background:#00CEC915;color:#00CEC9;border:1px solid #00CEC940">零售电商</span>
+                <span class="pair-type">联名产品</span>
+            </div>
+            <div class="pair-sample">《天龙八部》手游xJPE?联名款天龙聚贤系列羽绒服11.11限量特惠开售</div>
+            <div class="pair-footer">
+                <span class="pair-dates">2026-03-20</span>
+                <a href="https://news.17173.com/content/11112019/113011256.shtml" target="_blank" class="pair-link">查看详情 →</a>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+    
+    <!-- 游戏 & 品牌排行 -->
+    <div class="section">
+        <div class="section-title">📈 合作力排行</div>
+        <div class="two-col">
+            <div class="rank-container">
+                <h3>🎮 游戏合作广度排行</h3>
+                
+        <div class="rank-row">
+            <div class="rank-pos rank-top">1</div>
+            <div class="rank-info">
+                <div class="rank-name">王者荣耀</div>
+                <div class="rank-brands">荣耀</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:100%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">20</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos rank-top">2</div>
+            <div class="rank-info">
+                <div class="rank-name">原神</div>
+                <div class="rank-brands">一加, 创造, 安踏, 支付宝, 构建用户沟通桥梁, 泡泡玛特, 罗技, 赛事突破100万人报, 长安</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:60%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">12</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos rank-top">3</div>
+            <div class="rank-info">
+                <div class="rank-name">和平精英</div>
+                <div class="rank-brands">东鹏特饮, 新军需”, 比亚迪, 法拉利新春联名载具重</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:20%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">4</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">4</div>
+            <div class="rank-info">
+                <div class="rank-name">恋与深空</div>
+                <div class="rank-brands">为何频频翻车</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:15%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">3</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">5</div>
+            <div class="rank-info">
+                <div class="rank-name">英雄联盟</div>
+                <div class="rank-brands">双城之战联名枪皮, 周杰伦推出告白气球系</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:10%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">2</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">6</div>
+            <div class="rank-info">
+                <div class="rank-name">尘白禁区</div>
+                <div class="rank-brands">活动, 活动被批“严重擦边”</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:10%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">2</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">7</div>
+            <div class="rank-info">
+                <div class="rank-name">阴阳师</div>
+                <div class="rank-brands">瑞幸</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">8</div>
+            <div class="rank-info">
+                <div class="rank-name">逆水寒</div>
+                <div class="rank-brands">安塞腰鼓</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">9</div>
+            <div class="rank-info">
+                <div class="rank-name">蛋仔派对</div>
+                <div class="rank-brands">推出年货大街寻宝活动</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">10</div>
+            <div class="rank-info">
+                <div class="rank-name">诛仙</div>
+                <div class="rank-brands">老君山探索文化传承新</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">11</div>
+            <div class="rank-info">
+                <div class="rank-name">鸣潮</div>
+                <div class="rank-brands">必胜客</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">12</div>
+            <div class="rank-info">
+                <div class="rank-name">我的世界</div>
+                <div class="rank-brands">Adidas</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">13</div>
+            <div class="rank-info">
+                <div class="rank-name">以闪亮之名</div>
+                <div class="rank-brands">非遗跨界联名突出贡献</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">14</div>
+            <div class="rank-info">
+                <div class="rank-name">QQ炫舞</div>
+                <div class="rank-brands">京东</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">15</div>
+            <div class="rank-info">
+                <div class="rank-name">三角洲行动</div>
+                <div class="rank-brands">荣耀</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">16</div>
+            <div class="rank-info">
+                <div class="rank-name">武林外传</div>
+                <div class="rank-brands">宾果电竞耳机联动..</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">17</div>
+            <div class="rank-info">
+                <div class="rank-name">DNF手游</div>
+                <div class="rank-brands">长安</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">18</div>
+            <div class="rank-info">
+                <div class="rank-name">PUBG</div>
+                <div class="rank-brands">Con</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">19</div>
+            <div class="rank-info">
+                <div class="rank-name">黑神话悟空</div>
+                <div class="rank-brands">天猫</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">20</div>
+            <div class="rank-info">
+                <div class="rank-name">天龙八部</div>
+                <div class="rank-brands">天猫</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:5%;background:linear-gradient(90deg,#6C5CE7,#A29BFE)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+            </div>
+            <div class="rank-container">
+                <h3>🏢 品牌活跃度排行</h3>
+                
+        <div class="rank-row">
+            <div class="rank-pos rank-top">1</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#74B9FF">荣耀</div>
+                <div class="rank-brands">三角洲行动, 王者荣耀</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:100%;background:linear-gradient(90deg,#74B9FF,#74B9FF88)"></div>
+            </div>
+            <div class="rank-num">21</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos rank-top">2</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#74B9FF">一加</div>
+                <div class="rank-brands">原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:14%;background:linear-gradient(90deg,#74B9FF,#74B9FF88)"></div>
+            </div>
+            <div class="rank-num">3</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos rank-top">3</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">为何频频翻车</div>
+                <div class="rank-brands">恋与深空</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:14%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">3</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">4</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">构建用户沟通桥梁</div>
+                <div class="rank-brands">原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:9%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">2</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">5</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#00B894">长安</div>
+                <div class="rank-brands">DNF手游, 原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:9%;background:linear-gradient(90deg,#00B894,#00B89488)"></div>
+            </div>
+            <div class="rank-num">2</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">6</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#00CEC9">天猫</div>
+                <div class="rank-brands">天龙八部, 黑神话悟空</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:9%;background:linear-gradient(90deg,#00CEC9,#00CEC988)"></div>
+            </div>
+            <div class="rank-num">2</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">7</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#FF6B6B">瑞幸</div>
+                <div class="rank-brands">阴阳师</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#FF6B6B,#FF6B6B88)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">8</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">法拉利新春联名载具重</div>
+                <div class="rank-brands">和平精英</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">9</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">新军需”</div>
+                <div class="rank-brands">和平精英</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">10</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">双城之战联名枪皮</div>
+                <div class="rank-brands">英雄联盟</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">11</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#74B9FF">罗技</div>
+                <div class="rank-brands">原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#74B9FF,#74B9FF88)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">12</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#FDCB6E">东鹏特饮</div>
+                <div class="rank-brands">和平精英</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#FDCB6E,#FDCB6E88)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">13</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">安塞腰鼓</div>
+                <div class="rank-brands">逆水寒</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">14</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">推出年货大街寻宝活动</div>
+                <div class="rank-brands">蛋仔派对</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">15</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#A29BFE">安踏</div>
+                <div class="rank-brands">原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#A29BFE,#A29BFE88)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">16</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#00CEC9">泡泡玛特</div>
+                <div class="rank-brands">原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#00CEC9,#00CEC988)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">17</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">创造</div>
+                <div class="rank-brands">原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">18</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">赛事突破100万人报</div>
+                <div class="rank-brands">原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">19</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#00B894">比亚迪</div>
+                <div class="rank-brands">和平精英</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#00B894,#00B89488)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">20</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">周杰伦推出告白气球系</div>
+                <div class="rank-brands">英雄联盟</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">21</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">老君山探索文化传承新</div>
+                <div class="rank-brands">诛仙</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">22</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#FAB1A0">支付宝</div>
+                <div class="rank-brands">原神</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#FAB1A0,#FAB1A088)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">23</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#FF6B6B">必胜客</div>
+                <div class="rank-brands">鸣潮</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#FF6B6B,#FF6B6B88)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">24</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#A29BFE">Adidas</div>
+                <div class="rank-brands">我的世界</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#A29BFE,#A29BFE88)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">25</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">非遗跨界联名突出贡献</div>
+                <div class="rank-brands">以闪亮之名</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">26</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#00CEC9">京东</div>
+                <div class="rank-brands">QQ炫舞</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#00CEC9,#00CEC988)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">27</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">活动被批“严重擦边”</div>
+                <div class="rank-brands">尘白禁区</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">28</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">活动</div>
+                <div class="rank-brands">尘白禁区</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">29</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">宾果电竞耳机联动..</div>
+                <div class="rank-brands">武林外传</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+        <div class="rank-row">
+            <div class="rank-pos ">30</div>
+            <div class="rank-info">
+                <div class="rank-name" style="color:#94A1B2">Con</div>
+                <div class="rank-brands">PUBG</div>
+            </div>
+            <div class="rank-bar-container">
+                <div class="rank-bar" style="width:4%;background:linear-gradient(90deg,#94A1B2,#94A1B288)"></div>
+            </div>
+            <div class="rank-num">1</div>
+        </div>
+        
+            </div>
+        </div>
+    </div>
+    
+    <!-- 方向建议 -->
+    
+    <div class="section">
+        <div class="section-title">💡 潜在合作方向</div>
+        <div class="section-desc">基于当前合作格局分析，以下游戏在某些品牌类别尚未有合作报道，可作为关注方向</div>
+        <div class="suggestions-grid">
+            
+            <div class="suggestion-card">
+                <div class="suggestion-game">王者荣耀</div>
+                <div class="suggestion-text">
+                    已覆盖 <strong>3C数码</strong> 等类别，
+                    可关注 <span class="suggestion-highlight">餐饮, 快消, 美妆个护</span> 方向的潜在合作
+                </div>
+            </div>
+            
+            <div class="suggestion-card">
+                <div class="suggestion-game">原神</div>
+                <div class="suggestion-text">
+                    已覆盖 <strong>零售电商, 3C数码, 汽车出行</strong> 等类别，
+                    可关注 <span class="suggestion-highlight">餐饮, 快消, 美妆个护</span> 方向的潜在合作
+                </div>
+            </div>
+            
+            <div class="suggestion-card">
+                <div class="suggestion-game">和平精英</div>
+                <div class="suggestion-text">
+                    已覆盖 <strong>快消, 其他, 汽车出行</strong> 等类别，
+                    可关注 <span class="suggestion-highlight">餐饮, 美妆个护, 服饰潮牌</span> 方向的潜在合作
+                </div>
+            </div>
+            
+            <div class="suggestion-card">
+                <div class="suggestion-game">恋与深空</div>
+                <div class="suggestion-text">
+                    已覆盖 <strong>其他</strong> 等类别，
+                    可关注 <span class="suggestion-highlight">餐饮, 快消, 美妆个护</span> 方向的潜在合作
+                </div>
+            </div>
+            
+            <div class="suggestion-card">
+                <div class="suggestion-game">英雄联盟</div>
+                <div class="suggestion-text">
+                    已覆盖 <strong>其他</strong> 等类别，
+                    可关注 <span class="suggestion-highlight">餐饮, 快消, 美妆个护</span> 方向的潜在合作
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+
+</div>
+
+<div class="footer">
+    <p>🎯 游戏×品牌合作矩阵 · 数据截至 2026-03-23 19:35 · 基于 103 条情报分析</p>
+</div>
+
+<script>
+function filterPairs() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const cat = document.getElementById('catFilter').value;
+    document.querySelectorAll('.pair-card').forEach(card => {
+        const game = card.dataset.game.toLowerCase();
+        const brand = card.dataset.brand.toLowerCase();
+        const cardCat = card.dataset.cat;
+        const matchSearch = !search || game.includes(search) || brand.includes(search);
+        const matchCat = !cat || cardCat === cat;
+        card.style.display = (matchSearch && matchCat) ? '' : 'none';
+    });
+}
+
+function resetFilter() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('catFilter').value = '';
+    filterPairs();
+}
+</script>
+</body>
+</html>
