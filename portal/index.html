@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏异业合作情报站</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --primary-dark: #5541D7;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --green: #00B894;
+            --green-light: #55EFC4;
+            --blue: #74B9FF;
+            --red: #FF6B6B;
+            --orange: #F39C12;
+            --bg: #0F0E17;
+            --bg2: #141425;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --text-dim: #5C6378;
+            --border: #2D2D52;
+            --border-light: #3D3D62;
+            --shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* ===== 导航栏 ===== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15,14,23,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+        
+        .nav-logo span {
+            background: linear-gradient(135deg, #FD79A8, #FDCB6E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text);
+            background: rgba(108,92,231,0.15);
+        }
+        
+        .nav-time {
+            color: var(--text-dim);
+            font-size: 0.8em;
+        }
+        
+        /* ===== 主 Hero ===== */
+        .hero {
+            padding: 60px 24px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -50%;
+            width: 200%;
+            height: 300%;
+            background: 
+                radial-gradient(ellipse at 25% 50%, rgba(108,92,231,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 75% 30%, rgba(253,121,168,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(0,184,148,0.06) 0%, transparent 50%);
+            animation: heroFloat 20s ease-in-out infinite;
+        }
+        
+        @keyframes heroFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-15px, -10px) rotate(1deg); }
+            66% { transform: translate(10px, -5px) rotate(-1deg); }
+        }
+        
+        .hero h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #FD79A8, #FDCB6E, #A29BFE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero .subtitle {
+            color: var(--text-muted);
+            font-size: 1.15em;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ===== 全局统计卡片 ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .section {
+            margin: 32px 0;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title .icon {
+            font-size: 1.2em;
+        }
+        
+        .section-more {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s;
+        }
+        
+        .section-more:hover { color: var(--accent); }
+        
+        .mega-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .mega-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mega-stat:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+        
+        .mega-stat::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 0 0 16px 16px;
+        }
+        
+        .mega-stat:nth-child(1)::after { background: linear-gradient(90deg, #6C5CE7, #A29BFE); }
+        .mega-stat:nth-child(2)::after { background: linear-gradient(90deg, #FD79A8, #FDCB6E); }
+        .mega-stat:nth-child(3)::after { background: linear-gradient(90deg, #00B894, #55EFC4); }
+        .mega-stat:nth-child(4)::after { background: linear-gradient(90deg, #74B9FF, #A29BFE); }
+        .mega-stat:nth-child(5)::after { background: linear-gradient(90deg, #FDCB6E, #F39C12); }
+        
+        .mega-num {
+            font-size: 2.8em;
+            font-weight: 800;
+            line-height: 1;
+        }
+        
+        .mega-stat:nth-child(1) .mega-num { color: #A29BFE; }
+        .mega-stat:nth-child(2) .mega-num { color: #FD79A8; }
+        .mega-stat:nth-child(3) .mega-num { color: #00B894; }
+        .mega-stat:nth-child(4) .mega-num { color: #74B9FF; }
+        .mega-stat:nth-child(5) .mega-num { color: #FDCB6E; }
+        
+        .mega-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+        
+        /* ===== 双列布局 ===== */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .three-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        
+        /* ===== 图表卡片 ===== */
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        
+        .chart-card h3 {
+            color: var(--primary-light);
+            font-size: 1em;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        /* ===== 日报列表 ===== */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+        
+        .report-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+        
+        .report-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary-light);
+            transform: translateX(4px);
+        }
+        
+        .report-date-big {
+            font-size: 2em;
+            font-weight: 800;
+            color: var(--primary-light);
+            min-width: 48px;
+            text-align: center;
+            line-height: 1;
+        }
+        
+        .report-info {
+            flex: 1;
+        }
+        
+        .report-date-full {
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
+        
+        .report-count {
+            font-size: 0.85em;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+        
+        .report-arrow {
+            color: var(--text-dim);
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+        
+        .report-card:hover .report-arrow {
+            transform: translateX(4px);
+            color: var(--primary-light);
+        }
+        
+        /* ===== 热门情报 ===== */
+        .hot-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: var(--text);
+            cursor: pointer;
+        }
+        
+        .hot-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary-light);
+            transform: translateX(4px);
+        }
+        
+        .rank-badge {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8em;
+            background: rgba(108,92,231,0.15);
+            color: var(--primary-light);
+        }
+        
+        .rank-badge.rank-1 { background: linear-gradient(135deg, #FF6B6B, #FD79A8); color: white; }
+        .rank-badge.rank-2 { background: linear-gradient(135deg, #FDCB6E, #F39C12); color: #333; }
+        .rank-badge.rank-3 { background: linear-gradient(135deg, #74B9FF, #6C5CE7); color: white; }
+        
+        .hot-content { flex: 1; min-width: 0; }
+        
+        .hot-title {
+            font-size: 0.95em;
+            font-weight: 600;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .hot-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .hot-summary {
+            color: var(--text-muted);
+            font-size: 0.8em;
+            margin-top: 6px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .source-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-size: 0.85em;
+        }
+        
+        .source-link:hover { color: var(--accent); }
+        
+        .score-mini {
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        
+        .score-mini.hot { background: rgba(255,107,107,0.15); color: #FF6B6B; }
+        .score-mini.warm { background: rgba(253,203,110,0.15); color: #FDCB6E; }
+        .score-mini.cool { background: rgba(108,92,231,0.15); color: #A29BFE; }
+        
+        /* ===== 最新情报流 ===== */
+        .feed-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(45,45,82,0.5);
+            align-items: flex-start;
+            text-decoration: none;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .feed-item:hover {
+            background: rgba(108,92,231,0.06);
+            border-radius: 8px;
+            padding-left: 8px;
+            margin-left: -8px;
+        }
+        
+        .feed-item:last-child { border-bottom: none; }
+        
+        .feed-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+        
+        .feed-content { flex: 1; min-width: 0; }
+        
+        .feed-title {
+            font-size: 0.9em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .feed-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        
+        .feed-date {
+            color: var(--text-dim);
+            font-size: 0.75em;
+        }
+        
+        /* ===== 游戏排行 ===== */
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+        
+        .rank-num {
+            width: 24px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9em;
+            color: var(--text-dim);
+        }
+        
+        .rank-item:nth-child(1) .rank-num { color: #FF6B6B; }
+        .rank-item:nth-child(2) .rank-num { color: #FDCB6E; }
+        .rank-item:nth-child(3) .rank-num { color: #74B9FF; }
+        
+        .rank-name {
+            min-width: 80px;
+            font-size: 0.9em;
+        }
+        
+        .rank-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: rgba(108,92,231,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .rank-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6C5CE7, #A29BFE);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .rank-count {
+            min-width: 30px;
+            text-align: right;
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+        
+        /* ===== Tags ===== */
+        .tag, .tag-mini {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .tag-mini {
+            padding: 1px 6px;
+            font-size: 0.7em;
+        }
+        
+        .tag-game { background: rgba(108,92,231,0.15); color: var(--primary-light); }
+        .tag-brand { background: rgba(253,121,168,0.15); color: #FD79A8; }
+        .tag-type { background: rgba(253,203,110,0.15); color: #FDCB6E; }
+        .tag-cat { background: rgba(0,184,148,0.15); color: #00B894; }
+        
+        /* ===== 空提示 ===== */
+        .empty-hint {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-dim);
+        }
+        
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--text-dim);
+            font-size: 0.8em;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        
+        .footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+        
+        /* ===== 响应式 ===== */
+        @media (max-width: 1024px) {
+            .three-col { grid-template-columns: 1fr; }
+            .two-col { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8em; }
+            .mega-stats { grid-template-columns: repeat(2, 1fr); }
+            .reports-grid { grid-template-columns: 1fr; }
+            .navbar { padding: 0 12px; }
+            .nav-links { display: none; }
+        }
+        
+        /* ===== 滚动条 ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        
+        /* ===== 动画 ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section {
+            animation: fadeInUp 0.6s ease both;
+        }
+        
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="navbar">
+    <div class="nav-logo">🎮 <span>游戏异业合作情报站</span></div>
+    <div class="nav-links">
+        <a href="#overview" class="active">总览</a>
+        <a href="#reports">日报</a>
+        <a href="#hot">热门</a>
+        <a href="#trends">趋势</a>
+        <a href="#rankings">排行</a>
+    </div>
+    <div class="nav-time">更新于 2026-03-22 09:48:06</div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+    <h1>🎮 游戏异业合作情报站</h1>
+    <p class="subtitle">自动追踪 100 款热门游戏 × 10 大品牌类别的跨界合作动态</p>
+</div>
+
+<div class="container">
+    
+    <!-- 全局统计 -->
+    <div class="section" id="overview">
+        <div class="mega-stats">
+            <div class="mega-stat">
+                <div class="mega-num">99</div>
+                <div class="mega-label">累计情报总量</div>
+            </div>
+            <div class="mega-stat">
+                <div class="mega-num">15</div>
+                <div class="mega-label">涉及游戏数</div>
+            </div>
+            <div class="mega-stat">
+                <div class="mega-num">9</div>
+                <div class="mega-label">品牌类别</div>
+            </div>
+            <div class="mega-stat">
+                <div class="mega-num">2</div>
+                <div class="mega-label">日报总数</div>
+            </div>
+            <div class="mega-stat">
+                <div class="mega-num">2</div>
+                <div class="mega-label">采集天数</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 趋势图表 -->
+    <div class="section" id="trends">
+        <div class="section-header">
+            <div class="section-title"><span class="icon">📈</span> 数据趋势与分布</div>
+        </div>
+        <div style="max-width:500px;margin:0 auto">
+            <div class="chart-card">
+                <h3>🏷️ 品牌类别分布</h3>
+                <div style="position:relative;height:320px">
+                    <canvas id="catChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 日报列表 -->
+    <div class="section" id="reports">
+        <div class="section-header">
+            <div class="section-title"><span class="icon">📋</span> 每日情报日报</div>
+        </div>
+        <div class="reports-grid">
+            
+        <a href="../reports/daily_2026-03-22.html" class="report-card">
+            <div class="report-date-big">22</div>
+            <div class="report-info">
+                <div class="report-date-full">2026-03-22 周日</div>
+                <div class="report-count">5 条情报</div>
+            </div>
+            <div class="report-arrow">→</div>
+        </a>
+        
+        <a href="../reports/daily_2026-03-20.html" class="report-card">
+            <div class="report-date-big">20</div>
+            <div class="report-info">
+                <div class="report-date-full">2026-03-20 周五</div>
+                <div class="report-count">94 条情报</div>
+            </div>
+            <div class="report-arrow">→</div>
+        </a>
+        
+        </div>
+    </div>
+    
+    <!-- 热门情报 + 最新动态 -->
+    <div class="section" id="hot">
+        <div class="two-col">
+            <div>
+                <div class="section-header">
+                    <div class="section-title"><span class="icon">🔥</span> 热门情报 TOP12</div>
+                </div>
+                
+        <a href="https://news.qq.com/rain/a/20260215A06NPX00" target="_blank" class="hot-card">
+            <div class="rank-badge rank-1">#1</div>
+            <div class="hot-content">
+                <div class="hot-title">抖音携手《王者荣耀》！社交与内容新拐点来临？</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-type">其他</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">2月12日，DataEye研究院发现，抖音与《王者荣耀》达成深度联动。此次合作内容通过王者荣耀IP植入，覆盖抖音社交聊天、小火人、群内王者组队、王者荣耀群聊小助手等，实现多场景渗透。 DataEye研究院通过深度拆解合作模式、功能创新与生态</div>
+            </div>
+        </a>
+        
+        <a href="https://news.qq.com/rain/a/20260130A03OIF00" target="_blank" class="hot-card">
+            <div class="rank-badge rank-2">#2</div>
+            <div class="hot-content">
+                <div class="hot-title">白鹿正式官宣成为《王者荣耀》品牌代言人</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-type">代言合作</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">1月30日，演员白鹿今日正式官宣成为《王者荣耀》品牌代言人，并以“峡谷闺蜜”身份发布合作动态，其资深玩家属性和剧游联动效应引发全网热议。 白鹿以“峡谷闺蜜”形象代言王者荣耀，其个人微博强调“并肩作战”主题，并宣布将出演王者荣耀马年新春 ..</div>
+            </div>
+        </a>
+        
+        <a href="https://news.17173.com/content/02042026/151236009.shtml" target="_blank" class="hot-card">
+            <div class="rank-badge rank-3">#3</div>
+            <div class="hot-content">
+                <div class="hot-title">王者荣耀：哪吒X魔童联动官宣，五位新英雄正式上架，490点券必得四 ...</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-type">限定皮肤</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">王者荣耀春节版本重磅更新！哪吒X魔童联动皮肤登场，五位新英雄上架，490点券必得四款皮肤，杨玉环三喜临门，限定皮肤返场福利来袭！ 王者荣耀新版本即将到来，相信玩家们都等了很久吧？没错，在进入2月份之后，玩家们就要等来马年春节了，这也是一年 </div>
+            </div>
+        </a>
+        
+        <a href="https://www.sohu.com/a/996181042_121814834" target="_blank" class="hot-card">
+            <div class="rank-badge">#4</div>
+            <div class="hot-content">
+                <div class="hot-title">王者荣耀与奥特曼联动登场，墨子梦奇联动皮肤曝光，上线时间公布</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-type">限定皮肤</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">你好，我是小酒。近期，王者荣耀与奥特曼的联动引发了玩家们的广泛关注。最初的传闻让人期待不已，但因为某些原因，这一联动一度被搁置，甚至客户端内的相关资源也被删除，令人感到遗憾。然而，王者荣耀国际服突然上线了与奥特曼的联动，这让许多玩家惊喜不已</div>
+            </div>
+        </a>
+        
+        <a href="https://news.17173.com/content/02102026/150252599.shtml" target="_blank" class="hot-card">
+            <div class="rank-badge">#5</div>
+            <div class="hot-content">
+                <div class="hot-title">王者荣耀：15号全服“领取”随机典藏，甄嬛联动IP官宣，4珍品3无双 ...</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-type">限定皮肤</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">王者荣耀15号全服送随机典藏皮肤！甄嬛传联动IP官宣，4珍品3无双限定返场，李白、伽罗星元典藏上线，新春福利666点券+夺宝券免费领！ 相信兄弟们，在这几天，都陆续看到了马年限定皮肤的爆料。不得不说，这六款年限整体来说，没有让玩家失望。 如</div>
+            </div>
+        </a>
+        
+        <a href="https://news.qq.com/rain/a/20260128A00AV400" target="_blank" class="hot-card">
+            <div class="rank-badge">#6</div>
+            <div class="hot-content">
+                <div class="hot-title">王者喜羊羊联动皮肤首爆，嫦娥古风传说美哭，钻石夺宝上新</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-type">限定皮肤</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">很多玩家应该都发现了，王者荣耀如今出的联动皮肤是越来越多了。25年这一整年来，王者荣耀前前后后联动了数十个IP，推出了几十款联动皮肤。 26年年初，又联动的线条小狗，后续还有哪吒电影、疯狂动物城等联动。 而在近期，又有网友爆料称，王者荣耀接</div>
+            </div>
+        </a>
+        
+        <a href="https://news.qq.com/rain/a/20260215A06QM600" target="_blank" class="hot-card">
+            <div class="rank-badge">#7</div>
+            <div class="hot-content">
+                <div class="hot-title">抖音 ×《王者荣耀》深度联动背后：打造社交游戏新标杆，全面释放 ...</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-type">其他</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">2月12日，抖音和《王者荣耀》分别上线深度联动内容。Gamelook 发现此次合作不仅涵盖了王者荣耀IP的深度植入，更打通了抖音社交聊天、小火人、群内组队、王者荣耀群聊小助手等多重场景。 Gamelook 深度拆解此次合作后判断，这场声势浩</div>
+            </div>
+        </a>
+        
+        <a href="https://view.inews.qq.com/a/20240119A03GJD00" target="_blank" class="hot-card">
+            <div class="rank-badge">#8</div>
+            <div class="hot-content">
+                <div class="hot-title">一加原神新联名曝光！Ace系列新机首发：联动角色今晚揭晓</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">原神</span><span class="tag tag-brand">一加</span><span class="tag tag-type">跨界礼盒</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">一加于1月18日正式宣布，一加Ace 3全新原神定制机的联动角色将在《原神》 4.4 版本前瞻中亮相，前瞻活动时间为1月19日20:00。 这其实已经不是一加第一次和原神进行合作联名了，在Ace 3之前，一加就与《原神》进行过多次合作，包括</div>
+            </div>
+        </a>
+        
+        <a href="https://www.msn.com/zh-cn/news/other/%E7%8E%8B%E8%80%85%E8%8D%A3%E8%80%80%E6%96%B0%E6%B4%BB%E5%8A%A8%E9%80%8120%E5%BC%A0%E5%A4%BA%E5%AE%9D%E5%88%B8-%E5%85%B3%E7%BE%BD%E7%AD%89%E8%8B%B1%E9%9B%84%E7%89%B9%E6%95%88%E5%AE%98%E5%AE%A3/ar-AA1VWUnn?ocid=BingNewsVerp" target="_blank" class="hot-card">
+            <div class="rank-badge">#9</div>
+            <div class="hot-content">
+                <div class="hot-title">王者荣耀新活动送20张夺宝券，关羽等英雄特效官宣</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-type">其他</span></div>
+                    <span class="score-mini hot">85.0分</span>
+                </div>
+                <div class="hot-summary">小伙伴们，大家好啊，王者今天官宣了3款年限皮肤特效，即：关羽、朵莉亚、狄仁杰，2月9日会把剩余3款官宣。 本期，除了跟大家介绍下这3款皮肤特效，还要跟大家说下新活动，送20张积分夺宝券。接下来，一起看看本期内容吧！ 关羽-神骥·镇沧海，传说</div>
+            </div>
+        </a>
+        
+        <a href="https://news.qq.com/rain/a/20260228A046EK00" target="_blank" class="hot-card">
+            <div class="rank-badge">#10</div>
+            <div class="hot-content">
+                <div class="hot-title">新品精选：泡泡玛特x瑞幸联名即将来袭；茉莉奶白联名《阴阳师 ...</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">阴阳师</span><span class="tag tag-brand">瑞幸</span><span class="tag tag-type">其他</span></div>
+                    <span class="score-mini hot">77.0分</span>
+                </div>
+                <div class="hot-summary">市场的 “探宝人”，每周，iBrandi品创会从成百上千的新面孔中严选5款佼佼者，发现他们的亮点，让这些有潜力的好产品，被更多懂它的人看见。 如果你是正在寻找新鲜灵感的消费者，这里会是你的 “种草指南”；如果你是打磨出优质新品的创作者，我们</div>
+            </div>
+        </a>
+        
+        <a href="https://finance.sina.com.cn/jjxw/2026-01-23/doc-inhihhae1120167.shtml" target="_blank" class="hot-card">
+            <div class="rank-badge">#11</div>
+            <div class="hot-content">
+                <div class="hot-title">大润发首次跨界合作蛋仔派对，以游戏寻宝创新年货消费体验</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">蛋仔派对</span><span class="tag tag-brand">蛋仔派对</span><span class="tag tag-type">其他</span></div>
+                    <span class="score-mini hot">75.0分</span>
+                </div>
+                <div class="hot-summary">2026年春节前夕，高鑫零售旗下核心品牌大润发与国民级游戏IP《蛋仔派对》正式达成深度跨界合作，共同推出年货大街寻宝活动。此次联动是大润发在加速品牌年轻化、推动消费体验升级进程中的一次创新实践，旨在通过游戏化的方式，为春节前的家庭年货采购 </div>
+            </div>
+        </a>
+        
+        <a href="https://news.qq.com/rain/a/20260123A03CFS00" target="_blank" class="hot-card">
+            <div class="rank-badge">#12</div>
+            <div class="hot-content">
+                <div class="hot-title">盯上Z世代，大润发首次跨界合作蛋仔派对</div>
+                <div class="hot-meta">
+                    <div class="card-tags"><span class="tag tag-game">蛋仔派对</span><span class="tag tag-brand">蛋仔派对</span><span class="tag tag-type">其他</span></div>
+                    <span class="score-mini hot">75.0分</span>
+                </div>
+                <div class="hot-summary">2026年春节前夕，高鑫零售旗下核心品牌大润发与国民级游戏IP《蛋仔派对》正式达成深度跨界合作，并推出年货大街寻宝活动。大润发方面称，这不仅是一次性的营销活动，实质是通过引入年轻消费群体喜爱的文化符号和互动形式，对传统零售场景进行“游戏化 </div>
+            </div>
+        </a>
+        
+            </div>
+            <div>
+                <div class="section-header">
+                    <div class="section-title"><span class="icon">⚡</span> 最新情报流</div>
+                </div>
+                <div class="chart-card" style="max-height:600px;overflow-y:auto">
+                    
+        <a href="https://finance.sina.com.cn/roll/2026-01-07/doc-inhfnzrp1983762.shtml" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">「港股IPO观察」IP授权依赖症下的资本游戏，Suplay抢跑IPO，卡牌“第 ...</div>
+                <div class="feed-meta">
+                    
+                    <span class="feed-date">2026-03-22</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://news.17173.com/content/03072026/001716310.shtml" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">《尘白禁区》《恋与深空》双双跌倒，游戏跨界联动为何频频翻车？</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">恋与深空</span><span class="tag-mini tag-brand">为何频频翻车</span>
+                    <span class="feed-date">2026-03-22</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://www.msn.cn/zh-cn/news/other/pubg-%E4%BA%AE%E7%9B%B8%E5%85%A8%E7%90%83%E6%B5%81%E8%A1%8C%E6%96%87%E5%8C%96%E7%9B%9B%E5%85%B8-complexcon-hong-kong-2026/ar-AA1Z1iEc?ocid=BingNewsVerp" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">《PUBG》亮相全球流行文化盛典“ComplexCon Hong Kong 2026”</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">PUBG</span><span class="tag-mini tag-brand">Con</span>
+                    <span class="feed-date">2026-03-22</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://news.qq.com/rain/a/20260321A05BBR00" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">近四个月，手游、小游戏的207起IP联名联动合作盘点｜角研社</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">原神</span><span class="tag-mini tag-brand">支付宝</span>
+                    <span class="feed-date">2026-03-22</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://www.sohu.com/a/994682390_121636894" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">中国邮政×《尘白禁区》：一场48小时夭折的跨界联名与品牌底线之问</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">尘白禁区</span><span class="tag-mini tag-brand">《尘白禁区》：一场4</span>
+                    <span class="feed-date">2026-03-22</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://news.17173.com/content/11272025/110336021.shtml" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">江湖万千事，皆从耳畔生：《武林外传》手游×宾果电竞耳机联动...</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">武林外传</span><span class="tag-mini tag-brand">宾果电竞耳机联动..</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://news.qq.com/rain/a/20260213A03V7A00" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">在峡谷奏响浪漫！《英雄联盟手游》携手周杰伦推出告白气球系列 ...</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">英雄联盟</span><span class="tag-mini tag-brand">周杰伦推出告白气球系</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://news.17173.com/c/bc/content/11142025/112540860.shtml" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">《诛仙手游》将于11月13日开启老君山联动,不需激活码即可参与！</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">诛仙手游</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://finance.sina.com.cn/tech/digi/2025-11-28/doc-infyxmrn7507173.shtml" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">网易《逆水寒》手游3.2.2 版本联动安塞腰鼓，全新剧情预告发布</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">逆水寒</span><span class="tag-mini tag-brand">安塞腰鼓</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://finance.sina.com.cn/stock/bxjj/2025-12-22/doc-inhcsrnz4412122.shtml" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">中手游（0302.HK）：获“年度品牌价值奖”，IP筑底与多元协同构筑 ...</div>
+                <div class="feed-meta">
+                    
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://www.sohu.com/a/994827388_122004016" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">2026年2月全球手游市场报告：王者荣耀被新秀超越，市场格局大变！</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">王者荣耀</span><span class="tag-mini tag-brand">荣耀</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://news.qq.com/rain/a/20260120A062O600" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">对话负责人：2026年，让玩家看到DNF手游的“改变”</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">DNF手游</span><span class="tag-mini tag-brand">长安</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://hunan.voc.com.cn/news/202511/30891144.html" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">《诛仙》手游联动老君山探索文化传承新路径</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">诛仙</span><span class="tag-mini tag-brand">老君山探索文化传承新</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://www.sohu.com/a/994827298_122004016" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">2026年2月全球手游市场报告：王者荣耀被新兴黑马超越！</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">王者荣耀</span><span class="tag-mini tag-brand">荣耀</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+        <a href="https://www.msn.com/zh-cn/news/other/%E7%8E%8B%E8%80%85%E8%8D%A3%E8%80%80%E6%96%B0%E6%B4%BB%E5%8A%A8%E9%80%8120%E5%BC%A0%E5%A4%BA%E5%AE%9D%E5%88%B8-%E5%85%B3%E7%BE%BD%E7%AD%89%E8%8B%B1%E9%9B%84%E7%89%B9%E6%95%88%E5%AE%98%E5%AE%A3/ar-AA1VWUnn?ocid=BingNewsVerp" target="_blank" class="feed-item">
+            <div class="feed-dot"></div>
+            <div class="feed-content">
+                <div class="feed-title">王者荣耀新活动送20张夺宝券，关羽等英雄特效官宣</div>
+                <div class="feed-meta">
+                    <span class="tag-mini tag-game">王者荣耀</span><span class="tag-mini tag-brand">荣耀</span>
+                    <span class="feed-date">2026-03-20</span>
+                </div>
+            </div>
+        </a>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>🎮 游戏异业合作情报站 · 数据来源: Bing搜索 / Bing新闻 / RSS订阅</p>
+    <p style="margin-top:4px">自动采集 · 智能分析 · 每日更新 · 生成时间 2026-03-22 09:48:06</p>
+</div>
+
+<script>
+// 图表通用配色
+const colors = ['#6C5CE7','#FD79A8','#00B894','#FDCB6E','#74B9FF','#FF6B6B','#A29BFE','#55EFC4','#FAB1A0','#81ECEC'];
+const chartOpts = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#94A1B2', font: { size: 11 } } } }
+};
+
+// 品牌类别饼图
+new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["其他", "3C数码", "未知", "汽车出行", "零售电商", "快消", "服饰潮牌", "餐饮", "金融支付"],
+        datasets: [{ data: [36, 26, 22, 4, 4, 2, 2, 2, 1], backgroundColor: colors, borderWidth: 0 }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '55%',
+        plugins: { legend: { position: 'bottom', labels: { color: '#94A1B2', font: { size: 12 }, padding: 16 } } }
+    }
+});
+
+// 平滑滚动
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+    });
+});
+
+// 滚动高亮导航
+const sections = document.querySelectorAll('.section[id]');
+window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+        const top = section.offsetTop - 100;
+        if (window.scrollY >= top) current = section.id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+});
+</script>
+</body>
+</html>
