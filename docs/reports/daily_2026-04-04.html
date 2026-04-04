@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏异业合作日报 - 2026-04-04</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --bg: #0F0E17;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --border: #2D2D52;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #FF6B6B;
+            --gradient1: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            --gradient2: linear-gradient(135deg, #FD79A8, #FDCB6E);
+            --gradient3: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 顶部背景动画 */
+        .hero {
+            background: linear-gradient(135deg, #0F0E17 0%, #1A1A2E 50%, #16213E 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(253,121,168,0.08) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+        
+        .hero h1 {
+            font-size: 2.2em;
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .subtitle {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-card:nth-child(2) .stat-number {
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-card:nth-child(3) .stat-number {
+            background: var(--gradient3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        /* 图表区 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        .chart-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .chart-box h3 {
+            margin-bottom: 16px;
+            color: var(--primary-light);
+            font-size: 1em;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-bar label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .filter-bar select, .filter-bar input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-bar select:focus, .filter-bar input:focus {
+            border-color: var(--primary);
+        }
+        
+        .filter-bar .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-btn {
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .filter-btn:hover { opacity: 0.85; }
+        
+        .reset-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        /* 情报卡片 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .intel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .intel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(108,92,231,0.15);
+            border-color: var(--primary-light);
+            background: var(--bg-card-hover);
+        }
+        
+        .card-header {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .score-badge {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85em;
+        }
+        
+        .score-badge.hot {
+            background: linear-gradient(135deg, #FF6B6B, #FD79A8);
+            color: white;
+        }
+        
+        .score-badge.warm {
+            background: linear-gradient(135deg, #FDCB6E, #F39C12);
+            color: #333;
+        }
+        
+        .score-badge.cool {
+            background: rgba(108,92,231,0.2);
+            color: var(--primary-light);
+        }
+        
+        .card-title {
+            font-size: 1em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-body {
+            flex: 1;
+            margin: 12px 0;
+        }
+        
+        .card-summary {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .tag-game {
+            background: rgba(108,92,231,0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.3);
+        }
+        
+        .tag-brand {
+            background: rgba(253,121,168,0.15);
+            color: #FD79A8;
+            border: 1px solid rgba(253,121,168,0.3);
+        }
+        
+        .tag-cat {
+            background: rgba(0,184,148,0.15);
+            color: #00B894;
+            border: 1px solid rgba(0,184,148,0.3);
+        }
+        
+        .tag-type {
+            background: rgba(253,203,110,0.15);
+            color: #FDCB6E;
+            border: 1px solid rgba(253,203,110,0.3);
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        
+        /* 详情弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .modal h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            padding-right: 40px;
+            line-height: 1.4;
+        }
+        
+        .modal .detail-row {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+            align-items: baseline;
+        }
+        
+        .modal .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .modal .detail-value {
+            font-size: 0.95em;
+        }
+        
+        .modal .detail-content {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            line-height: 1.8;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .modal .detail-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--gradient1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .modal .detail-link:hover { opacity: 0.85; }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state .icon { font-size: 4em; margin-bottom: 16px; }
+        
+        /* 返回门户按钮 */
+        .back-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .back-portal:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        
+        /* ===== 联动速览模块 ===== */
+        .glance-section {
+            margin: 28px 0;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon { font-size: 1em; }
+        
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 18px;
+        }
+        
+        .section-desc strong {
+            color: var(--accent);
+        }
+        
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .glance-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .glance-box-title {
+            font-size: 1em;
+            color: var(--primary-light);
+            margin-bottom: 14px;
+        }
+        
+        .glance-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .glance-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .glance-tag:hover {
+            transform: translateY(-2px);
+        }
+        
+        .glance-tag em {
+            font-style: normal;
+            font-size: 0.85em;
+            opacity: 0.7;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        
+        .glance-game {
+            background: rgba(108,92,231,0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.25);
+        }
+        
+        .glance-brand {
+            background: rgba(253,121,168,0.08);
+            border: 1px solid rgba(253,121,168,0.2);
+        }
+        
+        .glance-brands {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .brand-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .brand-cat-label {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .glance-empty {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .glance-pairs-box {
+            margin-top: 0;
+        }
+        
+        .pairs-table-wrap {
+            overflow-x: auto;
+        }
+        
+        .pairs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+        }
+        
+        .pairs-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        
+        .pairs-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(45,45,82,0.5);
+            vertical-align: middle;
+        }
+        
+        .pairs-table tr:hover td {
+            background: rgba(108,92,231,0.05);
+        }
+        
+        .pair-game {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .pair-x {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1em;
+            padding: 10px 6px;
+        }
+        
+        .pair-brand {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .pair-cat {
+            font-size: 0.85em;
+        }
+        
+        .pair-type {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+        
+        .pair-count {
+            text-align: center;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5em; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .cards-container { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .glance-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<a href="../index.html" class="back-portal">← 返回情报站</a>
+
+<div class="hero">
+    <h1>🎮 游戏异业合作情报日报</h1>
+    <p class="subtitle">📅 2026-04-04 &nbsp;|&nbsp; 共收录 34 条情报</p>
+</div>
+
+<div class="container">
+    <!-- 核心统计 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">34</div>
+            <div class="stat-label">今日情报总数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">4</div>
+            <div class="stat-label">涉及游戏数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">4</div>
+            <div class="stat-label">品牌类别数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">253</div>
+            <div class="stat-label">累计情报总量</div>
+        </div>
+    </div>
+
+    
+    <!-- 联动速览模块 -->
+    <div class="glance-section">
+        <h2 class="section-title"><span class="section-icon">🔗</span> 联动速览</h2>
+        <p class="section-desc">今日情报涉及 <strong>3</strong> 款游戏、<strong>6</strong> 个品牌，共 <strong>3</strong> 组联动配对</p>
+        
+        <div class="glance-grid">
+            <!-- 游戏清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🎮 涉及游戏 (3)</h3>
+                <div class="glance-tags"><span class="glance-tag glance-game">王者荣耀<em>21</em></span><span class="glance-tag glance-game">崩坏：星穹铁道<em>6</em></span><span class="glance-tag glance-game">黑神话悟空<em>1</em></span></div>
+            </div>
+            
+            <!-- 品牌清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🏢 涉及品牌 (6)</h3>
+                <div class="glance-brands"><div class="brand-group"><span class="brand-cat-label" style="background:#74B9FF22;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">荣耀<em>21</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">小米<em>2</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">华为<em>2</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">联想<em>1</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#FF6B6B22;color:#FF6B6B;border:1px solid #FF6B6B40">餐饮</span><span class="glance-tag glance-brand" style="border-color:#FF6B6B40;color:#FF6B6B">瑞幸<em>1</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#94A1B222;color:#94A1B2;border:1px solid #94A1B240">其他</span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">都是怎样的<em>1</em></span></div></div>
+            </div>
+        </div>
+        
+        <!-- 联动配对表 -->
+        
+        <div class="glance-box glance-pairs-box">
+            <h3 class="glance-box-title">🤝 联动配对一览 (3)</h3>
+            <div class="pairs-table-wrap">
+                <table class="pairs-table">
+                    <thead>
+                        <tr><th>游戏</th><th></th><th>品牌</th><th>类别</th><th>合作类型</th><th>情报数</th></tr>
+                    </thead>
+                    <tbody>
+        <tr>
+            <td><span class="pair-game">王者荣耀</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他、限定皮肤、联名产品、AR互动</span></td>
+            <td class="pair-count">21</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">崩坏：星穹铁道</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">小米</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">2</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">黑神话悟空</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">瑞幸</span></td>
+            <td><span class="pair-cat" style="color:#FF6B6B">餐饮</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">1</td>
+        </tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- 图表 -->
+    <div class="charts-grid">
+        <div class="chart-box">
+            <h3>📊 游戏分布 TOP10</h3>
+            <canvas id="gameChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🏷️ 品牌类别分布</h3>
+            <canvas id="catChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🤝 合作类型分布</h3>
+            <canvas id="typeChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>📈 近30天采集趋势</h3>
+            <canvas id="trendChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="filter-bar">
+        <label>🔍</label>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、品牌、游戏..." oninput="filterCards()">
+        <select id="gameFilter" onchange="filterCards()">
+            <option value="">全部游戏</option>
+            <option value="王者荣耀">王者荣耀 (21)</option><option value="崩坏：星穹铁道">崩坏：星穹铁道 (6)</option><option value="未知">未知 (6)</option><option value="黑神话悟空">黑神话悟空 (1)</option>
+        </select>
+        <select id="catFilter" onchange="filterCards()">
+            <option value="">全部类别</option>
+            <option value="3C数码">3C数码 (26)</option><option value="未知">未知 (6)</option><option value="餐饮">餐饮 (1)</option><option value="其他">其他 (1)</option>
+        </select>
+        <button class="reset-btn" onclick="resetFilters()">重置</button>
+    </div>
+
+    <!-- 情报卡片 -->
+    <div class="cards-container" id="cardsContainer">
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="限定皮肤"
+             onclick="showDetail(226)">
+            <div class="card-header">
+                <div class="score-badge hot">85.0</div>
+                <h3 class="card-title">《王者》联名宝格丽，定制皮肤芈月·璀璨新程，你对该游戏 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年7月11日 · 《王者荣耀》官方公布了和宝格丽联名的数字定制皮肤【芈月·璀璨新程】。 前路总会经历曲折，但每一个曲折背后都是一个新的开始，珠宝的打磨和人的成长，是如此… 显示全部 关注者 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">限定皮肤</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(231)">
+            <div class="card-header">
+                <div class="score-badge hot">85.0</div>
+                <h3 class="card-title">王者荣耀官宣推出女装成衣品牌MEETING SHERO，网友吐 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年5月23日 · 与十三余、鸿星尔克进行跨界合作 事实上，王者荣耀此次联合的设计品牌WECOUTURE，本就定位高端市场。 在2021年10月，该品牌就联合王者荣耀发布系列联名婚纱，也 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(236)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日 · 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(237)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日 · 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="限定皮肤"
+             onclick="showDetail(227)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">《王者荣耀》宣布联动《哪吒之魔童闹海》将推出哪吒、敖丙 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年4月17日 · 王吒组合，强势出击！ 王者荣耀×电影《哪吒之魔童闹海》联动计划确认！ 此次合作包括哪吒、敖丙等四位角色的联动皮肤，将于后续择期上线。 作为电影《哪吒之魔童… 显示全部 关注 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">限定皮肤</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="联名产品"
+             onclick="showDetail(228)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》与 Burberry 联名款瑶皮肤「自然之灵 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">现在买皮肤看联名看限定，就是不看质量，买了之后还得骂那些喷的人皮肤是杠精。 麻烦你看看隔壁英雄联盟手游25块钱的史诗和52块钱的传说吧，花100+买个t4辅助的圈钱皮肤还得说王者荣耀和巴宝莉有 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">联名产品</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="联名产品"
+             onclick="showDetail(229)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》与万代联名款孙悟空限定皮肤「零号·赤 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2021年1月5日 · 看来在半年多前的锚点事件之后，王者荣耀仍然估错了自身英雄IP的影响力所在（不会真有人觉得孙悟空的IP价值在于游戏里英雄原皮肤佝偻匍匐的行走姿势，充满烂梗的老台词，而不是悟 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">联名产品</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="限定皮肤"
+             onclick="showDetail(230)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀 × 鸿星尔克联名鞋亮相，有哪些亮点？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2022年1月20日 · 国风联动，如虎添翼。 王者荣耀与鸿星尔克达成授权合作。 鸿星尔克的设计师们从王者荣耀孙膑虎年限定皮肤中提取灵感，将国风美学融入运动设计，打造虎年限定实… 显示全部 关注者 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">限定皮肤</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(232)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">如何看待鸿星尔克提前公布与王者荣耀的全年合作计划，因 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2022年1月14日 · 了解了事情的经过之后，我真的是震惊了。 其实稍微对品牌合作以及社交媒体运营有一些了解的人，都大概能看明白这事儿的前后关系。 大背景是，王者荣耀和鸿星尔克达成一整年的合 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(233)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》取消与巴宝莉合作的「自然之灵」与「 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2021年3月25日 · 来自王者荣耀官方微博：《王者荣耀》项目团队现决定取消与Burberry合作的「瑶」“自然之灵”新皮肤及“森海之灵”星传说皮肤计划。 我们将为持续提升广大… 显示全部 关注者 85 被浏览</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(234)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀，有哪些联名品牌让你眼前一亮？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年12月23日 · 今天带来的是这款TOPTOY推出的王者荣耀联名典藏款机甲积木。这款积木以王者荣耀中孙悟空齐天大圣皮肤为原型，融合了科技元素与传统盔甲的设计理念，是一款融合了古典与未来 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(246)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道随宠怎么召唤 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">小米</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(250)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道随宠怎么召唤 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">小米</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(220)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">虎扑电竞 - 最电竞的世界 - hupu</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">专注绝地求生,王者荣耀,英雄联盟的新闻分析等深入内容,拥有良好氛围的电竞游戏论坛. 虎扑专访leaf：能复刻去年EDG从败者组到夺冠 | 虎扑专访Boo 虎扑专访NiKo：用虎扑给自己打分，觉得中国粉丝起的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(221)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">虎扑电竞 - 最电竞的世界</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">专注绝地求生,王者荣耀,英雄联盟的新闻分析等深入内容,拥有良好氛围的电竞游戏论坛. 社区推荐 更多 . [赛后]Uzi杯：OP 2-3 YYDS，烈焰风暴席卷全场，YYDS鏖战挺进决赛 50亮238回复 英雄联盟 . [韩 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(222)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">虎扑电竞 - 最电竞的世界</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">专注绝地求生,王者荣耀,英雄联盟的新闻分析等深入内容,拥有良好氛围的电竞游戏论坛. 社区推荐 更多 . JRs评选LPL历史一阵：26Bin、24knight、18Uzi领衔 50亮1431回复 英雄联盟 . [流言板]4月4日首 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(235)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》七冠职业选手花海在钻石局 33 局仅赢 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年7月21日 · 于是我就开始查询，发现似乎真有这种事。 指尖上的王者（2025 年 7 月 20 日）详细描述了花海在钻石局的连败情况：33 局中 25 次获得 MVP，但因队友配合混乱、匹配机制限制（如高 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(238)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀怎么快速提高英雄战力拿省标国标？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2021年3月4日 · 想拿省标国标，可被排位elo机制安排的明明白白 作为一个初三就在玩王者荣耀的人，现在已经大四毕业了，高中的时候觉得有个省标已经是班里面最厉害害的存在了，到了大学之后，省标 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(239)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀换战区在哪里设置-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2024年3月19日 · 王者荣耀换战区在哪里设置，该如何进行操作呢？将带大家一起看下后再进行操作，希望介绍的内容能让你避免操作错误！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(240)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年11月24日 · 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="AR互动"
+             onclick="showDetail(241)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日 · 现在的王者荣耀像极了秦二世败家现场 万物都有寿命，太阳会燃尽、宇宙会冷寂，《扫码荣耀》不知道还能活几年 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">AR互动</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(242)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀用电脑怎么玩？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2017年12月1日 · 用电脑来玩王者的话，你以前手机上的账号数据共用的，所以可以一开始就用电脑来玩 来自 百度经验作者 阿曼达307 修改意见来自 Always 觉得有用的赏个赞呗~作者我肚子饿了看到您的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(243)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何玩好《王者荣耀》？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">索引 游戏的理解 英雄的相生相克 团战的前提与意义 进阶王者与荣耀王者 游戏的理解 小丑希望大家能明白MOBA类游戏本质就是推塔游戏，而推塔游戏的一个重要原则：以大欺小，以多欺少，团战胜利的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="黑神话悟空" 
+             data-category="餐饮" 
+             data-type="其他"
+             onclick="showDetail(252)">
+            <div class="card-header">
+                <div class="score-badge warm">55.0</div>
+                <h3 class="card-title">春节档联名启示：爆款难押，品牌玄学仍然待解</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">事实上，IP联名早已不是什么新鲜事。根据君智战略咨询的统计，2024年共有约3000个品牌，完成了1.4万次联名活动。各大品牌前仆后继，像瑞幸、喜茶等品牌的联名活动几乎全年不断；顶流IP频繁出镜，从全网刷屏的《黑神话：悟空》到重映的《哈利波特》系列，都成为品牌争相合作对象。</p>
+                <div class="card-tags"><span class="tag tag-game">黑神话悟空</span><span class="tag tag-brand">瑞幸</span><span class="tag tag-cat">餐饮</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">10 小时</span>
+                <span class="date">10 小时</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(223)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">【台式电脑推荐】品牌台式整机怎么选择？ 2026.04月 [高性价 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">4 天之前 · 联想售后，不用多说，遍布全国，售后不用担心。 这款主机，算是笔记本魔改，但是做到了70瓦的性能释放，性能比较强。 真正的8核CPU，加上24G的内存，多开网页办公Office没问题。 本 …</p>
+                <div class="card-tags"><span class="tag tag-brand">联想</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(244)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏·星穹铁道奇珍琳琅商店在哪-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0</p>
+                <div class="card-tags"><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(245)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么看剧情回放-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(247)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么设置展示角色-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年4月30日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(248)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏·星穹铁道奇珍琳琅商店在哪-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0</p>
+                <div class="card-tags"><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(249)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么看剧情回放-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(251)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么设置展示角色-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年4月30日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(225)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">想了解这样的IP品牌联名，收费方式和合作都是怎样的 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">过去2-3年我们已经帮几千家国内的生产制造型企业达成了IP联名的合作，实现了累计几个小目标量级的IP联名运营服务。 这个过程里面是三个玩家，品牌方（生产产品的企业），服务商（我），IP方（持 …</p>
+                <div class="card-tags"><span class="tag tag-brand">都是怎样的</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(224)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">1500元内台式电脑主机推荐（2025年5月新品）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年5月9日 · 总结： 畅骁 12 代 i3-12100F 主机以 1500 元级价格，实现商务、娱乐、游戏三栖全能，硬件兼容性与扩展性远超同价位品牌机。 无论是企业批量采购，还是家庭用户 DIY 升级，都是当 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-04</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(253)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">当娱乐圈顶流遇上游戏大佬？周杰伦王俊凯皮肤刷屏，玩家疯抢哭了</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">当娱乐圈的光影魅力遇上游戏世界的奇思妙想，总能碰撞出意想不到的火花。近年来，越来越多的游戏选择与明星或知名IP展开联动，将粉丝经济与游戏内容深度融合，为玩家带来前所未有的沉浸体验。这种跨界合作不仅让游戏的世界更加丰富多彩，也让更多人切身感受到游戏作为文化载体的独特魅力。</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">19 小时</span>
+                <span class="date">19 小时</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeDetail(event)">
+    <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// 所有条目数据
+const allItems = [{"id": 226, "content_hash": "2aeea031cfd9d2b7e45f5103b23791ac", "title": "《王者》联名宝格丽，定制皮肤芈月·璀璨新程，你对该游戏 ...", "summary": "2023年7月11日 · 《王者荣耀》官方公布了和宝格丽联名的数字定制皮肤【芈月·璀璨新程】。 前路总会经历曲折，但每一个曲折背后都是一个新的开始，珠宝的打磨和人的成长，是如此… 显示全部 关注者 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "限定皮肤", "source_url": "https://www.zhihu.com/question/611509976", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 85.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 231, "content_hash": "9310e5e0a063fdf51f22b002d86c8e79", "title": "王者荣耀官宣推出女装成衣品牌MEETING SHERO，网友吐 ...", "summary": "2023年5月23日 · 与十三余、鸿星尔克进行跨界合作 事实上，王者荣耀此次联合的设计品牌WECOUTURE，本就定位高端市场。 在2021年10月，该品牌就联合王者荣耀发布系列联名婚纱，也 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/601850097", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 85.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 236, "content_hash": "6876c82b3456e50a9bc4dae49b89a23b", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日 · 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/1965903753543672855", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 237, "content_hash": "d0c07b62ca5a307eb9c47aff18389ec5", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线 ...", "summary": "2026年3月2日 · 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/2011753327969462098", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 227, "content_hash": "b04cea8a2e7eaa25c6fb1a68b5ded24a", "title": "《王者荣耀》宣布联动《哪吒之魔童闹海》将推出哪吒、敖丙 ...", "summary": "2025年4月17日 · 王吒组合，强势出击！ 王者荣耀×电影《哪吒之魔童闹海》联动计划确认！ 此次合作包括哪吒、敖丙等四位角色的联动皮肤，将于后续择期上线。 作为电影《哪吒之魔童… 显示全部 关注 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "限定皮肤", "source_url": "https://www.zhihu.com/question/1895835058625017058", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 228, "content_hash": "f79a07cacf90fa2fd0ad6024b67874de", "title": "如何评价《王者荣耀》与 Burberry 联名款瑶皮肤「自然之灵 ...", "summary": "现在买皮肤看联名看限定，就是不看质量，买了之后还得骂那些喷的人皮肤是杠精。 麻烦你看看隔壁英雄联盟手游25块钱的史诗和52块钱的传说吧，花100+买个t4辅助的圈钱皮肤还得说王者荣耀和巴宝莉有 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "联名产品", "source_url": "https://www.zhihu.com/question/450001358", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 229, "content_hash": "60335316dccc90a33a1fc21292caf41a", "title": "如何评价《王者荣耀》与万代联名款孙悟空限定皮肤「零号·赤 ...", "summary": "2021年1月5日 · 看来在半年多前的锚点事件之后，王者荣耀仍然估错了自身英雄IP的影响力所在（不会真有人觉得孙悟空的IP价值在于游戏里英雄原皮肤佝偻匍匐的行走姿势，充满烂梗的老台词，而不是悟 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "联名产品", "source_url": "https://www.zhihu.com/question/437997882", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 230, "content_hash": "7d530fe855f13cd158be9f233f58f88a", "title": "王者荣耀 × 鸿星尔克联名鞋亮相，有哪些亮点？ - 知乎", "summary": "2022年1月20日 · 国风联动，如虎添翼。 王者荣耀与鸿星尔克达成授权合作。 鸿星尔克的设计师们从王者荣耀孙膑虎年限定皮肤中提取灵感，将国风美学融入运动设计，打造虎年限定实… 显示全部 关注者 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "限定皮肤", "source_url": "https://www.zhihu.com/question/512527319", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 232, "content_hash": "f602b07c72c17305546fba142b73e357", "title": "如何看待鸿星尔克提前公布与王者荣耀的全年合作计划，因 ...", "summary": "2022年1月14日 · 了解了事情的经过之后，我真的是震惊了。 其实稍微对品牌合作以及社交媒体运营有一些了解的人，都大概能看明白这事儿的前后关系。 大背景是，王者荣耀和鸿星尔克达成一整年的合 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/511482965", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 233, "content_hash": "5873888b73c22f6894e7eb8d2310e682", "title": "如何评价《王者荣耀》取消与巴宝莉合作的「自然之灵」与「 ...", "summary": "2021年3月25日 · 来自王者荣耀官方微博：《王者荣耀》项目团队现决定取消与Burberry合作的「瑶」“自然之灵”新皮肤及“森海之灵”星传说皮肤计划。 我们将为持续提升广大… 显示全部 关注者 85 被浏览", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/451173213", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 234, "content_hash": "87ce5424523291f10439ad12f7c48ec9", "title": "王者荣耀，有哪些联名品牌让你眼前一亮？ - 知乎", "summary": "2023年12月23日 · 今天带来的是这款TOPTOY推出的王者荣耀联名典藏款机甲积木。这款积木以王者荣耀中孙悟空齐天大圣皮肤为原型，融合了科技元素与传统盔甲的设计理念，是一款融合了古典与未来 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/519299966", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 246, "content_hash": "a674948b32d6cbc3bb258f88c3b9aa26", "title": "崩坏星穹铁道随宠怎么召唤 - 百度经验", "summary": "品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5", "game_name": "崩坏：星穹铁道", "brand_name": "小米", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8270aeda726024a49ce18bdc2a8f91d3b9b74c1e19d7f93c2ed1d1c25aa879fcJmltdHM9MTc3NTE3NDQwMA&ptn=3&ver=2&hsh=4&fclid=2c8b06f3-0d41-64a6-345a-11c20c10652a&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NGI0NjMxYzEzNzIwNjljYThmNDFiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:28:43", "updated_at": "2026-04-04 09:28:43"}, {"id": 250, "content_hash": "4a7037755bd2d61a834875ec4e99bfc0", "title": "崩坏星穹铁道随宠怎么召唤 - 百度经验", "summary": "品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5", "game_name": "崩坏：星穹铁道", "brand_name": "小米", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ae248afdf4ce8012d113d3ebaa8325cc4fc17102fce28a6882340e1904e9b176JmltdHM9MTc3NTE3NDQwMA&ptn=3&ver=2&hsh=4&fclid=1d99f0b8-8d18-6cd5-3796-e7898c896d8d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NGI0NjMxYzEzNzIwNjljYThmNDFiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:28:46", "updated_at": "2026-04-04 09:28:46"}, {"id": 220, "content_hash": "9d2e6f2c02debc7cb0f0ac1d967f4cfd", "title": "虎扑电竞 - 最电竞的世界 - hupu", "summary": "专注绝地求生,王者荣耀,英雄联盟的新闻分析等深入内容,拥有良好氛围的电竞游戏论坛. 虎扑专访leaf：能复刻去年EDG从败者组到夺冠 | 虎扑专访Boo 虎扑专访NiKo：用虎扑给自己打分，觉得中国粉丝起的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://gg.hupu.com/?night=0", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:26:08", "updated_at": "2026-04-04 09:26:08"}, {"id": 221, "content_hash": "52b56c909b16e8b9b0cc606fb991fec5", "title": "虎扑电竞 - 最电竞的世界", "summary": "专注绝地求生,王者荣耀,英雄联盟的新闻分析等深入内容,拥有良好氛围的电竞游戏论坛. 社区推荐 更多 . [赛后]Uzi杯：OP 2-3 YYDS，烈焰风暴席卷全场，YYDS鏖战挺进决赛 50亮238回复 英雄联盟 . [韩 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://gg.hupu.com/?from=websitedict.com", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:26:08", "updated_at": "2026-04-04 09:26:08"}, {"id": 222, "content_hash": "847225b18f4bf6f1db857bb2d6541ec4", "title": "虎扑电竞 - 最电竞的世界", "summary": "专注绝地求生,王者荣耀,英雄联盟的新闻分析等深入内容,拥有良好氛围的电竞游戏论坛. 社区推荐 更多 . JRs评选LPL历史一阵：26Bin、24knight、18Uzi领衔 50亮1431回复 英雄联盟 . [流言板]4月4日首 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://gg.hupu.com/?1319", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:26:08", "updated_at": "2026-04-04 09:26:08"}, {"id": 235, "content_hash": "6a830c1bea53fc5044d9ddcd25bfc6b3", "title": "如何看待《王者荣耀》七冠职业选手花海在钻石局 33 局仅赢 ...", "summary": "2025年7月21日 · 于是我就开始查询，发现似乎真有这种事。 指尖上的王者（2025 年 7 月 20 日）详细描述了花海在钻石局的连败情况：33 局中 25 次获得 MVP，但因队友配合混乱、匹配机制限制（如高 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/1930562051304056214", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 238, "content_hash": "65f020737e02d67a0d75f5abc8936894", "title": "王者荣耀怎么快速提高英雄战力拿省标国标？ - 知乎", "summary": "2021年3月4日 · 想拿省标国标，可被排位elo机制安排的明明白白 作为一个初三就在玩王者荣耀的人，现在已经大四毕业了，高中的时候觉得有个省标已经是班里面最厉害害的存在了，到了大学之后，省标 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/447587385", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 239, "content_hash": "e61672008690d352d2f2b55cb037d7e6", "title": "王者荣耀换战区在哪里设置-百度经验", "summary": "2024年3月19日 · 王者荣耀换战区在哪里设置，该如何进行操作呢？将带大家一起看下后再进行操作，希望介绍的内容能让你避免操作错误！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://jingyan.baidu.com/article/948f5924b55386990ff5f9de.html", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 240, "content_hash": "0ae749b42bead3402974660422d8d78d", "title": "我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎", "summary": "2020年11月24日 · 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/431794178", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 241, "content_hash": "a3e9dc4b26607a9e497eaa86cb2513db", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日 · 现在的王者荣耀像极了秦二世败家现场 万物都有寿命，太阳会燃尽、宇宙会冷寂，《扫码荣耀》不知道还能活几年 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "AR互动", "source_url": "https://www.zhihu.com/question/11269266524", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 242, "content_hash": "ca7c9d895a8371b2973b187236ddf930", "title": "王者荣耀用电脑怎么玩？ - 知乎", "summary": "2017年12月1日 · 用电脑来玩王者的话，你以前手机上的账号数据共用的，所以可以一开始就用电脑来玩 来自 百度经验作者 阿曼达307 修改意见来自 Always 觉得有用的赏个赞呗~作者我肚子饿了看到您的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/263415387?sort=created", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 243, "content_hash": "45d68d442357c0e10f63f3c1c6b66fe9", "title": "如何玩好《王者荣耀》？ - 知乎", "summary": "索引 游戏的理解 英雄的相生相克 团战的前提与意义 进阶王者与荣耀王者 游戏的理解 小丑希望大家能明白MOBA类游戏本质就是推塔游戏，而推塔游戏的一个重要原则：以大欺小，以多欺少，团战胜利的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/332563602", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:58", "updated_at": "2026-04-04 09:27:58"}, {"id": 252, "content_hash": "9cbd92321a21667292d2a6901a0277e6", "title": "春节档联名启示：爆款难押，品牌玄学仍然待解", "summary": "事实上，IP联名早已不是什么新鲜事。根据君智战略咨询的统计，2024年共有约3000个品牌，完成了1.4万次联名活动。各大品牌前仆后继，像瑞幸、喜茶等品牌的联名活动几乎全年不断；顶流IP频繁出镜，从全网刷屏的《黑神话：悟空》到重映的《哈利波特》系列，都成为品牌争相合作对象。", "game_name": "黑神话悟空", "brand_name": "瑞幸", "brand_category": "餐饮", "collab_type": "其他", "source_url": "https://www.36kr.com/p/3156309331090177", "source_name": "10 小时", "source_type": "bing_news", "image_url": "/th?id=OJ.fakbzDv1gnwxew&pid=news&w=28&h=16&rs=2", "published_date": "10 小时", "collected_date": "2026-04-04", "hot_score": 55.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:29:15", "updated_at": "2026-04-04 09:29:15"}, {"id": 223, "content_hash": "247b1ca02e2b2a251b74e8cba1b81406", "title": "【台式电脑推荐】品牌台式整机怎么选择？ 2026.04月 [高性价 ...", "summary": "4 天之前 · 联想售后，不用多说，遍布全国，售后不用担心。 这款主机，算是笔记本魔改，但是做到了70瓦的性能释放，性能比较强。 真正的8核CPU，加上24G的内存，多开网页办公Office没问题。 本 …", "game_name": "", "brand_name": "联想", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.zhihu.com/tardis/zm/art/630146448", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:09", "updated_at": "2026-04-04 09:27:09"}, {"id": 244, "content_hash": "09f48289f8aa2976d546e6c8f78fd83b", "title": "崩坏·星穹铁道奇珍琳琅商店在哪-百度经验", "summary": "品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0", "game_name": "", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b376c809d8277cad1867fdd1380cbdb38375f013f39336953bef6632d695c546JmltdHM9MTc3NTE3NDQwMA&ptn=3&ver=2&hsh=4&fclid=2c8b06f3-0d41-64a6-345a-11c20c10652a&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzNhMmY3YzJlZWYxY2MzNjdhZWQ2MTE3YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:28:43", "updated_at": "2026-04-04 09:28:43"}, {"id": 245, "content_hash": "cf4325b08c24b2a1601f1b6a34e98876", "title": "崩坏星穹铁道怎么看剧情回放-百度经验", "summary": "品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c2eb860f2f3f19ceb4d64f990f40b1cec9b9dcb4aa9e613dd0a8c3434b7de99bJmltdHM9MTc3NTE3NDQwMA&ptn=3&ver=2&hsh=4&fclid=2c8b06f3-0d41-64a6-345a-11c20c10652a&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE0YmQyNTZlZDc1OWU3ZmE2ZDI2MTJhYS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:28:43", "updated_at": "2026-04-04 09:28:43"}, {"id": 247, "content_hash": "1e9ed5f603528dcfa3e88e903bd71d16", "title": "崩坏星穹铁道怎么设置展示角色-百度经验", "summary": "2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3b4850f4f9db43ba6133d00a9c5779eed31bf081aa080f596c78d9134c9abd16JmltdHM9MTc3NTE3NDQwMA&ptn=3&ver=2&hsh=4&fclid=2c8b06f3-0d41-64a6-345a-11c20c10652a&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NjIyZjI0ZGYwYWE3YmNmZGJlYTU2Zi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年4月30日", "collected_date": "2026-04-04", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:28:43", "updated_at": "2026-04-04 09:28:43"}, {"id": 248, "content_hash": "ea9e822315e23d96fcc4ff81783c2e38", "title": "崩坏·星穹铁道奇珍琳琅商店在哪-百度经验", "summary": "品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0", "game_name": "", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b5436afff5eadf830a64866e5b1e51c6adad7e8d53e06af8685aa4cc01ae762aJmltdHM9MTc3NTE3NDQwMA&ptn=3&ver=2&hsh=4&fclid=1d99f0b8-8d18-6cd5-3796-e7898c896d8d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzNhMmY3YzJlZWYxY2MzNjdhZWQ2MTE3YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:28:46", "updated_at": "2026-04-04 09:28:46"}, {"id": 249, "content_hash": "ba2ca3e471f2a9c5ef55435c2ef93179", "title": "崩坏星穹铁道怎么看剧情回放-百度经验", "summary": "品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5cc55eaef87a71769cdba1f7e66e98f6b57ac64df53256803473f022f1fdbabdJmltdHM9MTc3NTE3NDQwMA&ptn=3&ver=2&hsh=4&fclid=1d99f0b8-8d18-6cd5-3796-e7898c896d8d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE0YmQyNTZlZDc1OWU3ZmE2ZDI2MTJhYS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:28:46", "updated_at": "2026-04-04 09:28:46"}, {"id": 251, "content_hash": "de423d7ef4ff609e3e83689176e931ae", "title": "崩坏星穹铁道怎么设置展示角色-百度经验", "summary": "2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=13dfa6496927f54010645d3fbd118def917a69e27a93e8f90150a910f21f38f3JmltdHM9MTc3NTE3NDQwMA&ptn=3&ver=2&hsh=4&fclid=1d99f0b8-8d18-6cd5-3796-e7898c896d8d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NjIyZjI0ZGYwYWE3YmNmZGJlYTU2Zi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年4月30日", "collected_date": "2026-04-04", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:28:46", "updated_at": "2026-04-04 09:28:46"}, {"id": 225, "content_hash": "c087fb13d8bf667069731b707922c8b2", "title": "想了解这样的IP品牌联名，收费方式和合作都是怎样的 ...", "summary": "过去2-3年我们已经帮几千家国内的生产制造型企业达成了IP联名的合作，实现了累计几个小目标量级的IP联名运营服务。 这个过程里面是三个玩家，品牌方（生产产品的企业），服务商（我），IP方（持 …", "game_name": "", "brand_name": "都是怎样的", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.zhihu.com/question/356839219", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:52", "updated_at": "2026-04-04 09:27:52"}, {"id": 224, "content_hash": "d235f5570f90afaa487866aad8c3f4bf", "title": "1500元内台式电脑主机推荐（2025年5月新品）", "summary": "2025年5月9日 · 总结： 畅骁 12 代 i3-12100F 主机以 1500 元级价格，实现商务、娱乐、游戏三栖全能，硬件兼容性与扩展性远超同价位品牌机。 无论是企业批量采购，还是家庭用户 DIY 升级，都是当 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.zhihu.com/tardis/zm/art/357085735", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-04", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:27:09", "updated_at": "2026-04-04 09:27:09"}, {"id": 253, "content_hash": "619a6c7069d99032ddc3e2195b1f42d3", "title": "当娱乐圈顶流遇上游戏大佬？周杰伦王俊凯皮肤刷屏，玩家疯抢哭了", "summary": "当娱乐圈的光影魅力遇上游戏世界的奇思妙想，总能碰撞出意想不到的火花。近年来，越来越多的游戏选择与明星或知名IP展开联动，将粉丝经济与游戏内容深度融合，为玩家带来前所未有的沉浸体验。这种跨界合作不仅让游戏的世界更加丰富多彩，也让更多人切身感受到游戏作为文化载体的独特魅力。", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.sohu.com/a/1004913960_121160104", "source_name": "19 小时", "source_type": "bing_news", "image_url": "/th?id=OJ.7vVJQgxeqYsI0Q&pid=news&w=32&h=16&rs=2", "published_date": "19 小时", "collected_date": "2026-04-04", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-04 09:29:19", "updated_at": "2026-04-04 09:29:19"}];
+
+// 图表配置
+const chartColors = ['#6C5CE7','#FD79A8','#00B894','#FDCB6E','#74B9FF','#FF6B6B','#A29BFE','#55EFC4','#FAB1A0','#81ECEC'];
+const chartDefaults = {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#94A1B2', font: { size: 11 } } } }
+};
+
+// 游戏分布图
+new Chart(document.getElementById('gameChart'), {
+    type: 'bar',
+    data: {
+        labels: ["王者荣耀", "崩坏：星穹铁道", "未知", "黑神话悟空"],
+        datasets: [{ data: [21, 6, 6, 1], backgroundColor: chartColors, borderRadius: 6 }]
+    },
+    options: { ...chartDefaults, indexAxis: 'y', plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } }, y: { ticks: { color: '#94A1B2' }, grid: { display: false } } }
+    }
+});
+
+// 品牌类别图
+new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["3C数码", "未知", "餐饮", "其他"],
+        datasets: [{ data: [26, 6, 1, 1], backgroundColor: chartColors, borderWidth: 0 }]
+    },
+    options: { ...chartDefaults, cutout: '55%' }
+});
+
+// 合作类型图
+new Chart(document.getElementById('typeChart'), {
+    type: 'polarArea',
+    data: {
+        labels: ["其他", "限定皮肤", "联名产品", "AR互动"],
+        datasets: [{ data: [28, 3, 2, 1], backgroundColor: chartColors.map(c => c + '88') }]
+    },
+    options: { ...chartDefaults, scales: { r: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } } } }
+});
+
+// 趋势图
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: ["2026-03-20", "2026-03-21", "2026-03-22", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-28", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04"],
+        datasets: [{ data: [47, 47, 5, 4, 2, 5, 15, 11, 3, 5, 4, 6, 10, 55, 34], borderColor: '#6C5CE7', backgroundColor: 'rgba(108,92,231,0.1)',
+            fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6C5CE7' }]
+    },
+    options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2', maxTicksLimit: 10 }, grid: { color: '#2D2D52' } },
+                   y: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' }, beginAtZero: true } }
+    }
+});
+
+// 筛选功能
+function filterCards() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const game = document.getElementById('gameFilter').value;
+    const cat = document.getElementById('catFilter').value;
+    
+    document.querySelectorAll('.intel-card').forEach(card => {
+        const matchSearch = !search || card.textContent.toLowerCase().includes(search);
+        const matchGame = !game || card.dataset.game === game;
+        const matchCat = !cat || card.dataset.category === cat;
+        card.style.display = (matchSearch && matchGame && matchCat) ? '' : 'none';
+    });
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('gameFilter').value = '';
+    document.getElementById('catFilter').value = '';
+    filterCards();
+}
+
+// 详情弹窗
+function showDetail(id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    
+    let tagsHtml = '';
+    if (item.game_name) tagsHtml += '<span class="tag tag-game">' + item.game_name + '</span>';
+    if (item.brand_name) tagsHtml += '<span class="tag tag-brand">' + item.brand_name + '</span>';
+    if (item.brand_category) tagsHtml += '<span class="tag tag-cat">' + item.brand_category + '</span>';
+    if (item.collab_type) tagsHtml += '<span class="tag tag-type">' + item.collab_type + '</span>';
+    
+    let html = '<h2>' + item.title + '</h2>';
+    html += '<div class="card-tags" style="margin-bottom:16px">' + tagsHtml + '</div>';
+    
+    const fields = [
+        ['游戏', item.game_name],
+        ['品牌', item.brand_name],
+        ['品牌类别', item.brand_category],
+        ['合作类型', item.collab_type],
+        ['信息来源', item.source_name || item.source_type],
+        ['发布日期', item.published_date],
+        ['采集日期', item.collected_date],
+        ['热度评分', item.hot_score + '/100'],
+    ];
+    
+    fields.forEach(([label, value]) => {
+        if (value) {
+            html += '<div class="detail-row"><span class="detail-label">' + label + '：</span><span class="detail-value">' + value + '</span></div>';
+        }
+    });
+    
+    if (item.summary) {
+        html += '<div class="detail-row"><span class="detail-label">摘要：</span></div>';
+        html += '<div class="detail-content">' + item.summary + '</div>';
+    }
+    
+    if (item.full_content) {
+        html += '<div class="detail-row" style="margin-top:16px"><span class="detail-label">正文内容：</span></div>';
+        html += '<div class="detail-content">' + item.full_content + '</div>';
+    }
+    
+    if (item.source_url) {
+        html += '<a href="' + item.source_url + '" target="_blank" class="detail-link">🔗 查看原文</a>';
+    }
+    
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
