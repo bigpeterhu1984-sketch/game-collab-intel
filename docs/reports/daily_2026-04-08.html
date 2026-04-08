@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏异业合作日报 - 2026-04-08</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --bg: #0F0E17;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --border: #2D2D52;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #FF6B6B;
+            --gradient1: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            --gradient2: linear-gradient(135deg, #FD79A8, #FDCB6E);
+            --gradient3: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 顶部背景动画 */
+        .hero {
+            background: linear-gradient(135deg, #0F0E17 0%, #1A1A2E 50%, #16213E 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(253,121,168,0.08) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+        
+        .hero h1 {
+            font-size: 2.2em;
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .subtitle {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-card:nth-child(2) .stat-number {
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-card:nth-child(3) .stat-number {
+            background: var(--gradient3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        /* 图表区 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        .chart-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .chart-box h3 {
+            margin-bottom: 16px;
+            color: var(--primary-light);
+            font-size: 1em;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-bar label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .filter-bar select, .filter-bar input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-bar select:focus, .filter-bar input:focus {
+            border-color: var(--primary);
+        }
+        
+        .filter-bar .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-btn {
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .filter-btn:hover { opacity: 0.85; }
+        
+        .reset-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        /* 情报卡片 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .intel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .intel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(108,92,231,0.15);
+            border-color: var(--primary-light);
+            background: var(--bg-card-hover);
+        }
+        
+        .card-header {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .score-badge {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85em;
+        }
+        
+        .score-badge.hot {
+            background: linear-gradient(135deg, #FF6B6B, #FD79A8);
+            color: white;
+        }
+        
+        .score-badge.warm {
+            background: linear-gradient(135deg, #FDCB6E, #F39C12);
+            color: #333;
+        }
+        
+        .score-badge.cool {
+            background: rgba(108,92,231,0.2);
+            color: var(--primary-light);
+        }
+        
+        .card-title {
+            font-size: 1em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-body {
+            flex: 1;
+            margin: 12px 0;
+        }
+        
+        .card-summary {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .tag-game {
+            background: rgba(108,92,231,0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.3);
+        }
+        
+        .tag-brand {
+            background: rgba(253,121,168,0.15);
+            color: #FD79A8;
+            border: 1px solid rgba(253,121,168,0.3);
+        }
+        
+        .tag-cat {
+            background: rgba(0,184,148,0.15);
+            color: #00B894;
+            border: 1px solid rgba(0,184,148,0.3);
+        }
+        
+        .tag-type {
+            background: rgba(253,203,110,0.15);
+            color: #FDCB6E;
+            border: 1px solid rgba(253,203,110,0.3);
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        
+        /* 详情弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .modal h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            padding-right: 40px;
+            line-height: 1.4;
+        }
+        
+        .modal .detail-row {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+            align-items: baseline;
+        }
+        
+        .modal .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .modal .detail-value {
+            font-size: 0.95em;
+        }
+        
+        .modal .detail-content {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            line-height: 1.8;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .modal .detail-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--gradient1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .modal .detail-link:hover { opacity: 0.85; }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state .icon { font-size: 4em; margin-bottom: 16px; }
+        
+        /* 返回门户按钮 */
+        .back-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .back-portal:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        
+        /* ===== 联动速览模块 ===== */
+        .glance-section {
+            margin: 28px 0;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon { font-size: 1em; }
+        
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 18px;
+        }
+        
+        .section-desc strong {
+            color: var(--accent);
+        }
+        
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .glance-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .glance-box-title {
+            font-size: 1em;
+            color: var(--primary-light);
+            margin-bottom: 14px;
+        }
+        
+        .glance-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .glance-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .glance-tag:hover {
+            transform: translateY(-2px);
+        }
+        
+        .glance-tag em {
+            font-style: normal;
+            font-size: 0.85em;
+            opacity: 0.7;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        
+        .glance-game {
+            background: rgba(108,92,231,0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.25);
+        }
+        
+        .glance-brand {
+            background: rgba(253,121,168,0.08);
+            border: 1px solid rgba(253,121,168,0.2);
+        }
+        
+        .glance-brands {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .brand-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .brand-cat-label {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .glance-empty {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .glance-pairs-box {
+            margin-top: 0;
+        }
+        
+        .pairs-table-wrap {
+            overflow-x: auto;
+        }
+        
+        .pairs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+        }
+        
+        .pairs-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        
+        .pairs-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(45,45,82,0.5);
+            vertical-align: middle;
+        }
+        
+        .pairs-table tr:hover td {
+            background: rgba(108,92,231,0.05);
+        }
+        
+        .pair-game {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .pair-x {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1em;
+            padding: 10px 6px;
+        }
+        
+        .pair-brand {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .pair-cat {
+            font-size: 0.85em;
+        }
+        
+        .pair-type {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+        
+        .pair-count {
+            text-align: center;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5em; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .cards-container { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .glance-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<a href="../index.html" class="back-portal">← 返回情报站</a>
+
+<div class="hero">
+    <h1>🎮 游戏异业合作情报日报</h1>
+    <p class="subtitle">📅 2026-04-08 &nbsp;|&nbsp; 共收录 88 条情报</p>
+</div>
+
+<div class="container">
+    <!-- 核心统计 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">88</div>
+            <div class="stat-label">今日情报总数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">7</div>
+            <div class="stat-label">涉及游戏数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">5</div>
+            <div class="stat-label">品牌类别数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">451</div>
+            <div class="stat-label">累计情报总量</div>
+        </div>
+    </div>
+
+    
+    <!-- 联动速览模块 -->
+    <div class="glance-section">
+        <h2 class="section-title"><span class="section-icon">🔗</span> 联动速览</h2>
+        <p class="section-desc">今日情报涉及 <strong>6</strong> 款游戏、<strong>8</strong> 个品牌，共 <strong>4</strong> 组联动配对</p>
+        
+        <div class="glance-grid">
+            <!-- 游戏清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🎮 涉及游戏 (6)</h3>
+                <div class="glance-tags"><span class="glance-tag glance-game">王者荣耀<em>31</em></span><span class="glance-tag glance-game">Xbox<em>17</em></span><span class="glance-tag glance-game">崩坏：星穹铁道<em>9</em></span><span class="glance-tag glance-game">三角洲行动<em>2</em></span><span class="glance-tag glance-game">英雄联盟<em>2</em></span><span class="glance-tag glance-game">逆水寒<em>1</em></span></div>
+            </div>
+            
+            <!-- 品牌清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🏢 涉及品牌 (8)</h3>
+                <div class="glance-brands"><div class="brand-group"><span class="brand-cat-label" style="background:#74B9FF22;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">荣耀<em>30</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">小米<em>3</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">华为<em>3</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">联想<em>1</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#FDCB6E22;color:#FDCB6E;border:1px solid #FDCB6E40">快消</span><span class="glance-tag glance-brand" style="border-color:#FDCB6E40;color:#FDCB6E">统一<em>3</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#FF6B6B22;color:#FF6B6B;border:1px solid #FF6B6B40">餐饮</span><span class="glance-tag glance-brand" style="border-color:#FF6B6B40;color:#FF6B6B">麦当劳<em>1</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#94A1B222;color:#94A1B2;border:1px solid #94A1B240">其他</span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">电竞叛客是什么牌子<em>1</em></span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">协议<em>1</em></span></div></div>
+            </div>
+        </div>
+        
+        <!-- 联动配对表 -->
+        
+        <div class="glance-box glance-pairs-box">
+            <h3 class="glance-box-title">🤝 联动配对一览 (4)</h3>
+            <div class="pairs-table-wrap">
+                <table class="pairs-table">
+                    <thead>
+                        <tr><th>游戏</th><th></th><th>品牌</th><th>类别</th><th>合作类型</th><th>情报数</th></tr>
+                    </thead>
+                    <tbody>
+        <tr>
+            <td><span class="pair-game">王者荣耀</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他、AR互动</span></td>
+            <td class="pair-count">28</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">崩坏：星穹铁道</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">小米</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">3</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">王者荣耀</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">统一</span></td>
+            <td><span class="pair-cat" style="color:#FDCB6E">快消</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">3</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">三角洲行动</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">2</td>
+        </tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- 图表 -->
+    <div class="charts-grid">
+        <div class="chart-box">
+            <h3>📊 游戏分布 TOP10</h3>
+            <canvas id="gameChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🏷️ 品牌类别分布</h3>
+            <canvas id="catChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🤝 合作类型分布</h3>
+            <canvas id="typeChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>📈 近30天采集趋势</h3>
+            <canvas id="trendChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="filter-bar">
+        <label>🔍</label>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、品牌、游戏..." oninput="filterCards()">
+        <select id="gameFilter" onchange="filterCards()">
+            <option value="">全部游戏</option>
+            <option value="王者荣耀">王者荣耀 (31)</option><option value="未知">未知 (26)</option><option value="Xbox">Xbox (17)</option><option value="崩坏：星穹铁道">崩坏：星穹铁道 (9)</option><option value="英雄联盟">英雄联盟 (2)</option><option value="三角洲行动">三角洲行动 (2)</option><option value="逆水寒">逆水寒 (1)</option>
+        </select>
+        <select id="catFilter" onchange="filterCards()">
+            <option value="">全部类别</option>
+            <option value="未知">未知 (45)</option><option value="3C数码">3C数码 (37)</option><option value="快消">快消 (3)</option><option value="其他">其他 (2)</option><option value="餐饮">餐饮 (1)</option>
+        </select>
+        <button class="reset-btn" onclick="resetFilters()">重置</button>
+    </div>
+
+    <!-- 情报卡片 -->
+    <div class="cards-container" id="cardsContainer">
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(401)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(402)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(407)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》新英雄「空空儿」？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(410)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(411)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(416)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》新英雄「空空儿」？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(419)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(420)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(425)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》新英雄「空空儿」？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(428)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 王者策划团队大换血了， 孙悟空 是老团队捧出的最赚钱的英雄，新团队恨他想抹去老团队的影响，新团队上位后猴子好久没皮肤，十周年这么大阵仗的宣传几乎看不到猴子的脸，现在又 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(430)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》新英雄「空空儿」？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(431)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 王者策划团队大换血了， 孙悟空 是老团队捧出的最赚钱的英雄，新团队恨他想抹去老团队的影响，新团队上位后猴子好久没皮肤，十周年这么大阵仗的宣传几乎看不到猴子的脸，现在又 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(433)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》新英雄「空空儿」？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(436)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道随宠怎么召唤 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">小米</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(440)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道随宠怎么召唤 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">小米</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(444)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道随宠怎么召唤 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">小米</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(403)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》七冠职业选手花海在钻石局 33 局仅赢下 8 局？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">指尖上的王者（2025 年 7 月 20 日）详细描述了花海在钻石局的连败情况：33 局中 25 次获得 MVP，但因队友配合混乱、匹配机制限制（如高隐藏分导致对手强度过高），最终仅取得 8 胜。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="AR互动"
+             onclick="showDetail(404)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 现在的王者荣耀像极了秦二世败家现场 万物都有寿命，太阳会燃尽、宇宙会冷寂，《扫码荣耀》不知道还能活几年 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">AR互动</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(405)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀》目前的玩家基数大概在多少呢？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年至今：用户量逐渐稳定 《王者荣耀》的用户量逐渐稳定下来。 据统计，截至目前，《王者荣耀》的月活跃用户数已经超过了2亿。 之前还有过一个数据能显示王者荣耀在MOBA手游中一骑绝尘的地 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(406)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2020年11月24</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(408)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》被质疑暗改局内数据，排位人机比真人多20</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">你们在这闹是没有意义，你看腾讯鸟不鸟你们？大家应该直接向日本奥委会举报，亚运会怎么能有这么个暗箱操作的游戏呢？ 举报材料如下： 1、王者策划公开声明本游戏没有塞人机的视 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="快消" 
+             data-type="其他"
+             onclick="showDetail(409)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀的百科全书 - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">目前累计：王者荣耀内容188篇 更新日期：2023.05.12 英雄教学：持续更新细节ing丨周更 本文将王者荣耀的核心基础、各位置打法思路与英雄攻略进行统一汇总，后续新的攻略还有其他内容也将会以链接 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">统一</span><span class="tag tag-cat">快消</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(412)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》七冠职业选手花海在钻石局 33 局仅赢下 8 局？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">指尖上的王者（2025 年 7 月 20 日）详细描述了花海在钻石局的连败情况：33 局中 25 次获得 MVP，但因队友配合混乱、匹配机制限制（如高隐藏分导致对手强度过高），最终仅取得 8 胜。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="AR互动"
+             onclick="showDetail(413)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 现在的王者荣耀像极了秦二世败家现场 万物都有寿命，太阳会燃尽、宇宙会冷寂，《扫码荣耀》不知道还能活几年 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">AR互动</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(414)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀》目前的玩家基数大概在多少呢？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年至今：用户量逐渐稳定 《王者荣耀》的用户量逐渐稳定下来。 据统计，截至目前，《王者荣耀》的月活跃用户数已经超过了2亿。 之前还有过一个数据能显示王者荣耀在MOBA手游中一骑绝尘的地 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(415)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2020年11月24</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(417)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》被质疑暗改局内数据，排位人机比真人多20</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">你们在这闹是没有意义，你看腾讯鸟不鸟你们？大家应该直接向日本奥委会举报，亚运会怎么能有这么个暗箱操作的游戏呢？ 举报材料如下： 1、王者策划公开声明本游戏没有塞人机的视 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="快消" 
+             data-type="其他"
+             onclick="showDetail(418)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀的百科全书 - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">目前累计：王者荣耀内容188篇 更新日期：2023.05.12 英雄教学：持续更新细节ing丨周更 本文将王者荣耀的核心基础、各位置打法思路与英雄攻略进行统一汇总，后续新的攻略还有其他内容也将会以链接 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">统一</span><span class="tag tag-cat">快消</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(421)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》七冠职业选手花海在钻石局 33 局仅赢下 8 局？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">指尖上的王者（2025 年 7 月 20 日）详细描述了花海在钻石局的连败情况：33 局中 25 次获得 MVP，但因队友配合混乱、匹配机制限制（如高隐藏分导致对手强度过高），最终仅取得 8 胜。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="AR互动"
+             onclick="showDetail(422)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 现在的王者荣耀像极了秦二世败家现场 万物都有寿命，太阳会燃尽、宇宙会冷寂，《扫码荣耀》不知道还能活几年 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">AR互动</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(423)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀》目前的玩家基数大概在多少呢？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年至今：用户量逐渐稳定 《王者荣耀》的用户量逐渐稳定下来。 据统计，截至目前，《王者荣耀》的月活跃用户数已经超过了2亿。 之前还有过一个数据能显示王者荣耀在MOBA手游中一骑绝尘的地 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(424)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2020年11月24</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(426)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》被质疑暗改局内数据，排位人机比真人多20</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">你们在这闹是没有意义，你看腾讯鸟不鸟你们？大家应该直接向日本奥委会举报，亚运会怎么能有这么个暗箱操作的游戏呢？ 举报材料如下： 1、王者策划公开声明本游戏没有塞人机的视 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="快消" 
+             data-type="其他"
+             onclick="showDetail(427)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀的百科全书 - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">目前累计：王者荣耀内容188篇 更新日期：2023.05.12 英雄教学：持续更新细节ing丨周更 本文将王者荣耀的核心基础、各位置打法思路与英雄攻略进行统一汇总，后续新的攻略还有其他内容也将会以链接 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">统一</span><span class="tag tag-cat">快消</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="三角洲行动" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(446)">
+            <div class="card-header">
+                <div class="score-badge warm">55.0</div>
+                <h3 class="card-title">荣耀WIN游戏本发布定档4月23日！高端性能+三角洲联名双加持</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">全新WIN游戏本发布定档4月23日，作为荣耀WIN生态的第二款产品，这次的新笔记本还将携手《三角洲行动》烽火职业联赛入局高端游戏本赛道。同时，它的诞生也让荣耀实现从全能本到专业游戏本的跨越，进一步完善了荣耀在PC电竞生态的布局。 这款笔记本定位高端性能旗舰，根据爆料，配置分为两个版本： Intel </p>
+                <div class="card-tags"><span class="tag tag-game">三角洲行动</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">腾讯网9 小时</span>
+                <span class="date">9 小时</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="三角洲行动" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(451)">
+            <div class="card-header">
+                <div class="score-badge warm">55.0</div>
+                <h3 class="card-title">荣耀WIN游戏本发布定档4月23日! 高端性能+三角洲联名双加持</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">全新WIN游戏本发布定档4月23日，作为荣耀WIN生态的第二款产品，这次的新笔记本还将携手《三角洲行动》烽火职业联赛入局高端游戏本赛道。同时，它的诞生也让荣耀实现从全能本到专业游戏本的跨越，进一步完善了荣耀在PC电竞生态的布局。 这款笔记本定位高端性能旗舰，根据爆料，配置分为两个版本： Intel </p>
+                <div class="card-tags"><span class="tag tag-game">三角洲行动</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">电脑之家PChome.net on MSN13 小时</span>
+                <span class="date">13 小时</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="逆水寒" 
+             data-category="" 
+             data-type="联名产品"
+             onclick="showDetail(449)">
+            <div class="card-header">
+                <div class="score-badge warm">47.0</div>
+                <h3 class="card-title">《逆水寒手游》血赚！逆水寒新版本外观福利杀疯，零氪党白嫖14件 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《逆水寒手游》新版本福利大放送！零氪党白嫖14件免费外观，敦煌联名款颜值封神，涵盖发饰、耳饰、坐骑等全品类。限时活动不容错过，古风玩家必冲！ 01敦煌主题限定（古韵党必冲）新版本的异域配饰堪称“福利狂欢”，16件免费外观涵盖发饰、耳饰、坐骑 ...</p>
+                <div class="card-tags"><span class="tag tag-game">逆水寒</span><span class="tag tag-type">联名产品</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">17173游戏网2 个月</span>
+                <span class="date">2 个月</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(365)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(367)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(369)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(371)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(373)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(375)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(377)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(379)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(381)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(383)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(385)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(386)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">【台式电脑推荐】品牌台式整机怎么选择？ 2026.04月 [高性价比 高性 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月31日· 联想售后，不用多说，遍布全国，售后不用担心。 这款主机，算是笔记本魔改，但是做到了70瓦的性能释放，性能比较强。 真正的8核CPU，加上24G的内存，多开网页办公Office没问题 …</p>
+                <div class="card-tags"><span class="tag tag-brand">联想</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月31日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(389)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(391)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(393)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(395)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(398)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="Xbox" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(400)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …</p>
+                <div class="card-tags"><span class="tag tag-game">Xbox</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="英雄联盟" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(429)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">《英雄联盟》拉克丝人设是怎么崩的？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …</p>
+                <div class="card-tags"><span class="tag tag-game">英雄联盟</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="英雄联盟" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(432)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">《英雄联盟》拉克丝人设是怎么崩的？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …</p>
+                <div class="card-tags"><span class="tag tag-game">英雄联盟</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(434)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏·星穹铁道奇珍琳琅商店在哪-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0</p>
+                <div class="card-tags"><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(435)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么看剧情回放-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(437)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么设置展示角色-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年4月30日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(438)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏·星穹铁道奇珍琳琅商店在哪-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0</p>
+                <div class="card-tags"><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(439)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么看剧情回放-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(441)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么设置展示角色-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年4月30日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(442)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏·星穹铁道奇珍琳琅商店在哪-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0</p>
+                <div class="card-tags"><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(443)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么看剧情回放-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(445)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么设置展示角色-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年4月30日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="餐饮" 
+             data-type="其他"
+             onclick="showDetail(447)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">海贼王与Popeyes联名卡牌将于4月13日发售</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">根据目前的消息，Popeyes与《海贼王》的合作预计将在4月13日正式上线。大家不禁要问，这次的联名会否像之前的麦当劳合作一样被疯抢？无论如何，这场卡牌游戏的盛宴，势必将吸引无数玩家的目光。 返回搜狐，查看更多 ...</p>
+                <div class="card-tags"><span class="tag tag-brand">麦当劳</span><span class="tag tag-cat">餐饮</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">21 小时</span>
+                <span class="date">21 小时</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(396)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">AX电竞叛客是什么牌子？电竞叛客显卡怎么样？是什么档次</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">英伟达官网认可的：N卡九大厂 另外我们需要讲讲栢能集团， 栢能集团是世界上最大的显卡制造商之一 栢能旗下有：索泰、 映众 、万丽等显卡品牌，另外还为A卡的蓝宝石、迪兰等代工，电竞叛客的显卡 …</p>
+                <div class="card-tags"><span class="tag tag-brand">电竞叛客是什么牌子</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(448)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">花叮娱乐与昱泉国际签订战略合作协议，未来将布局经典IP深化业务合作</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">（中国·哈尔滨）2026年3月18日，昱泉国际洪社长一行莅临黑龙江王氏国信网络科技有限公司参观考察，并与花叮娱乐王总举行高层工作会议。双方围绕当前合作游戏项目《玄武豪侠传》（以下简称：“玄武”）的知识产权规范、商业化创新模式以及未来多端拓展 ...</p>
+                <div class="card-tags"><span class="tag tag-brand">协议</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">中华网14 天</span>
+                <span class="date">14 天</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(364)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(366)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(368)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(370)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(372)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(374)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(376)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(378)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(380)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(382)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(384)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(387)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">1500元内台式电脑主机推荐（2025年5月新品）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">总结： 畅骁 12 代 i3-12100F 主机以 1500 元级价格，实现商务、娱乐、游戏三栖全能，硬件兼容性与扩展性远超同价位品牌机。 无论是企业批量采购，还是家庭用户 DIY 升级，都是当前市场的 “水桶机”  …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(388)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(390)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(392)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(394)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(397)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(399)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-08</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(450)">
+            <div class="card-header">
+                <div class="score-badge cool">25.0</div>
+                <h3 class="card-title">筑牢维权后盾，激发创新活力：上海游戏IP授权的挑战与机遇</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">上海游戏IP保护已初步形成“司法判例引领+行业协同共治”的格局，但在应对“玩法”侵权定性、中小企业维权成本及判赔力度等方面仍存短板。 面向未来，建议重点完善“快速维权通道”，探索“先行判决+临时禁令”的常态化适用，并在AI与数字资产等新技术 ...</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">腾讯网2 个月</span>
+                <span class="date">2 个月</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeDetail(event)">
+    <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// 所有条目数据
+const allItems = [{"id": 401, "content_hash": "14bca107b9affae3ee39098c3e244bfb", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=867f3b1cd0347c28a9551bacb3bb56dbbebf60f781d1d10875e7fd676faa7a09JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:15", "updated_at": "2026-04-08 09:02:15"}, {"id": 402, "content_hash": "ef1fb553acee3f34bdbe536b0a4c61c8", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0d48239c76406272a1fb2aed38df18e0779f78b66f2be91f3862f4e55ae07141JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:15", "updated_at": "2026-04-08 09:02:15"}, {"id": 407, "content_hash": "e86cb4f9e8f10bc93095aefc6f2740a3", "title": "如何评价《王者荣耀》新英雄「空空儿」？ - 知乎", "summary": "王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=75ec81be5339b9bf3f97573654983b168de4e0b77df7f6a31c331b793426aff4JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExNTMzMjAxMTM3&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:16", "updated_at": "2026-04-08 09:02:16"}, {"id": 410, "content_hash": "6a8b3f0164ecd183a63b689da9766a44", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=88a7189c33d8f14e8a69f9d26888a17c4135084bdd6e61d3949cd2c4a14bea9dJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 411, "content_hash": "dd43c826c849e8101cf48d44398c47ac", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=928cca7defb8d48f52a4e0ff0c440e026664a0641fedb7573a1bf4b5af6aeb3aJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 416, "content_hash": "342d3eb39d4d3de21ad2b5b2c15c423b", "title": "如何评价《王者荣耀》新英雄「空空儿」？ - 知乎", "summary": "王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=78d49812920c5f040767010f00d07cd18eb066edb712231ab3db8eaa77606ca0JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExNTMzMjAxMTM3&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 419, "content_hash": "c7c1f0d48efb4bc68929aa91eefba783", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ec9d987bf704d36818a654e1461ed4b81fc9c3dbfb20e9d85f5f569bd2138a2bJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 420, "content_hash": "5efaef4146a8480a07d41cd1885acac4", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=856fc83f1d651a4bdc7ed818e6b556f28a3c5b98e11aa232685fecb08fd70e3aJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 425, "content_hash": "1fef6439a2251aa0f2b2dcee82641775", "title": "如何评价《王者荣耀》新英雄「空空儿」？ - 知乎", "summary": "王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=4c1f36f59e31d188b7aa460407929a25f1bb2e8d9bec259d7508e0d446589122JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExNTMzMjAxMTM3&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 428, "content_hash": "775dc552d2e7e813430cf53d499e77de", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日· 王者策划团队大换血了， 孙悟空 是老团队捧出的最赚钱的英雄，新团队恨他想抹去老团队的影响，新团队上位后猴子好久没皮肤，十周年这么大阵仗的宣传几乎看不到猴子的脸，现在又 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8deecc9fc3cae87eedba710e9873706503cc2e6e6b3c87001f211108f955ed6fJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=38991124-0e80-6c36-0ab4-06110f116d42&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:55", "updated_at": "2026-04-08 09:02:55"}, {"id": 430, "content_hash": "3359caecf6a630709026e5e98c8a5a9e", "title": "如何评价《王者荣耀》新英雄「空空儿」？ - 知乎", "summary": "王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7bf54812e924a1b59a3b51cb91e7b6e5adbb8b538db7bdd164d5b32d154f08dbJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=38991124-0e80-6c36-0ab4-06110f116d42&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExNTMzMjAxMTM3&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:55", "updated_at": "2026-04-08 09:02:55"}, {"id": 431, "content_hash": "32b326279b22926e4a7978ae5b117cee", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日· 王者策划团队大换血了， 孙悟空 是老团队捧出的最赚钱的英雄，新团队恨他想抹去老团队的影响，新团队上位后猴子好久没皮肤，十周年这么大阵仗的宣传几乎看不到猴子的脸，现在又 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0013bc61cd5d25cbb05a994f0aa5a23fc9f60f3b8f831995f380019dbfc3232bJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=25de9da5-f418-68e6-2d15-8a90f54969f7&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:00", "updated_at": "2026-04-08 09:03:00"}, {"id": 433, "content_hash": "4afdd72da34c5488a5057c0c175212c4", "title": "如何评价《王者荣耀》新英雄「空空儿」？ - 知乎", "summary": "王者新英雄空空儿将上线体验服 如上图所示，我的空空儿即便是辅助纯肉装，也能在5秒内秒掉满血的后羿，切脆皮的速度堪比刺客，如果没有看到我用形昭的话，或许还有玩家会以为我是输出流呢。 这 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e0b0301b8b5a3157b14c19fe96cf806d1fab79a239e5bb3b2ac8f762b2674a62JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=25de9da5-f418-68e6-2d15-8a90f54969f7&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExNTMzMjAxMTM3&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:00", "updated_at": "2026-04-08 09:03:00"}, {"id": 436, "content_hash": "dc5311ea39ac40fe9f6057241c5a61c0", "title": "崩坏星穹铁道随宠怎么召唤 - 百度经验", "summary": "品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5", "game_name": "崩坏：星穹铁道", "brand_name": "小米", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5d00261d1a9b56a0e09c3cf811956805bba47a2e936a23ca3095d7badc194a65JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2ca83d3c-fcfc-6c1b-254a-2a09fd1b6df7&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NGI0NjMxYzEzNzIwNjljYThmNDFiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:10", "updated_at": "2026-04-08 09:03:10"}, {"id": 440, "content_hash": "781c14ad1fc13751a4569bb6499cd655", "title": "崩坏星穹铁道随宠怎么召唤 - 百度经验", "summary": "品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5", "game_name": "崩坏：星穹铁道", "brand_name": "小米", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a9d7a6353cc499ca4b561612a92af611794b4734e6cc321212ec583d0ca24fb8JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0c8ec9d5-e826-6c8c-1c3c-dee0e9776d13&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NGI0NjMxYzEzNzIwNjljYThmNDFiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:15", "updated_at": "2026-04-08 09:03:15"}, {"id": 444, "content_hash": "2ca53b031e0ef8f07aebd76166c07379", "title": "崩坏星穹铁道随宠怎么召唤 - 百度经验", "summary": "品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5", "game_name": "崩坏：星穹铁道", "brand_name": "小米", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=78ffe16119e11967bc0a51101b1dfc50e6034ad3e30a4e7d624f67104a04fc54JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2edcf6f6-07c6-61ec-24f8-e1c30621609f&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NGI0NjMxYzEzNzIwNjljYThmNDFiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:20", "updated_at": "2026-04-08 09:03:20"}, {"id": 403, "content_hash": "af56170b6619b0e82825ab805edb9902", "title": "如何看待《王者荣耀》七冠职业选手花海在钻石局 33 局仅赢下 8 局？", "summary": "指尖上的王者（2025 年 7 月 20 日）详细描述了花海在钻石局的连败情况：33 局中 25 次获得 MVP，但因队友配合混乱、匹配机制限制（如高隐藏分导致对手强度过高），最终仅取得 8 胜。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=01c8a8dd1f8bf571010f9fd5389f1c6a1659fb7eb48bfb9d55ada9a61bdfba33JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5MzA1NjIwNTEzMDQwNTYyMTQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:16", "updated_at": "2026-04-08 09:02:16"}, {"id": 404, "content_hash": "92fae94637f2c6fe43653ba57c5c64f6", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 现在的王者荣耀像极了秦二世败家现场 万物都有寿命，太阳会燃尽、宇宙会冷寂，《扫码荣耀》不知道还能活几年 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "AR互动", "source_url": "https://www.bing.com/ck/a?!&&p=265626797048ebb5dee06d410d3565183ac9a1e894f33237cb48edd1551f99a3JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:16", "updated_at": "2026-04-08 09:02:16"}, {"id": 405, "content_hash": "02074655672146ef00513f4e44efad75", "title": "《王者荣耀》目前的玩家基数大概在多少呢？ - 知乎", "summary": "2020年至今：用户量逐渐稳定 《王者荣耀》的用户量逐渐稳定下来。 据统计，截至目前，《王者荣耀》的月活跃用户数已经超过了2亿。 之前还有过一个数据能显示王者荣耀在MOBA手游中一骑绝尘的地 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a6e6353f721e58bff66c56695a9dae1e71dd3cd29d920cd0e021b8deb7aa6e38JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzY2NzYzMTM4OQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:16", "updated_at": "2026-04-08 09:02:16"}, {"id": 406, "content_hash": "55371cd9fe22259fb4f0832f4289dd63", "title": "我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎", "summary": "2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b99b7eaf8f12333c4880c2a89cef515f9452809d0c80e718165634ead12968c1JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzQzMTc5NDE3OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2020年11月24日", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:16", "updated_at": "2026-04-08 09:02:16"}, {"id": 408, "content_hash": "acb56218c87e68bce226816bf0fbd4ed", "title": "如何看待《王者荣耀》被质疑暗改局内数据，排位人机比真人多20", "summary": "你们在这闹是没有意义，你看腾讯鸟不鸟你们？大家应该直接向日本奥委会举报，亚运会怎么能有这么个暗箱操作的游戏呢？ 举报材料如下： 1、王者策划公开声明本游戏没有塞人机的视 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=33c0e4ac69989ab6d0c2e269fd7f59ceea8a6dd69ffdad3678cdf1349517747eJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NTA4MjY2ODIyMjgzNzY5Nzk&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:16", "updated_at": "2026-04-08 09:02:16"}, {"id": 409, "content_hash": "ec80a8a5b7074b860eec90f12683049c", "title": "王者荣耀的百科全书 - 知乎", "summary": "目前累计：王者荣耀内容188篇 更新日期：2023.05.12 英雄教学：持续更新细节ing丨周更 本文将王者荣耀的核心基础、各位置打法思路与英雄攻略进行统一汇总，后续新的攻略还有其他内容也将会以链接 …", "game_name": "王者荣耀", "brand_name": "统一", "brand_category": "快消", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c755f226442a62a115ac353634530542f7d0d1153809ddbe3a6ca24583266175JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=13b739b9-96c0-69e3-10e3-2e8c97516877&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL2NvbHVtbi9MdWNmaWVySw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:16", "updated_at": "2026-04-08 09:02:16"}, {"id": 412, "content_hash": "2b17899f4272642a9838a81a74891130", "title": "如何看待《王者荣耀》七冠职业选手花海在钻石局 33 局仅赢下 8 局？", "summary": "指尖上的王者（2025 年 7 月 20 日）详细描述了花海在钻石局的连败情况：33 局中 25 次获得 MVP，但因队友配合混乱、匹配机制限制（如高隐藏分导致对手强度过高），最终仅取得 8 胜。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8e6971ea7585d4b79934ddf3c6c42027de4bb541edf8598770049e4f26edb172JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5MzA1NjIwNTEzMDQwNTYyMTQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 413, "content_hash": "374fd3eb60703738a8844857aa03451c", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 现在的王者荣耀像极了秦二世败家现场 万物都有寿命，太阳会燃尽、宇宙会冷寂，《扫码荣耀》不知道还能活几年 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "AR互动", "source_url": "https://www.bing.com/ck/a?!&&p=7e08817e0cec0b58d1b01fc02eaec2ebb2ad1ac56499b258fc6154204d98526dJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 414, "content_hash": "19cda026bc46560a8447f48f556969e0", "title": "《王者荣耀》目前的玩家基数大概在多少呢？ - 知乎", "summary": "2020年至今：用户量逐渐稳定 《王者荣耀》的用户量逐渐稳定下来。 据统计，截至目前，《王者荣耀》的月活跃用户数已经超过了2亿。 之前还有过一个数据能显示王者荣耀在MOBA手游中一骑绝尘的地 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3761caca15a464394ff9b0c629cd339069180e3c6221642742989651f2bea9baJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzY2NzYzMTM4OQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 415, "content_hash": "f395b48b1a5935e36fb3d8223f20d243", "title": "我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎", "summary": "2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7547bd77ba606a0fd6c76507756bebc41456720e5213be4883bdafe30780cdefJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzQzMTc5NDE3OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2020年11月24日", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 417, "content_hash": "d6feccaeccae4ffe38649c4862161a24", "title": "如何看待《王者荣耀》被质疑暗改局内数据，排位人机比真人多20", "summary": "你们在这闹是没有意义，你看腾讯鸟不鸟你们？大家应该直接向日本奥委会举报，亚运会怎么能有这么个暗箱操作的游戏呢？ 举报材料如下： 1、王者策划公开声明本游戏没有塞人机的视 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d6df71a5af64962776d28005933f63a81790026adff9b3e842dc4b1cb62996ffJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NTA4MjY2ODIyMjgzNzY5Nzk&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 418, "content_hash": "502f33933627aba94dccf2105ff723d4", "title": "王者荣耀的百科全书 - 知乎", "summary": "目前累计：王者荣耀内容188篇 更新日期：2023.05.12 英雄教学：持续更新细节ing丨周更 本文将王者荣耀的核心基础、各位置打法思路与英雄攻略进行统一汇总，后续新的攻略还有其他内容也将会以链接 …", "game_name": "王者荣耀", "brand_name": "统一", "brand_category": "快消", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7bdbb455e4d30bf7ee748061a17863b3ed9db09bcdcede3c8f52c8e7e5eef39eJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2619fb21-9caa-60a6-0fc3-ec149dfb61ef&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL2NvbHVtbi9MdWNmaWVySw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:19", "updated_at": "2026-04-08 09:02:19"}, {"id": 421, "content_hash": "626cf303269046899f0221152b0fc804", "title": "如何看待《王者荣耀》七冠职业选手花海在钻石局 33 局仅赢下 8 局？", "summary": "指尖上的王者（2025 年 7 月 20 日）详细描述了花海在钻石局的连败情况：33 局中 25 次获得 MVP，但因队友配合混乱、匹配机制限制（如高隐藏分导致对手强度过高），最终仅取得 8 胜。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=cb5ac550faab13b9609d6188f0332bba9cd1bf9b46232eaa08b62b99ddae2bb5JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5MzA1NjIwNTEzMDQwNTYyMTQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 422, "content_hash": "a3baa6bb109ffe47e138b19bb4ecccad", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 现在的王者荣耀像极了秦二世败家现场 万物都有寿命，太阳会燃尽、宇宙会冷寂，《扫码荣耀》不知道还能活几年 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "AR互动", "source_url": "https://www.bing.com/ck/a?!&&p=c0aa2fe131cfcea031a17cb3730d86db493c4b9aeab0f58e593b797b1068b23dJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 423, "content_hash": "e229692fad430095d790a2a814f8ba65", "title": "《王者荣耀》目前的玩家基数大概在多少呢？ - 知乎", "summary": "2020年至今：用户量逐渐稳定 《王者荣耀》的用户量逐渐稳定下来。 据统计，截至目前，《王者荣耀》的月活跃用户数已经超过了2亿。 之前还有过一个数据能显示王者荣耀在MOBA手游中一骑绝尘的地 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=815459484dc5d83268779e59db523d55cfd016e2cc86c3943b5698004620cf84JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzY2NzYzMTM4OQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 424, "content_hash": "49c3af4a926f18f5a6491e7522f8e8a4", "title": "我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎", "summary": "2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c50a49c6919614fea2a105ffb77e771ca44da08b7755a76a1a57f06fddead9b8JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzQzMTc5NDE3OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2020年11月24日", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 426, "content_hash": "4d0a37bb096f9779b263376e7b5becc6", "title": "如何看待《王者荣耀》被质疑暗改局内数据，排位人机比真人多20", "summary": "你们在这闹是没有意义，你看腾讯鸟不鸟你们？大家应该直接向日本奥委会举报，亚运会怎么能有这么个暗箱操作的游戏呢？ 举报材料如下： 1、王者策划公开声明本游戏没有塞人机的视 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=adbaf331607a5ddd71b2a33aab2918bd14dd586063fa8e0deb8a6649b7c7f600JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NTA4MjY2ODIyMjgzNzY5Nzk&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 427, "content_hash": "a8719aee09c35f982a766e4173cdbd29", "title": "王者荣耀的百科全书 - 知乎", "summary": "目前累计：王者荣耀内容188篇 更新日期：2023.05.12 英雄教学：持续更新细节ing丨周更 本文将王者荣耀的核心基础、各位置打法思路与英雄攻略进行统一汇总，后续新的攻略还有其他内容也将会以链接 …", "game_name": "王者荣耀", "brand_name": "统一", "brand_category": "快消", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=094cea0b1da8b52ae8caf2d6c3a35983067b7769d1582593193daa4dcf7ac3d6JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0cf2a549-1cdb-60bd-165a-b27c1d8a61dc&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL2NvbHVtbi9MdWNmaWVySw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:23", "updated_at": "2026-04-08 09:02:23"}, {"id": 446, "content_hash": "49796c297016869464192d824d056e9b", "title": "荣耀WIN游戏本发布定档4月23日！高端性能+三角洲联名双加持", "summary": "全新WIN游戏本发布定档4月23日，作为荣耀WIN生态的第二款产品，这次的新笔记本还将携手《三角洲行动》烽火职业联赛入局高端游戏本赛道。同时，它的诞生也让荣耀实现从全能本到专业游戏本的跨越，进一步完善了荣耀在PC电竞生态的布局。 这款笔记本定位高端性能旗舰，根据爆料，配置分为两个版本： Intel i7 14650HX处理器+RTX 5060显卡，16GB DDR5内存+512GB/1TB SSD ...", "game_name": "三角洲行动", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://news.qq.com/rain/a/20260407A06VO700", "source_name": "腾讯网9 小时", "source_type": "bing_news", "image_url": "/th?id=ODF.MEMWO6hHU7S1HdMpDK6uZw&pid=news&w=16&h=16&c=14&rs=2&qlt=90", "published_date": "9 小时", "collected_date": "2026-04-08", "hot_score": 55.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:51", "updated_at": "2026-04-08 09:03:51"}, {"id": 451, "content_hash": "1b92ed82b5e395e408afea1afd014b46", "title": "荣耀WIN游戏本发布定档4月23日! 高端性能+三角洲联名双加持", "summary": "全新WIN游戏本发布定档4月23日，作为荣耀WIN生态的第二款产品，这次的新笔记本还将携手《三角洲行动》烽火职业联赛入局高端游戏本赛道。同时，它的诞生也让荣耀实现从全能本到专业游戏本的跨越，进一步完善了荣耀在PC电竞生态的布局。 这款笔记本定位高端性能旗舰，根据爆料，配置分为两个版本： Intel i7 14650HX处理器+RTX 5060显卡，16GB ...", "game_name": "三角洲行动", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.msn.cn/zh-cn/gaming/%E6%B8%B8%E6%88%8F%E5%B9%B3%E5%8F%B0/%E8%8D%A3%E8%80%80win%E6%B8%B8%E6%88%8F%E6%9C%AC%E5%8F%91%E5%B8%83%E5%AE%9A%E6%A1%A34%E6%9C%8823%E6%97%A5-%E9%AB%98%E7%AB%AF%E6%80%A7%E8%83%BD-%E4%B8%89%E8%A7%92%E6%B4%B2%E8%81%94%E5%90%8D%E5%8F%8C%E5%8A%A0%E6%8C%81/ar-AA20lVMc?ocid=BingNewsVerp", "source_name": "电脑之家PChome.net on MSN13 小时", "source_type": "bing_news", "image_url": "/th?id=ODF.Ju6UmJvzxjbTcMFYNuESFA&pid=news&w=16&h=16&c=14&rs=2&qlt=90", "published_date": "13 小时", "collected_date": "2026-04-08", "hot_score": 55.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:04:35", "updated_at": "2026-04-08 09:04:35"}, {"id": 449, "content_hash": "fc0bf5ac7676573207c294c67b6dab76", "title": "《逆水寒手游》血赚！逆水寒新版本外观福利杀疯，零氪党白嫖14件 ...", "summary": "《逆水寒手游》新版本福利大放送！零氪党白嫖14件免费外观，敦煌联名款颜值封神，涵盖发饰、耳饰、坐骑等全品类。限时活动不容错过，古风玩家必冲！ 01敦煌主题限定（古韵党必冲）新版本的异域配饰堪称“福利狂欢”，16件免费外观涵盖发饰、耳饰、坐骑 ...", "game_name": "逆水寒", "brand_name": "", "brand_category": "", "collab_type": "联名产品", "source_url": "https://news.17173.com/content/01082026/141145440.shtml", "source_name": "17173游戏网2 个月", "source_type": "bing_news", "image_url": "", "published_date": "2 个月", "collected_date": "2026-04-08", "hot_score": 47.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:04:26", "updated_at": "2026-04-08 09:04:26"}, {"id": 365, "content_hash": "2c00042aa2eebb7ccdba70e6e4dac565", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1adc01bf99aad1fa0ce4120362a08d08569961462cd5120f36c832a7e28506f4JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=180168ae-b0b2-6f4b-0e77-7f9bb1e36e3d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:06", "updated_at": "2026-04-08 09:00:06"}, {"id": 367, "content_hash": "0644afcad512f0eb47a58be7cfb76a78", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b71b5fdbf4200928adb6546882697da90a3247175ae14f4ea891377cd9bff744JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=318a154c-08c5-694a-3a20-02790954687a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:09", "updated_at": "2026-04-08 09:00:09"}, {"id": 369, "content_hash": "0cb7b354b5608df2e53bfa68259ab0e9", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=499a1c520a60a0ab61ee4aaae2d32cb1f1ae54ec9c67a7e48d5718856614477cJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=3a75fa6b-99cc-63fb-272d-ed5e982b627a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:13", "updated_at": "2026-04-08 09:00:13"}, {"id": 371, "content_hash": "19f41fc9697eb0ddb7c07091a175ef4e", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8d786d37ffa3a99878f9a6f4ac8bb179288886a641b5241b631909fac6708793JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=043becc1-8a7f-64ac-1cab-fbf48b98654e&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:30", "updated_at": "2026-04-08 09:00:30"}, {"id": 373, "content_hash": "03bcb9b5fdb31cdb481524dbd89dc2b2", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=cfc0d1ad3b253590e70cc8dd1d9427614a33cc4b04b42155714bd0c282b008a3JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=102e2f39-60cf-62da-34c1-380c612a638d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:42", "updated_at": "2026-04-08 09:00:42"}, {"id": 375, "content_hash": "016093149993fe114788f70239587b04", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=302de08cc202982671ca1aa3ec19776ec1d91ed71aa69068bced6a06a89fd1a9JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0feaf01a-9bd9-63cb-0526-e72f9a3e627b&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:47", "updated_at": "2026-04-08 09:00:47"}, {"id": 377, "content_hash": "0d52183ceeb019e1f82068994291da02", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=be879669f0b440efd384c1a02d68d3f4e3241da87c664d96994f6b9c8185b00dJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2d99a58b-96b2-63a2-2bbf-b2be97e362ac&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:52", "updated_at": "2026-04-08 09:00:52"}, {"id": 379, "content_hash": "7ce393f195a5d6e149c444f839cb63d6", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=53bfc1b56fe646fc716842e141ec6f0aaa5c9ac4c59687b7abf0f3170ef15e04JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0c3daedc-7878-61d2-2246-b9e9792960ec&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:55", "updated_at": "2026-04-08 09:00:55"}, {"id": 381, "content_hash": "5baebb3cd73b8087aa0725e10766697e", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9ad6ee918cbd336b68c75f6d886420dc48b8be36dc75bf0a764e908f911d6373JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=23385b75-c4e3-669b-13f1-4c40c5726730&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:58", "updated_at": "2026-04-08 09:00:58"}, {"id": 383, "content_hash": "5e5be54f407db1ec7aeff700c46d9721", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8a2a77d1b6042c4f2befbe3bed6f522c2736a57606ba9a27148102be35d50188JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2f33efce-7e2e-6e0f-02dd-f8fb7fbf6f4d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:07", "updated_at": "2026-04-08 09:01:07"}, {"id": 385, "content_hash": "f4c2a0772d32f823aff59ea29a8bc682", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=02673544bef6023936cb10b6d99bf9bb50d16d6aa04579378ef8de4839c94387JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=31253d82-a6a2-69e3-0469-2ab7a7f3682a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:12", "updated_at": "2026-04-08 09:01:12"}, {"id": 386, "content_hash": "8ebdc988ebc5262b43c55a78fb471346", "title": "【台式电脑推荐】品牌台式整机怎么选择？ 2026.04月 [高性价比 高性 …", "summary": "2026年3月31日· 联想售后，不用多说，遍布全国，售后不用担心。 这款主机，算是笔记本魔改，但是做到了70瓦的性能释放，性能比较强。 真正的8核CPU，加上24G的内存，多开网页办公Office没问题 …", "game_name": "", "brand_name": "联想", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=22b84c4f39b0d1a153982e7d6891a8cf20d222f57d953281560954caf0fc443aJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0dcce0d5-a441-693c-2e6f-f7e0a5a4682d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjMwMTQ2NDQ4&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月31日", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:34", "updated_at": "2026-04-08 09:01:34"}, {"id": 389, "content_hash": "a04f133d1d4524cacdb801a26ccef6bb", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9e68fe72e13528f971207bd6f207ebde9f1b090bfa6811577b27eaabc0c87873JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=26baf7a1-4f4d-6719-141a-e0944edc665c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:38", "updated_at": "2026-04-08 09:01:38"}, {"id": 391, "content_hash": "c874508e137342f580bd33acebcfcd35", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8950c27d611600adee406999b10b66d7bd470ec7ce3b541107b809849a3de93dJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=12e0f35f-c1df-6cd9-1bd5-e46ac08e6ddf&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:51", "updated_at": "2026-04-08 09:01:51"}, {"id": 393, "content_hash": "2af526db4ba7ef863da6f035da02e6bb", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=117afbbf73d5bd183adea384cbd2ca786383f9341f81091dc9c9558acd3e6bf5JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2f0c3447-4944-6ced-3dc5-237248a36d41&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:55", "updated_at": "2026-04-08 09:01:55"}, {"id": 395, "content_hash": "45103e713326474e19da75fbf469b5f1", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a613e7c000727b075837832278fa82d073b3e6fdb2a48ce739a5d69f2af0fe93JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=03634eb0-c7d7-69f6-096f-5985c632685c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:00", "updated_at": "2026-04-08 09:02:00"}, {"id": 398, "content_hash": "4ed8b286b7aad966ac523d7290d8792b", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3319937aec9126386e4f652ddeef096c23f1f2c5ce256c4249b6da300550117aJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=1be1ad16-8351-6fd2-291f-ba2382006e71&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:08", "updated_at": "2026-04-08 09:02:08"}, {"id": 400, "content_hash": "cbbedb3813462501ac1f2b20e1ee788c", "title": "如何评价任天堂新游戏机 Switch2 ？与第一代相比，有哪些亮点？", "summary": "这个跟当年Xbox One上的摄像头概念差不多。 有全身动作捕捉 不过这一个摄像头可以AI去背景。 所以配合新的Game Chat功能 以及有许多Party游戏可以看朋友的脸一起玩许多有全身动作需求的游戏。 这 …", "game_name": "Xbox", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b9d9dfd392589c0aaa0c432415476aa40ee57ad471df4e60d421bd17fe3f0138JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=28370459-c33a-66fc-38a1-136cc2df6708&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE4OTA4MjAyMzM4NTk2NzUwNDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:12", "updated_at": "2026-04-08 09:02:12"}, {"id": 429, "content_hash": "bb9b67186b5a722d27bbcf7777391d6e", "title": "《英雄联盟》拉克丝人设是怎么崩的？ - 知乎", "summary": "知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …", "game_name": "英雄联盟", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=81697fce0ab33b0adc695adf3d31cac88af1fde5775ee52b7e01073b43c075bcJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=38991124-0e80-6c36-0ab4-06110f116d42&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzY2MjI1MjI4Ng&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:55", "updated_at": "2026-04-08 09:02:55"}, {"id": 432, "content_hash": "040b17ac5f1585a26ed5963570099120", "title": "《英雄联盟》拉克丝人设是怎么崩的？ - 知乎", "summary": "知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …", "game_name": "英雄联盟", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=cf411e018865885eb94e491c2c23545d20d62c3000fb24c5f1cf57dcef74b9b5JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=25de9da5-f418-68e6-2d15-8a90f54969f7&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzY2MjI1MjI4Ng&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:00", "updated_at": "2026-04-08 09:03:00"}, {"id": 434, "content_hash": "da8327230227610b1bad0bdef7c26d0d", "title": "崩坏·星穹铁道奇珍琳琅商店在哪-百度经验", "summary": "品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0", "game_name": "", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3874139965283973bb9e6627b1b85cb8b98a5cbba96c5ab1cb804393e69e33faJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2ca83d3c-fcfc-6c1b-254a-2a09fd1b6df7&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzNhMmY3YzJlZWYxY2MzNjdhZWQ2MTE3YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:09", "updated_at": "2026-04-08 09:03:09"}, {"id": 435, "content_hash": "b3df4cd2cfb9ab2c4e6f4fa9465b3cf7", "title": "崩坏星穹铁道怎么看剧情回放-百度经验", "summary": "品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7ab76ced64c570e534c94ea3bdbb1ca0986a1727389ffc6947e5374f04099b6dJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2ca83d3c-fcfc-6c1b-254a-2a09fd1b6df7&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE0YmQyNTZlZDc1OWU3ZmE2ZDI2MTJhYS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:10", "updated_at": "2026-04-08 09:03:10"}, {"id": 437, "content_hash": "f2b6144ce0101aad6bad537268c4f316", "title": "崩坏星穹铁道怎么设置展示角色-百度经验", "summary": "2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1cee761d16a00df33ea3b77329827e11ce129910f39ae97a0a3e85552cddc88aJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2ca83d3c-fcfc-6c1b-254a-2a09fd1b6df7&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NjIyZjI0ZGYwYWE3YmNmZGJlYTU2Zi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年4月30日", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:10", "updated_at": "2026-04-08 09:03:10"}, {"id": 438, "content_hash": "378401650ace73178bb886439d8d8cf8", "title": "崩坏·星穹铁道奇珍琳琅商店在哪-百度经验", "summary": "品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0", "game_name": "", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=286f969ba62b4fe3a7976f815e65846e2d57d588cf239f4faf153c2f1b2eafafJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0c8ec9d5-e826-6c8c-1c3c-dee0e9776d13&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzNhMmY3YzJlZWYxY2MzNjdhZWQ2MTE3YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:15", "updated_at": "2026-04-08 09:03:15"}, {"id": 439, "content_hash": "1f5498536a64a443af1eacd579fd5893", "title": "崩坏星穹铁道怎么看剧情回放-百度经验", "summary": "品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=4679e8fc70ac8b7130bbad2d5864a5476861a17eae13f5725269edad3008eb47JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0c8ec9d5-e826-6c8c-1c3c-dee0e9776d13&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE0YmQyNTZlZDc1OWU3ZmE2ZDI2MTJhYS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:15", "updated_at": "2026-04-08 09:03:15"}, {"id": 441, "content_hash": "402ff311b7f0fd5022677aa1b087a11e", "title": "崩坏星穹铁道怎么设置展示角色-百度经验", "summary": "2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=74822ee2fba0c15b3f5b17118b994a460ad3c2e92cf0a5b4f81629b51b425a97JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0c8ec9d5-e826-6c8c-1c3c-dee0e9776d13&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NjIyZjI0ZGYwYWE3YmNmZGJlYTU2Zi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年4月30日", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:15", "updated_at": "2026-04-08 09:03:15"}, {"id": 442, "content_hash": "bdeb9d92a4615645c1ddb45f43848536", "title": "崩坏·星穹铁道奇珍琳琅商店在哪-百度经验", "summary": "品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0", "game_name": "", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e1e39453838c4b3e8c697b5346d89b62ffac7e3941ae70b817473cecbf346a5eJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2edcf6f6-07c6-61ec-24f8-e1c30621609f&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzNhMmY3YzJlZWYxY2MzNjdhZWQ2MTE3YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:20", "updated_at": "2026-04-08 09:03:20"}, {"id": 443, "content_hash": "66e028e17ddd14edba5b02f931c5cd84", "title": "崩坏星穹铁道怎么看剧情回放-百度经验", "summary": "品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d0caf550f40f11cb04d74c11cb7d0e378236ec84a7e8b17eb3d7ddd55d9ed131JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2edcf6f6-07c6-61ec-24f8-e1c30621609f&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE0YmQyNTZlZDc1OWU3ZmE2ZDI2MTJhYS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:20", "updated_at": "2026-04-08 09:03:20"}, {"id": 445, "content_hash": "e0be43abea331c992b868cc07654f814", "title": "崩坏星穹铁道怎么设置展示角色-百度经验", "summary": "2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7a8def76c9cdf3d0a6fcb6eafe0405f7d9ed51ef8ba29b784469c3bd4816cd17JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2edcf6f6-07c6-61ec-24f8-e1c30621609f&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NjIyZjI0ZGYwYWE3YmNmZGJlYTU2Zi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年4月30日", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:20", "updated_at": "2026-04-08 09:03:20"}, {"id": 447, "content_hash": "966f4f57c76b34a3e706ae51af7b3aee", "title": "海贼王与Popeyes联名卡牌将于4月13日发售", "summary": "根据目前的消息，Popeyes与《海贼王》的合作预计将在4月13日正式上线。大家不禁要问，这次的联名会否像之前的麦当劳合作一样被疯抢？无论如何，这场卡牌游戏的盛宴，势必将吸引无数玩家的目光。 返回搜狐，查看更多 ...", "game_name": "", "brand_name": "麦当劳", "brand_category": "餐饮", "collab_type": "其他", "source_url": "https://www.sohu.com/a/1006317037_122004016", "source_name": "21 小时", "source_type": "bing_news", "image_url": "/th?id=OJ.7vVJQgxeqYsI0Q&pid=news&w=32&h=16&rs=2", "published_date": "21 小时", "collected_date": "2026-04-08", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:03:57", "updated_at": "2026-04-08 09:03:57"}, {"id": 396, "content_hash": "d8cd05c28656bb96f3381c0695c18396", "title": "AX电竞叛客是什么牌子？电竞叛客显卡怎么样？是什么档次", "summary": "英伟达官网认可的：N卡九大厂 另外我们需要讲讲栢能集团， 栢能集团是世界上最大的显卡制造商之一 栢能旗下有：索泰、 映众 、万丽等显卡品牌，另外还为A卡的蓝宝石、迪兰等代工，电竞叛客的显卡 …", "game_name": "", "brand_name": "电竞叛客是什么牌子", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=44c9ec1ea3a73171c1511cac2a63750e7ce020c26d58071c5303f13123b93d4dJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=33ba5000-3e62-6fea-29e0-47353f856e35&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjIwOTM1MjQ5&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:04", "updated_at": "2026-04-08 09:02:04"}, {"id": 448, "content_hash": "1cb1654b0375602be7fae02fd7e0ea32", "title": "花叮娱乐与昱泉国际签订战略合作协议，未来将布局经典IP深化业务合作", "summary": "（中国·哈尔滨）2026年3月18日，昱泉国际洪社长一行莅临黑龙江王氏国信网络科技有限公司参观考察，并与花叮娱乐王总举行高层工作会议。双方围绕当前合作游戏项目《玄武豪侠传》（以下简称：“玄武”）的知识产权规范、商业化创新模式以及未来多端拓展 ...", "game_name": "", "brand_name": "协议", "brand_category": "其他", "collab_type": "其他", "source_url": "https://game.china.com/online/news/11043230/20260324/49349651.html", "source_name": "中华网14 天", "source_type": "bing_news", "image_url": "", "published_date": "14 天", "collected_date": "2026-04-08", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:04:12", "updated_at": "2026-04-08 09:04:12"}, {"id": 364, "content_hash": "c2ed56293bc54cf9704b69b6554c2643", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ee78a6de2458225e9913c4033d67c934480cf6f4b449f371cbc0b2443501313eJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=180168ae-b0b2-6f4b-0e77-7f9bb1e36e3d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:06", "updated_at": "2026-04-08 09:00:06"}, {"id": 366, "content_hash": "ebf8d8e1ddeb3b782b1ce47fa313cf81", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1eab747a2653c23676537025980a40702bcacf156d53e2039828a53546c69af2JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=318a154c-08c5-694a-3a20-02790954687a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:09", "updated_at": "2026-04-08 09:00:09"}, {"id": 368, "content_hash": "24bb9350a83ca4f8a14181f101550329", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=6eaefc43f6b2aa3fb0cc4ab3d55d7e6e6231821db96bb7fe556a6237cb1b9e75JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=3a75fa6b-99cc-63fb-272d-ed5e982b627a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:13", "updated_at": "2026-04-08 09:00:13"}, {"id": 370, "content_hash": "20b1032d548e0567107318bae9db0e6b", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=fd4e3e94eb7b43d7125814deed88614adf75d2701612a2c3bcc3f522600be36fJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=043becc1-8a7f-64ac-1cab-fbf48b98654e&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:30", "updated_at": "2026-04-08 09:00:30"}, {"id": 372, "content_hash": "9588d562d4a7b4eca32ef12fd44297f6", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a68d5cc2158b3a2ad986db2ff56b5d61b9e3ae0620cd94d94ba09d7e4c4598e6JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=102e2f39-60cf-62da-34c1-380c612a638d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:42", "updated_at": "2026-04-08 09:00:42"}, {"id": 374, "content_hash": "e085753c543f0911c08d2009ce66a429", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a09454128b1e6292a63a91c191434a73d19ca73b64db0bc5760b7410106a8a6aJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0feaf01a-9bd9-63cb-0526-e72f9a3e627b&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:47", "updated_at": "2026-04-08 09:00:47"}, {"id": 376, "content_hash": "9cfa10405a9b227295169c02ea87d4da", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a814eccdaab34258924dbefd2ca0f798d1ec165e2b3c7cad4b3d5169e8d88c16JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2d99a58b-96b2-63a2-2bbf-b2be97e362ac&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:52", "updated_at": "2026-04-08 09:00:52"}, {"id": 378, "content_hash": "7818a30e4ca07a63b88a57f2980ad82f", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a52c57e6700ff9b0508806f3356542d71e5f2e6d57ca4ab9c74dfa5a17128147JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0c3daedc-7878-61d2-2246-b9e9792960ec&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:55", "updated_at": "2026-04-08 09:00:55"}, {"id": 380, "content_hash": "5639b4743daf84e37fb1575f9fffa88a", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a0cd93d2f903fe8c03b1b40c42446c16df4611cecfadf1a29883d383d77e7e3fJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=23385b75-c4e3-669b-13f1-4c40c5726730&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:00:58", "updated_at": "2026-04-08 09:00:58"}, {"id": 382, "content_hash": "45cce76b67803589ae22fa0c502a35ef", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ba1e10a5a0ef414718bf746d816c6872e9511444698902513d301f9689e308a2JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2f33efce-7e2e-6e0f-02dd-f8fb7fbf6f4d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:07", "updated_at": "2026-04-08 09:01:07"}, {"id": 384, "content_hash": "1f79f4b4bfe497ebaee49dfeb89b0f22", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=794f44cf0fb8146dcbb1d38155ad5449b19d02f82fb6e1340bde111a4dde30d9JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=31253d82-a6a2-69e3-0469-2ab7a7f3682a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:12", "updated_at": "2026-04-08 09:01:12"}, {"id": 387, "content_hash": "12f2557e293aa7b228cc5c5283952d0f", "title": "1500元内台式电脑主机推荐（2025年5月新品）", "summary": "总结： 畅骁 12 代 i3-12100F 主机以 1500 元级价格，实现商务、娱乐、游戏三栖全能，硬件兼容性与扩展性远超同价位品牌机。 无论是企业批量采购，还是家庭用户 DIY 升级，都是当前市场的 “水桶机”  …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8c23ea8a6132d1ef91780ab36566b79cf46296b4cfb123019864839760917997JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=0dcce0d5-a441-693c-2e6f-f7e0a5a4682d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMzU3MDg1NzM1&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:34", "updated_at": "2026-04-08 09:01:34"}, {"id": 388, "content_hash": "bf40416e8414c3016651d01fdb3b6779", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=258d68da903ae736537c027deaa913c66e616830647fc81143e3d8b2f58f168dJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=26baf7a1-4f4d-6719-141a-e0944edc665c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:38", "updated_at": "2026-04-08 09:01:38"}, {"id": 390, "content_hash": "54590b9bd92f55667c17538a102536b4", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=52dc70f586c0cf07f36fd329b102b11ed77e14f0a3fa3cfcbb76232532da086fJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=12e0f35f-c1df-6cd9-1bd5-e46ac08e6ddf&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:51", "updated_at": "2026-04-08 09:01:51"}, {"id": 392, "content_hash": "0e46372d62b4e801c0727ede421ca0a2", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=af1b496ae791f64048da13803c09d5b2c7b19133128d9e5737712df924ab32fdJmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=2f0c3447-4944-6ced-3dc5-237248a36d41&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:01:55", "updated_at": "2026-04-08 09:01:55"}, {"id": 394, "content_hash": "8c1cc3204e48ac5e4c15e3306a3d5107", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1a300ff14c1a93b9b2e1e023b92a6f74d505602ab431d34b3fd1a721e6f6ca42JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=03634eb0-c7d7-69f6-096f-5985c632685c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:00", "updated_at": "2026-04-08 09:02:00"}, {"id": 397, "content_hash": "ff94496c69698183abbfb158893b9357", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7c71a107c7ad712cac6d5577283a850c6a0a40b40e5c9f3cf55cd4f2ec99c348JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=1be1ad16-8351-6fd2-291f-ba2382006e71&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:08", "updated_at": "2026-04-08 09:02:08"}, {"id": 399, "content_hash": "ab693025ad0c82f70b1816f94827c729", "title": "【8月更新&游戏手柄选购指南】2026最全游戏手柄选购！100+价位的 …", "summary": "三、2024年热门游戏手柄排行榜 1、性价比首选——盖世小鸡超新星 参考价：159（全平台前5000名） 推荐指数：⭐⭐⭐⭐⭐ 作为专业的游戏手柄品牌，盖世小鸡 有着11年的研发经验 和 微软授权的 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c019f559895e4229d34f6f6f26f8867b1138c5cb8e93865865575d93b4045204JmltdHM9MTc3NTUyMDAwMA&ptn=3&ver=2&hsh=4&fclid=28370459-c33a-66fc-38a1-136cc2df6708&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy9iZC9hcnQvNDg4NjE2MjE1NA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:02:12", "updated_at": "2026-04-08 09:02:12"}, {"id": 450, "content_hash": "1b115ad948498248ac546206029da5c8", "title": "筑牢维权后盾，激发创新活力：上海游戏IP授权的挑战与机遇", "summary": "上海游戏IP保护已初步形成“司法判例引领+行业协同共治”的格局，但在应对“玩法”侵权定性、中小企业维权成本及判赔力度等方面仍存短板。 面向未来，建议重点完善“快速维权通道”，探索“先行判决+临时禁令”的常态化适用，并在AI与数字资产等新技术 ...", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://news.qq.com/rain/a/20260131A0202U00", "source_name": "腾讯网2 个月", "source_type": "bing_news", "image_url": "", "published_date": "2 个月", "collected_date": "2026-04-08", "hot_score": 25.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-08 09:04:30", "updated_at": "2026-04-08 09:04:30"}];
+
+// 图表配置
+const chartColors = ['#6C5CE7','#FD79A8','#00B894','#FDCB6E','#74B9FF','#FF6B6B','#A29BFE','#55EFC4','#FAB1A0','#81ECEC'];
+const chartDefaults = {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#94A1B2', font: { size: 11 } } } }
+};
+
+// 游戏分布图
+new Chart(document.getElementById('gameChart'), {
+    type: 'bar',
+    data: {
+        labels: ["王者荣耀", "未知", "Xbox", "崩坏：星穹铁道", "英雄联盟", "三角洲行动", "逆水寒"],
+        datasets: [{ data: [31, 26, 17, 9, 2, 2, 1], backgroundColor: chartColors, borderRadius: 6 }]
+    },
+    options: { ...chartDefaults, indexAxis: 'y', plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } }, y: { ticks: { color: '#94A1B2' }, grid: { display: false } } }
+    }
+});
+
+// 品牌类别图
+new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["未知", "3C数码", "快消", "其他", "餐饮"],
+        datasets: [{ data: [45, 37, 3, 2, 1], backgroundColor: chartColors, borderWidth: 0 }]
+    },
+    options: { ...chartDefaults, cutout: '55%' }
+});
+
+// 合作类型图
+new Chart(document.getElementById('typeChart'), {
+    type: 'polarArea',
+    data: {
+        labels: ["其他", "AR互动", "联名产品"],
+        datasets: [{ data: [84, 3, 1], backgroundColor: chartColors.map(c => c + '88') }]
+    },
+    options: { ...chartDefaults, scales: { r: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } } } }
+});
+
+// 趋势图
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: ["2026-03-20", "2026-03-21", "2026-03-22", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-28", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-07", "2026-04-08"],
+        datasets: [{ data: [47, 47, 5, 4, 2, 5, 15, 11, 3, 5, 4, 6, 10, 55, 34, 71, 39, 88], borderColor: '#6C5CE7', backgroundColor: 'rgba(108,92,231,0.1)',
+            fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6C5CE7' }]
+    },
+    options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2', maxTicksLimit: 10 }, grid: { color: '#2D2D52' } },
+                   y: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' }, beginAtZero: true } }
+    }
+});
+
+// 筛选功能
+function filterCards() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const game = document.getElementById('gameFilter').value;
+    const cat = document.getElementById('catFilter').value;
+    
+    document.querySelectorAll('.intel-card').forEach(card => {
+        const matchSearch = !search || card.textContent.toLowerCase().includes(search);
+        const matchGame = !game || card.dataset.game === game;
+        const matchCat = !cat || card.dataset.category === cat;
+        card.style.display = (matchSearch && matchGame && matchCat) ? '' : 'none';
+    });
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('gameFilter').value = '';
+    document.getElementById('catFilter').value = '';
+    filterCards();
+}
+
+// 详情弹窗
+function showDetail(id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    
+    let tagsHtml = '';
+    if (item.game_name) tagsHtml += '<span class="tag tag-game">' + item.game_name + '</span>';
+    if (item.brand_name) tagsHtml += '<span class="tag tag-brand">' + item.brand_name + '</span>';
+    if (item.brand_category) tagsHtml += '<span class="tag tag-cat">' + item.brand_category + '</span>';
+    if (item.collab_type) tagsHtml += '<span class="tag tag-type">' + item.collab_type + '</span>';
+    
+    let html = '<h2>' + item.title + '</h2>';
+    html += '<div class="card-tags" style="margin-bottom:16px">' + tagsHtml + '</div>';
+    
+    const fields = [
+        ['游戏', item.game_name],
+        ['品牌', item.brand_name],
+        ['品牌类别', item.brand_category],
+        ['合作类型', item.collab_type],
+        ['信息来源', item.source_name || item.source_type],
+        ['发布日期', item.published_date],
+        ['采集日期', item.collected_date],
+        ['热度评分', item.hot_score + '/100'],
+    ];
+    
+    fields.forEach(([label, value]) => {
+        if (value) {
+            html += '<div class="detail-row"><span class="detail-label">' + label + '：</span><span class="detail-value">' + value + '</span></div>';
+        }
+    });
+    
+    if (item.summary) {
+        html += '<div class="detail-row"><span class="detail-label">摘要：</span></div>';
+        html += '<div class="detail-content">' + item.summary + '</div>';
+    }
+    
+    if (item.full_content) {
+        html += '<div class="detail-row" style="margin-top:16px"><span class="detail-label">正文内容：</span></div>';
+        html += '<div class="detail-content">' + item.full_content + '</div>';
+    }
+    
+    if (item.source_url) {
+        html += '<a href="' + item.source_url + '" target="_blank" class="detail-link">🔗 查看原文</a>';
+    }
+    
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
