@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏异业合作日报 - 2026-04-16</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --bg: #0F0E17;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --border: #2D2D52;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #FF6B6B;
+            --gradient1: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            --gradient2: linear-gradient(135deg, #FD79A8, #FDCB6E);
+            --gradient3: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 顶部背景动画 */
+        .hero {
+            background: linear-gradient(135deg, #0F0E17 0%, #1A1A2E 50%, #16213E 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(253,121,168,0.08) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+        
+        .hero h1 {
+            font-size: 2.2em;
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .subtitle {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-card:nth-child(2) .stat-number {
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-card:nth-child(3) .stat-number {
+            background: var(--gradient3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        /* 图表区 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        .chart-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .chart-box h3 {
+            margin-bottom: 16px;
+            color: var(--primary-light);
+            font-size: 1em;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-bar label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .filter-bar select, .filter-bar input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-bar select:focus, .filter-bar input:focus {
+            border-color: var(--primary);
+        }
+        
+        .filter-bar .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-btn {
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .filter-btn:hover { opacity: 0.85; }
+        
+        .reset-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        /* 情报卡片 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .intel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .intel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(108,92,231,0.15);
+            border-color: var(--primary-light);
+            background: var(--bg-card-hover);
+        }
+        
+        .card-header {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .score-badge {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85em;
+        }
+        
+        .score-badge.hot {
+            background: linear-gradient(135deg, #FF6B6B, #FD79A8);
+            color: white;
+        }
+        
+        .score-badge.warm {
+            background: linear-gradient(135deg, #FDCB6E, #F39C12);
+            color: #333;
+        }
+        
+        .score-badge.cool {
+            background: rgba(108,92,231,0.2);
+            color: var(--primary-light);
+        }
+        
+        .card-title {
+            font-size: 1em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-body {
+            flex: 1;
+            margin: 12px 0;
+        }
+        
+        .card-summary {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .tag-game {
+            background: rgba(108,92,231,0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.3);
+        }
+        
+        .tag-brand {
+            background: rgba(253,121,168,0.15);
+            color: #FD79A8;
+            border: 1px solid rgba(253,121,168,0.3);
+        }
+        
+        .tag-cat {
+            background: rgba(0,184,148,0.15);
+            color: #00B894;
+            border: 1px solid rgba(0,184,148,0.3);
+        }
+        
+        .tag-type {
+            background: rgba(253,203,110,0.15);
+            color: #FDCB6E;
+            border: 1px solid rgba(253,203,110,0.3);
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        
+        /* 详情弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .modal h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            padding-right: 40px;
+            line-height: 1.4;
+        }
+        
+        .modal .detail-row {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+            align-items: baseline;
+        }
+        
+        .modal .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .modal .detail-value {
+            font-size: 0.95em;
+        }
+        
+        .modal .detail-content {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            line-height: 1.8;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .modal .detail-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--gradient1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .modal .detail-link:hover { opacity: 0.85; }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state .icon { font-size: 4em; margin-bottom: 16px; }
+        
+        /* 返回门户按钮 */
+        .back-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .back-portal:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        
+        /* ===== 联动速览模块 ===== */
+        .glance-section {
+            margin: 28px 0;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon { font-size: 1em; }
+        
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 18px;
+        }
+        
+        .section-desc strong {
+            color: var(--accent);
+        }
+        
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .glance-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .glance-box-title {
+            font-size: 1em;
+            color: var(--primary-light);
+            margin-bottom: 14px;
+        }
+        
+        .glance-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .glance-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .glance-tag:hover {
+            transform: translateY(-2px);
+        }
+        
+        .glance-tag em {
+            font-style: normal;
+            font-size: 0.85em;
+            opacity: 0.7;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        
+        .glance-game {
+            background: rgba(108,92,231,0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.25);
+        }
+        
+        .glance-brand {
+            background: rgba(253,121,168,0.08);
+            border: 1px solid rgba(253,121,168,0.2);
+        }
+        
+        .glance-brands {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .brand-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .brand-cat-label {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .glance-empty {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .glance-pairs-box {
+            margin-top: 0;
+        }
+        
+        .pairs-table-wrap {
+            overflow-x: auto;
+        }
+        
+        .pairs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+        }
+        
+        .pairs-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        
+        .pairs-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(45,45,82,0.5);
+            vertical-align: middle;
+        }
+        
+        .pairs-table tr:hover td {
+            background: rgba(108,92,231,0.05);
+        }
+        
+        .pair-game {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .pair-x {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1em;
+            padding: 10px 6px;
+        }
+        
+        .pair-brand {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .pair-cat {
+            font-size: 0.85em;
+        }
+        
+        .pair-type {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+        
+        .pair-count {
+            text-align: center;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5em; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .cards-container { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .glance-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<a href="../index.html" class="back-portal">← 返回情报站</a>
+
+<div class="hero">
+    <h1>🎮 游戏异业合作情报日报</h1>
+    <p class="subtitle">📅 2026-04-16 &nbsp;|&nbsp; 共收录 76 条情报</p>
+</div>
+
+<div class="container">
+    <!-- 核心统计 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">76</div>
+            <div class="stat-label">今日情报总数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">6</div>
+            <div class="stat-label">涉及游戏数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">3</div>
+            <div class="stat-label">品牌类别数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">890</div>
+            <div class="stat-label">累计情报总量</div>
+        </div>
+    </div>
+
+    
+    <!-- 联动速览模块 -->
+    <div class="glance-section">
+        <h2 class="section-title"><span class="section-icon">🔗</span> 联动速览</h2>
+        <p class="section-desc">今日情报涉及 <strong>5</strong> 款游戏、<strong>7</strong> 个品牌，共 <strong>5</strong> 组联动配对</p>
+        
+        <div class="glance-grid">
+            <!-- 游戏清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🎮 涉及游戏 (5)</h3>
+                <div class="glance-tags"><span class="glance-tag glance-game">王者荣耀<em>30</em></span><span class="glance-tag glance-game">崩坏：星穹铁道<em>12</em></span><span class="glance-tag glance-game">APEX英雄<em>6</em></span><span class="glance-tag glance-game">英雄联盟<em>3</em></span><span class="glance-tag glance-game">原神<em>1</em></span></div>
+            </div>
+            
+            <!-- 品牌清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🏢 涉及品牌 (7)</h3>
+                <div class="glance-brands"><div class="brand-group"><span class="brand-cat-label" style="background:#74B9FF22;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">荣耀<em>30</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">联想<em>4</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">小米<em>3</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">华为<em>3</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">OPPO<em>1</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#94A1B222;color:#94A1B2;border:1px solid #94A1B240">其他</span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">英雄》<em>3</em></span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">英雄apex英雄段位<em>3</em></span></div></div>
+            </div>
+        </div>
+        
+        <!-- 联动配对表 -->
+        
+        <div class="glance-box glance-pairs-box">
+            <h3 class="glance-box-title">🤝 联动配对一览 (5)</h3>
+            <div class="pairs-table-wrap">
+                <table class="pairs-table">
+                    <thead>
+                        <tr><th>游戏</th><th></th><th>品牌</th><th>类别</th><th>合作类型</th><th>情报数</th></tr>
+                    </thead>
+                    <tbody>
+        <tr>
+            <td><span class="pair-game">王者荣耀</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">30</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">崩坏：星穹铁道</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">小米</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">3</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">崩坏：星穹铁道</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">联想</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">3</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">APEX英雄</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">英雄》</span></td>
+            <td><span class="pair-cat" style="color:#94A1B2">其他</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">3</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">APEX英雄</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">英雄apex英雄段位</span></td>
+            <td><span class="pair-cat" style="color:#94A1B2">其他</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">3</td>
+        </tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- 图表 -->
+    <div class="charts-grid">
+        <div class="chart-box">
+            <h3>📊 游戏分布 TOP10</h3>
+            <canvas id="gameChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🏷️ 品牌类别分布</h3>
+            <canvas id="catChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🤝 合作类型分布</h3>
+            <canvas id="typeChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>📈 近30天采集趋势</h3>
+            <canvas id="trendChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="filter-bar">
+        <label>🔍</label>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、品牌、游戏..." oninput="filterCards()">
+        <select id="gameFilter" onchange="filterCards()">
+            <option value="">全部游戏</option>
+            <option value="王者荣耀">王者荣耀 (30)</option><option value="未知">未知 (24)</option><option value="崩坏：星穹铁道">崩坏：星穹铁道 (12)</option><option value="APEX英雄">APEX英雄 (6)</option><option value="英雄联盟">英雄联盟 (3)</option><option value="原神">原神 (1)</option>
+        </select>
+        <select id="catFilter" onchange="filterCards()">
+            <option value="">全部类别</option>
+            <option value="3C数码">3C数码 (41)</option><option value="未知">未知 (29)</option><option value="其他">其他 (6)</option>
+        </select>
+        <button class="reset-btn" onclick="resetFilters()">重置</button>
+    </div>
+
+    <!-- 情报卡片 -->
+    <div class="cards-container" id="cardsContainer">
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(838)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(842)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(848)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(852)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(858)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(862)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(835)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">《洛克王国世界》力压《王者荣耀》登顶游戏榜首，如何看待这一成绩？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月29日· 你王者叔叔出俩源梦6元皮，洛克王国就老实了。你王者叔叔 三丽鸥联动 返场一次就更老实了。王者荣耀最近一个新皮肤没出，摆明想都是腾讯的游戏，给洛克点面子。 所以这成绩只能 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月29日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(836)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">《王者荣耀世界》有哪些好看/好玩的捏脸数据可以分享？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">6 天之前· 知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">6 天之前</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(839)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀咋这么难？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(845)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">《洛克王国世界》力压《王者荣耀》登顶游戏榜首，如何看待这一成绩？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月29日· 你王者叔叔出俩源梦6元皮，洛克王国就老实了。你王者叔叔 三丽鸥联动 返场一次就更老实了。王者荣耀最近一个新皮肤没出，摆明想都是腾讯的游戏，给洛克点面子。 所以这成绩只能 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月29日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(846)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">《王者荣耀世界》有哪些好看/好玩的捏脸数据可以分享？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">6 天之前· 知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">6 天之前</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(849)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀咋这么难？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(855)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">《洛克王国世界》力压《王者荣耀》登顶游戏榜首，如何看待这一成绩？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月29日· 你王者叔叔出俩源梦6元皮，洛克王国就老实了。你王者叔叔 三丽鸥联动 返场一次就更老实了。王者荣耀最近一个新皮肤没出，摆明想都是腾讯的游戏，给洛克点面子。 所以这成绩只能 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月29日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(856)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">《王者荣耀世界》有哪些好看/好玩的捏脸数据可以分享？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">6 天之前· 知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">6 天之前</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(859)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀咋这么难？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(875)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道随宠怎么召唤 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">小米</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(878)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么快速升级钟表小子雕像 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2024年6月29日· 品牌型号：联想拯救者y8000p 系统版本：Windows11 软件版本：崩坏星穹铁道2.3.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">联想</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2024年6月29日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(880)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道随宠怎么召唤 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">小米</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(883)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么快速升级钟表小子雕像 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2024年6月29日· 品牌型号：联想拯救者y8000p 系统版本：Windows11 软件版本：崩坏星穹铁道2.3.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">联想</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2024年6月29日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(885)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道随宠怎么召唤 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">小米</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(888)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么快速升级钟表小子雕像 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2024年6月29日· 品牌型号：联想拯救者y8000p 系统版本：Windows11 软件版本：崩坏星穹铁道2.3.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-brand">联想</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2024年6月29日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(834)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何评价《王者荣耀世界》前瞻直播公开的游戏内容，它能成为腾讯游 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月20日· 啊不是，是可以0门槛直接上手《王者荣耀世界》了。 游戏的具体内容放后面了，先讲几个好玩的题外话。 首先，谁家游戏开服前瞻起手就是个广告啊？ 这个我无力吐槽，给我乐无语了 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月20日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(837)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 我退坑很久了，然后刷到s40更新大改动，突然有兴趣，就又回归打了一波。 结果让我只用了一周时间88%胜率就从白金打上了王者。而且我也没用什么鸡爪流，就正常打的。 我都震惊了 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(840)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2020年11月24</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(841)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">系统体验过《王者荣耀世界》后，它的世界观是什么样的？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">6 天之前· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特色的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">6 天之前</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(843)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀世界》前瞻特别节目宣布 PC 端将于 4 月 10 日正式公测， …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月20日· 这点其实蛮怪异的，因为此前《王者荣耀世界》在几轮测试时候，是有手机端的测试。 而且整体王者开发周期不算短，既然原来已经确认是推出多端且互通，而临门一脚结果是一个先出一 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月20日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(844)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何评价《王者荣耀世界》前瞻直播公开的游戏内容，它能成为腾讯游 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月20日· 啊不是，是可以0门槛直接上手《王者荣耀世界》了。 游戏的具体内容放后面了，先讲几个好玩的题外话。 首先，谁家游戏开服前瞻起手就是个广告啊？ 这个我无力吐槽，给我乐无语了 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月20日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(847)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 我退坑很久了，然后刷到s40更新大改动，突然有兴趣，就又回归打了一波。 结果让我只用了一周时间88%胜率就从白金打上了王者。而且我也没用什么鸡爪流，就正常打的。 我都震惊了 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(850)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2020年11月24</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(851)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">系统体验过《王者荣耀世界》后，它的世界观是什么样的？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">6 天之前· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特色的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">6 天之前</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(853)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀世界》前瞻特别节目宣布 PC 端将于 4 月 10 日正式公测， …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月20日· 这点其实蛮怪异的，因为此前《王者荣耀世界》在几轮测试时候，是有手机端的测试。 而且整体王者开发周期不算短，既然原来已经确认是推出多端且互通，而临门一脚结果是一个先出一 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月20日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(854)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何评价《王者荣耀世界》前瞻直播公开的游戏内容，它能成为腾讯游 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月20日· 啊不是，是可以0门槛直接上手《王者荣耀世界》了。 游戏的具体内容放后面了，先讲几个好玩的题外话。 首先，谁家游戏开服前瞻起手就是个广告啊？ 这个我无力吐槽，给我乐无语了 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月20日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(857)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 我退坑很久了，然后刷到s40更新大改动，突然有兴趣，就又回归打了一波。 结果让我只用了一周时间88%胜率就从白金打上了王者。而且我也没用什么鸡爪流，就正常打的。 我都震惊了 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(860)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2020年11月24</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(861)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">系统体验过《王者荣耀世界》后，它的世界观是什么样的？</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">6 天之前· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特色的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">6 天之前</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(863)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀世界》前瞻特别节目宣布 PC 端将于 4 月 10 日正式公测， …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月20日· 这点其实蛮怪异的，因为此前《王者荣耀世界》在几轮测试时候，是有手机端的测试。 而且整体王者开发周期不算短，既然原来已经确认是推出多端且互通，而临门一脚结果是一个先出一 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月20日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="APEX英雄" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(867)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">如何评价游戏《Apex英雄》？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2019年2月5日· 《Apex 英雄》 继承自 Respawn 自家《泰坦陨落》系列的世界观和核心动作设计，套用了大逃杀的游戏框架。如果拿《堡垒之夜》来比的话， 《Apex 英雄》 对大逃杀的玩法框架改动其实 …</p>
+                <div class="card-tags"><span class="tag tag-game">APEX英雄</span><span class="tag tag-brand">英雄》</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2019年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="APEX英雄" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(870)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">如何评价游戏《Apex英雄》？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2019年2月5日· 《Apex 英雄》 继承自 Respawn 自家《泰坦陨落》系列的世界观和核心动作设计，套用了大逃杀的游戏框架。如果拿《堡垒之夜》来比的话， 《Apex 英雄》 对大逃杀的玩法框架改动其实 …</p>
+                <div class="card-tags"><span class="tag tag-game">APEX英雄</span><span class="tag tag-brand">英雄》</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2019年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="APEX英雄" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(873)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">如何评价游戏《Apex英雄》？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2019年2月5日· 《Apex 英雄》 继承自 Respawn 自家《泰坦陨落》系列的世界观和核心动作设计，套用了大逃杀的游戏框架。如果拿《堡垒之夜》来比的话， 《Apex 英雄》 对大逃杀的玩法框架改动其实 …</p>
+                <div class="card-tags"><span class="tag tag-game">APEX英雄</span><span class="tag tag-brand">英雄》</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2019年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(827)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">【台式电脑推荐】品牌台式整机怎么选择？ 2026.04月 [高性价比 高性 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月31日· 联想售后，不用多说，遍布全国，售后不用担心。 这款主机，算是笔记本魔改，但是做到了70瓦的性能释放，性能比较强。 真正的8核CPU，加上24G的内存，多开网页办公Office没问题 …</p>
+                <div class="card-tags"><span class="tag tag-brand">联想</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月31日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(864)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">recommend me mini phone - Lowyat.NET</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年5月25日· wahai warga /kcan recommend me a simple 4g phone purely for whatsapp?rugged if possible. frequent drop is expected.long battery lifeother </p>
+                <div class="card-tags"><span class="tag tag-brand">OPPO</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年5月25日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="英雄联盟" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(866)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">《英雄联盟》永恒星碑有什么用？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …</p>
+                <div class="card-tags"><span class="tag tag-game">英雄联盟</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="英雄联盟" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(869)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">《英雄联盟》永恒星碑有什么用？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …</p>
+                <div class="card-tags"><span class="tag tag-game">英雄联盟</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="英雄联盟" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(872)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">《英雄联盟》永恒星碑有什么用？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …</p>
+                <div class="card-tags"><span class="tag tag-game">英雄联盟</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(874)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏·星穹铁道奇珍琳琅商店在哪-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0</p>
+                <div class="card-tags"><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(876)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么看剧情回放-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(877)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么设置展示角色-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年4月30日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(879)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏·星穹铁道奇珍琳琅商店在哪-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0</p>
+                <div class="card-tags"><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(881)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么看剧情回放-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(882)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么设置展示角色-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年4月30日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(884)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏·星穹铁道奇珍琳琅商店在哪-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0</p>
+                <div class="card-tags"><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(886)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么看剧情回放-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="崩坏：星穹铁道" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(887)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">崩坏星穹铁道怎么设置展示角色-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5</p>
+                <div class="card-tags"><span class="tag tag-game">崩坏：星穹铁道</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年4月30日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="APEX英雄" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(865)">
+            <div class="card-header">
+                <div class="score-badge warm">35.0</div>
+                <h3 class="card-title">Apex英雄apex英雄段位等级如何划分？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">首先是每个分段所需要的分数： 菜鸟段位：1RP以上 青铜段位：1000RP以上 白银段位：3000RP以上 黄金段位：5400RP以上 白金段位：8200RP以上 钻石段位：11400RP以上 大师段位：15000RP以上  …</p>
+                <div class="card-tags"><span class="tag tag-game">APEX英雄</span><span class="tag tag-brand">英雄apex英雄段位</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="APEX英雄" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(868)">
+            <div class="card-header">
+                <div class="score-badge warm">35.0</div>
+                <h3 class="card-title">Apex英雄apex英雄段位等级如何划分？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">首先是每个分段所需要的分数： 菜鸟段位：1RP以上 青铜段位：1000RP以上 白银段位：3000RP以上 黄金段位：5400RP以上 白金段位：8200RP以上 钻石段位：11400RP以上 大师段位：15000RP以上  …</p>
+                <div class="card-tags"><span class="tag tag-game">APEX英雄</span><span class="tag tag-brand">英雄apex英雄段位</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="APEX英雄" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(871)">
+            <div class="card-header">
+                <div class="score-badge warm">35.0</div>
+                <h3 class="card-title">Apex英雄apex英雄段位等级如何划分？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">首先是每个分段所需要的分数： 菜鸟段位：1RP以上 青铜段位：1000RP以上 白银段位：3000RP以上 黄金段位：5400RP以上 白金段位：8200RP以上 钻石段位：11400RP以上 大师段位：15000RP以上  …</p>
+                <div class="card-tags"><span class="tag tag-game">APEX英雄</span><span class="tag tag-brand">英雄apex英雄段位</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-16</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="原神" 
+             data-category="" 
+             data-type="线下活动"
+             onclick="showDetail(890)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">假期漫展一票难求 游戏IP商业价值持续挖掘</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">1月4日，长达四天的第三届“原神FES”在上海国家会展中心落下帷幕。原神嘉年华线下活动负责人告白向《证券日报》记者介绍，此次参展人数超8万人次，八成观展人员来自上海以外的城市。 近两年，漫展经济持续升温，节假日更成为各地扎堆办展的高峰期。</p>
+                <div class="card-tags"><span class="tag tag-game">原神</span><span class="tag tag-type">线下活动</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">人民网3 个月</span>
+                <span class="date">3 个月</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(815)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(816)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(817)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(818)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(819)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(820)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(821)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(822)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(823)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(824)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(825)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(826)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(828)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(829)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(830)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(831)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(832)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(833)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月6日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(889)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">超越百亿赛道？游戏IP周边，格局再变</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">最近几天，一则“叠纸游戏要做AI玩具/乙游机器人”的消息，引起不小的玩家轰动，各种猜测与调侃纷至沓来。话题在小红书 ...</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">新浪网23 天</span>
+                <span class="date">23 天</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeDetail(event)">
+    <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// 所有条目数据
+const allItems = [{"id": 838, "content_hash": "2ab6aef78815236ba6afc09c1bfaf730", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=eb2a7cabb8ef07d9040cf35568a135fba9b0d8a47e8aa05867237583bde8b60dJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-16", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 842, "content_hash": "9582c1f107a8e7ea1716e5b8ca5d24cc", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f8934eef412c2bdf070e5f060eed088695a1da6178e45cd69a1252657662cf62JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-16", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 848, "content_hash": "53f2ed66a6bf56e45f1ff6d08e614ca6", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c54a258a2247033462649b9832261919643f7004b2cab3c42b1910f20893f1e2JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-16", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 852, "content_hash": "ff1afef1b7e5aa09d741088da7a49edd", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e8567a96e5fd9acb1c017bc64e0e2aa24eeb9fdc3bd5e3af52be9caa9d6ae342JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-16", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 858, "content_hash": "dfbe5fd1be496b57448d874ee4c53f5b", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六耳」？", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1435713e0f3e002ca66a8db8b20079a94836ffa1b0012c511f8c778a8c4ccb55JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-16", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 862, "content_hash": "c1cfade2fabd0e7ef541344133e4523c", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏上线前你对这款 …", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7453fa43121b37491295ec7348a3629edd47604014e10e135b1eac2d3b7ab9ebJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-16", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 835, "content_hash": "fb2c15577edf64347b61a5442ca4a531", "title": "《洛克王国世界》力压《王者荣耀》登顶游戏榜首，如何看待这一成绩？", "summary": "2026年3月29日· 你王者叔叔出俩源梦6元皮，洛克王国就老实了。你王者叔叔 三丽鸥联动 返场一次就更老实了。王者荣耀最近一个新皮肤没出，摆明想都是腾讯的游戏，给洛克点面子。 所以这成绩只能 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=fd319c56eda55a1c45732610fa699ec791a4e6c95603bc35e8ae3e1646acf9eeJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjA5NTc2MzMwMzc3NzA4NDE&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月29日", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 836, "content_hash": "da44b5a78e4fdcaae964fed6cdba34b3", "title": "《王者荣耀世界》有哪些好看/好玩的捏脸数据可以分享？", "summary": "6 天之前· 知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3fba5dd2c1440f03f8b2d278ca2423b16301dfc01b0b969b3ebf471ef35cb10bJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODU4MzA2MTk2ODY3NzM&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "6 天之前", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 839, "content_hash": "58cea5ee84b176431d7ec90ea6afc661", "title": "王者荣耀咋这么难？ - 知乎", "summary": "知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0049f749a0823ecfd3000e50273458999d4ebe7cfac1e6c01758e4e704e20f90JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjIyNjE2NzYzNTU4ODkwNjU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 845, "content_hash": "80c55970ce5567914eb1f7a52aa5d148", "title": "《洛克王国世界》力压《王者荣耀》登顶游戏榜首，如何看待这一成绩？", "summary": "2026年3月29日· 你王者叔叔出俩源梦6元皮，洛克王国就老实了。你王者叔叔 三丽鸥联动 返场一次就更老实了。王者荣耀最近一个新皮肤没出，摆明想都是腾讯的游戏，给洛克点面子。 所以这成绩只能 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=597c795ddc115f9eedfa8da294e1d2a2ee3522ad5192b21f9b7ea76578e4111fJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjA5NTc2MzMwMzc3NzA4NDE&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月29日", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 846, "content_hash": "f258c288b18f2996c17863649807e807", "title": "《王者荣耀世界》有哪些好看/好玩的捏脸数据可以分享？", "summary": "6 天之前· 知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=473e72ec9f72434b1c82f8bbfdfde7ff19260d682ed618c5864e98d5c2434148JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODU4MzA2MTk2ODY3NzM&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "6 天之前", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 849, "content_hash": "f1fa95ded37c92b288092eab4c30f740", "title": "王者荣耀咋这么难？ - 知乎", "summary": "知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c774e6f5a1ca058326de6dc82aa669a317c364fa44adbb2110f5a4ea1bfef4baJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjIyNjE2NzYzNTU4ODkwNjU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 855, "content_hash": "d4e11f146ecc6f87553b90746ffd1f2e", "title": "《洛克王国世界》力压《王者荣耀》登顶游戏榜首，如何看待这一成绩？", "summary": "2026年3月29日· 你王者叔叔出俩源梦6元皮，洛克王国就老实了。你王者叔叔 三丽鸥联动 返场一次就更老实了。王者荣耀最近一个新皮肤没出，摆明想都是腾讯的游戏，给洛克点面子。 所以这成绩只能 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1d668137ee7c4b586b783e569aea545202135c0321f608060c8d3fc983e09819JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjA5NTc2MzMwMzc3NzA4NDE&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月29日", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 856, "content_hash": "def183eefb01e271c6aeddd3bced0d51", "title": "《王者荣耀世界》有哪些好看/好玩的捏脸数据可以分享？", "summary": "6 天之前· 知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e988755d21c7805560b98979911976ddceb9a3acc9fd7f267004cfd466334559JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODU4MzA2MTk2ODY3NzM&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "6 天之前", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 859, "content_hash": "3d9711cb57635f3a8aa891813f2bd403", "title": "王者荣耀咋这么难？ - 知乎", "summary": "知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c6ec0fba4e683c8ae1820806d2283268497bdb11f04e2d24420a216a90f1c6e8JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjIyNjE2NzYzNTU4ODkwNjU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 875, "content_hash": "78817b17cfe5378ffbb6ab48fa51268d", "title": "崩坏星穹铁道随宠怎么召唤 - 百度经验", "summary": "品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5", "game_name": "崩坏：星穹铁道", "brand_name": "小米", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f5a97f26826a970c4d9d8b28ad82fd98fff70c402a67b5b2a890fcc83871a2cbJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=28a95ddb-80b0-6106-249d-4ae68155601d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NGI0NjMxYzEzNzIwNjljYThmNDFiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:45", "updated_at": "2026-04-16 14:38:45"}, {"id": 878, "content_hash": "c9c7a10408b68d05007b8aefa3ef2591", "title": "崩坏星穹铁道怎么快速升级钟表小子雕像 - 百度经验", "summary": "2024年6月29日· 品牌型号：联想拯救者y8000p 系统版本：Windows11 软件版本：崩坏星穹铁道2.3.1", "game_name": "崩坏：星穹铁道", "brand_name": "联想", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f0883859ac6ccd542b7ddd1dcf37470287ba07b7b3da3e62792eefb3ea866b4aJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=28a95ddb-80b0-6106-249d-4ae68155601d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzYzNmYzOGJiYWM2MTE4OTdiODQ2MTA5YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2024年6月29日", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:45", "updated_at": "2026-04-16 14:38:45"}, {"id": 880, "content_hash": "4fa838c7b7c037381554435ea5f90821", "title": "崩坏星穹铁道随宠怎么召唤 - 百度经验", "summary": "品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5", "game_name": "崩坏：星穹铁道", "brand_name": "小米", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=84480e59a62ee0ed7a99c286bac179e9a930637cbf53baca1d38e5ed8848ec78JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=246ffba7-d9c1-6018-3526-ec9ad8906150&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NGI0NjMxYzEzNzIwNjljYThmNDFiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:49", "updated_at": "2026-04-16 14:38:49"}, {"id": 883, "content_hash": "0a2567f26e873d82d12bf511f616d4bc", "title": "崩坏星穹铁道怎么快速升级钟表小子雕像 - 百度经验", "summary": "2024年6月29日· 品牌型号：联想拯救者y8000p 系统版本：Windows11 软件版本：崩坏星穹铁道2.3.1", "game_name": "崩坏：星穹铁道", "brand_name": "联想", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f3b4822a582902e68c275a141e60ad20e24983e99d110b476b71a59cc080c909JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=246ffba7-d9c1-6018-3526-ec9ad8906150&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzYzNmYzOGJiYWM2MTE4OTdiODQ2MTA5YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2024年6月29日", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:49", "updated_at": "2026-04-16 14:38:49"}, {"id": 885, "content_hash": "3c3524f51ef657f9be403ff6da591636", "title": "崩坏星穹铁道随宠怎么召唤 - 百度经验", "summary": "品牌型号：小米13 系统版本：MiUi13 软件版本：崩坏星穹铁道2.5", "game_name": "崩坏：星穹铁道", "brand_name": "小米", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=06befa9b62606bc766d14b37e257e6b241ef9bc3f2a097de68098645d0831963JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=15449d5f-dbd4-6ab1-0627-8a62da336b63&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NGI0NjMxYzEzNzIwNjljYThmNDFiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:55", "updated_at": "2026-04-16 14:38:55"}, {"id": 888, "content_hash": "edce94b140d448df8d55f4487d3f4d5f", "title": "崩坏星穹铁道怎么快速升级钟表小子雕像 - 百度经验", "summary": "2024年6月29日· 品牌型号：联想拯救者y8000p 系统版本：Windows11 软件版本：崩坏星穹铁道2.3.1", "game_name": "崩坏：星穹铁道", "brand_name": "联想", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=82abd2d5bbd0c5ddb6ecd0398a6233eb875cb54cbc217bf0abd5fa183e5e91c5JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=15449d5f-dbd4-6ab1-0627-8a62da336b63&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzYzNmYzOGJiYWM2MTE4OTdiODQ2MTA5YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2024年6月29日", "collected_date": "2026-04-16", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:55", "updated_at": "2026-04-16 14:38:55"}, {"id": 834, "content_hash": "2107725dd86899fd8b8b9101aba55fdd", "title": "如何评价《王者荣耀世界》前瞻直播公开的游戏内容，它能成为腾讯游 …", "summary": "2026年3月20日· 啊不是，是可以0门槛直接上手《王者荣耀世界》了。 游戏的具体内容放后面了，先讲几个好玩的题外话。 首先，谁家游戏开服前瞻起手就是个广告啊？ 这个我无力吐槽，给我乐无语了 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=434d82434d9cc3b1179106494116f9326f6ea62afcbd69ab9b3532dd77589508JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTgzOTYyMzExMzE0NzgwMTA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月20日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 837, "content_hash": "fd24a7dd12f82244dc86652e47a2baa6", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 我退坑很久了，然后刷到s40更新大改动，突然有兴趣，就又回归打了一波。 结果让我只用了一周时间88%胜率就从白金打上了王者。而且我也没用什么鸡爪流，就正常打的。 我都震惊了 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=66a47bd7e03134004b56d93f42118ee0501fe29dfa91118f04d048f81efdd4d8JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 840, "content_hash": "2e96939bca50d3e948478ee9efa87bd5", "title": "我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎", "summary": "2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f87dcd17d14caaf63d7d7330c24b2f3a10b8d1f7596d821af7cd2c8eda651851JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzQzMTc5NDE3OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2020年11月24日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 841, "content_hash": "cdef5a0aa8adb60203024536a9681a33", "title": "系统体验过《王者荣耀世界》后，它的世界观是什么样的？", "summary": "6 天之前· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特色的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3e9b2bec203603a6fd2bb8d6a734dbc5b5c6a28a8df38db85ee9603a322ab36cJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODYyNTUwNzQ4NjY5MDE&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "6 天之前", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 843, "content_hash": "92774a67cbed384ac0eee1cf73a4bff5", "title": "《王者荣耀世界》前瞻特别节目宣布 PC 端将于 4 月 10 日正式公测， …", "summary": "2026年3月20日· 这点其实蛮怪异的，因为此前《王者荣耀世界》在几轮测试时候，是有手机端的测试。 而且整体王者开发周期不算短，既然原来已经确认是推出多端且互通，而临门一脚结果是一个先出一 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=924846f5e09cf31553534a6d33a8bf422c7e53c3b6ab773cb648ed95678b5590JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=349a0e97-dca6-6eb5-0019-19aadd416fb9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTgzODkxNjIxMTg1NzAyNjY&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月20日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:42", "updated_at": "2026-04-16 14:37:42"}, {"id": 844, "content_hash": "0479f3866022610d28e0826fcc3224fd", "title": "如何评价《王者荣耀世界》前瞻直播公开的游戏内容，它能成为腾讯游 …", "summary": "2026年3月20日· 啊不是，是可以0门槛直接上手《王者荣耀世界》了。 游戏的具体内容放后面了，先讲几个好玩的题外话。 首先，谁家游戏开服前瞻起手就是个广告啊？ 这个我无力吐槽，给我乐无语了 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=95dba32da9d4f8b93912738d8e44999dd0bf419f09ace974846568bfbda07b48JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTgzOTYyMzExMzE0NzgwMTA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月20日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 847, "content_hash": "e7bdd075abc342338a33fc567961b2ee", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 我退坑很久了，然后刷到s40更新大改动，突然有兴趣，就又回归打了一波。 结果让我只用了一周时间88%胜率就从白金打上了王者。而且我也没用什么鸡爪流，就正常打的。 我都震惊了 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3592e598de7431fcf2c53bb5ff821c9e849764fe98f0d1a21afc5449f72caf3eJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 850, "content_hash": "4544f47e1400f42565da66c8b9f0bd65", "title": "我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎", "summary": "2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7bc185ad43b36d89a981d2847d83c0964bf7b2466e501db08bfbe2796009f65eJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzQzMTc5NDE3OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2020年11月24日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 851, "content_hash": "666f95f97cbed9b4d8b6d52c1bc0eb68", "title": "系统体验过《王者荣耀世界》后，它的世界观是什么样的？", "summary": "6 天之前· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特色的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=94ead21cb81c35474dc57df1f70a5a2ddfa78a97b22fb57a824d3b00715a1ae4JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODYyNTUwNzQ4NjY5MDE&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "6 天之前", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 853, "content_hash": "e7224c1305d9eb9c02010e4a2cb10bed", "title": "《王者荣耀世界》前瞻特别节目宣布 PC 端将于 4 月 10 日正式公测， …", "summary": "2026年3月20日· 这点其实蛮怪异的，因为此前《王者荣耀世界》在几轮测试时候，是有手机端的测试。 而且整体王者开发周期不算短，既然原来已经确认是推出多端且互通，而临门一脚结果是一个先出一 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=978ee82d397f2d34a26df458506906f2d89e84aa8f7bb6bd309264213b7b1455JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b0cca6d-48d4-6415-3041-dd50493165b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTgzODkxNjIxMTg1NzAyNjY&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月20日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:46", "updated_at": "2026-04-16 14:37:46"}, {"id": 854, "content_hash": "d611c35ee2d8febef4dd0f7ef79bac57", "title": "如何评价《王者荣耀世界》前瞻直播公开的游戏内容，它能成为腾讯游 …", "summary": "2026年3月20日· 啊不是，是可以0门槛直接上手《王者荣耀世界》了。 游戏的具体内容放后面了，先讲几个好玩的题外话。 首先，谁家游戏开服前瞻起手就是个广告啊？ 这个我无力吐槽，给我乐无语了 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d5005e05ce36863a9931ac9f18bde8bcfecd1ba326360bec3bd5228905067168JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTgzOTYyMzExMzE0NzgwMTA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月20日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 857, "content_hash": "491eff18f2760e38003f942212f8f64f", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 我退坑很久了，然后刷到s40更新大改动，突然有兴趣，就又回归打了一波。 结果让我只用了一周时间88%胜率就从白金打上了王者。而且我也没用什么鸡爪流，就正常打的。 我都震惊了 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=12c0d7183dd49b2e4655b3886e7053475bdd02d603e18edc858bca94d106fb54JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 860, "content_hash": "3f37a07562fb9192efeedfb06cfa7c6a", "title": "我想买个王者荣耀账号，请问王者荣耀一般去哪买号靠谱? - 知乎", "summary": "2020年11月24日· 前言： 知乎就挺可靠的，我，废渣，多年历史有迹可循，诚信上网，奈何世风日下，加之奇怪嗜好，一小段时间的离网生活直接过气，如今入不敷出，王者农药又占用我大量时间金 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7699f20f8b61bcaa49751837da8b5ace60914ff351437c3e0f9d333572b77e63JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzQzMTc5NDE3OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2020年11月24日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 861, "content_hash": "f0ff51293161f998731b3d618951b20d", "title": "系统体验过《王者荣耀世界》后，它的世界观是什么样的？", "summary": "6 天之前· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特色的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9eaa8a1bf3a5dba878e2085210df8eb034d0052ba7aa55041b99fc883f96d8d3JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODYyNTUwNzQ4NjY5MDE&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "6 天之前", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:55", "updated_at": "2026-04-16 14:37:55"}, {"id": 863, "content_hash": "8bc945039dc183440c641e926e16da61", "title": "《王者荣耀世界》前瞻特别节目宣布 PC 端将于 4 月 10 日正式公测， …", "summary": "2026年3月20日· 这点其实蛮怪异的，因为此前《王者荣耀世界》在几轮测试时候，是有手机端的测试。 而且整体王者开发周期不算短，既然原来已经确认是推出多端且互通，而临门一脚结果是一个先出一 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a79e1cc4f180f400a1842b0e357385baa7490afb6d1c9d3e0a7f28d8c9615bd6JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0d67973f-23ed-6d11-3054-8002220a6c94&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTgzODkxNjIxMTg1NzAyNjY&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月20日", "collected_date": "2026-04-16", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:56", "updated_at": "2026-04-16 14:37:56"}, {"id": 867, "content_hash": "4e9372f61ba082c536732cbd685b9d7b", "title": "如何评价游戏《Apex英雄》？ - 知乎", "summary": "2019年2月5日· 《Apex 英雄》 继承自 Respawn 自家《泰坦陨落》系列的世界观和核心动作设计，套用了大逃杀的游戏框架。如果拿《堡垒之夜》来比的话， 《Apex 英雄》 对大逃杀的玩法框架改动其实 …", "game_name": "APEX英雄", "brand_name": "英雄》", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=bcfb6b597556e77788e2777832a0ae12e11432127c011dcfb9b3898a5aa3b6c5JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=009fdf1d-92b7-6043-22bd-c820932661f1&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzMxMTI4NDUyNg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2019年2月5日", "collected_date": "2026-04-16", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:29", "updated_at": "2026-04-16 14:38:29"}, {"id": 870, "content_hash": "88ac5e4e3797944bef44c8a737a007a1", "title": "如何评价游戏《Apex英雄》？ - 知乎", "summary": "2019年2月5日· 《Apex 英雄》 继承自 Respawn 自家《泰坦陨落》系列的世界观和核心动作设计，套用了大逃杀的游戏框架。如果拿《堡垒之夜》来比的话， 《Apex 英雄》 对大逃杀的玩法框架改动其实 …", "game_name": "APEX英雄", "brand_name": "英雄》", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=726d9b9d839116559b460c3cb912bc3d274b170a750ffbce738fd244752bdf63JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=34a58600-05b2-62c3-27b1-913d0455635c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzMxMTI4NDUyNg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2019年2月5日", "collected_date": "2026-04-16", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:35", "updated_at": "2026-04-16 14:38:35"}, {"id": 873, "content_hash": "1d76a1d6ade119b9eedc847c72910439", "title": "如何评价游戏《Apex英雄》？ - 知乎", "summary": "2019年2月5日· 《Apex 英雄》 继承自 Respawn 自家《泰坦陨落》系列的世界观和核心动作设计，套用了大逃杀的游戏框架。如果拿《堡垒之夜》来比的话， 《Apex 英雄》 对大逃杀的玩法框架改动其实 …", "game_name": "APEX英雄", "brand_name": "英雄》", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=999c3b55aeea424381217513cc3d2f114ddd5758e9d3c6f4ec6a14819b5f0c1aJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=2e979c44-c7d2-641c-069f-8b79c6836589&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzMxMTI4NDUyNg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2019年2月5日", "collected_date": "2026-04-16", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:41", "updated_at": "2026-04-16 14:38:41"}, {"id": 827, "content_hash": "ada4a1a397cc96fa7c3452af2ce5ba47", "title": "【台式电脑推荐】品牌台式整机怎么选择？ 2026.04月 [高性价比 高性 …", "summary": "2026年3月31日· 联想售后，不用多说，遍布全国，售后不用担心。 这款主机，算是笔记本魔改，但是做到了70瓦的性能释放，性能比较强。 真正的8核CPU，加上24G的内存，多开网页办公Office没问题 …", "game_name": "", "brand_name": "联想", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=4161673fa53de22b41d057da93ab39e58a3848e4cfe61d101bf5f7127bad3eb6JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=37b0ccc0-0823-67cd-29d4-dbfd09c4665c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjMwMTQ2NDQ4&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月31日", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:36:53", "updated_at": "2026-04-16 14:36:53"}, {"id": 864, "content_hash": "cbdac24b35760331dd981c2d413e96e4", "title": "recommend me mini phone - Lowyat.NET", "summary": "2025年5月25日· wahai warga /kcan recommend me a simple 4g phone purely for whatsapp?rugged if possible. frequent drop is expected.long battery lifeother spec not important.Short listOppo a3x got …", "game_name": "", "brand_name": "OPPO", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b7612bc12a5e9316ec02afc34a8a53199ba830a610d21187063373ea771c55f2JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=07a5e09a-fd30-6f95-1e6d-f7a7fca16e8a&u=a1aHR0cHM6Ly9mb3J1bS5sb3d5YXQubmV0L3RvcGljLzU1MjQ2MDAvYWxs&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年5月25日", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:10", "updated_at": "2026-04-16 14:38:10"}, {"id": 866, "content_hash": "cf5c10d784e5098e3822f45198b42b03", "title": "《英雄联盟》永恒星碑有什么用？ - 知乎", "summary": "知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …", "game_name": "英雄联盟", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e857ede2b67210af79856374ad9979178f82123a6555b28358a6f0ba277f39b6JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=009fdf1d-92b7-6043-22bd-c820932661f1&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzYzMjYxOTI5NQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:29", "updated_at": "2026-04-16 14:38:29"}, {"id": 869, "content_hash": "908d685a802a33efbb6a96932970a96e", "title": "《英雄联盟》永恒星碑有什么用？ - 知乎", "summary": "知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …", "game_name": "英雄联盟", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c7f7127ce549a127b918d2b6d877824276b73d937f508164e8e8c60c95a3fb91JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=34a58600-05b2-62c3-27b1-913d0455635c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzYzMjYxOTI5NQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:34", "updated_at": "2026-04-16 14:38:34"}, {"id": 872, "content_hash": "f52867ce3a1ba984d3411fcd8efb11e3", "title": "《英雄联盟》永恒星碑有什么用？ - 知乎", "summary": "知乎，中文互联网高质量的问答社区和创作者聚集的原创内容平台，于 2011 年 1 月正式上线，以「让人们更好的分享知识、经验和见解，找到自己的解答」为品牌使命。知乎凭借认真、专业、友善的社区 …", "game_name": "英雄联盟", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0a9833d21b7a6317827c96601327180a4982c4c83a4c3d917f125403c10b78b1JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=2e979c44-c7d2-641c-069f-8b79c6836589&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzYzMjYxOTI5NQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:40", "updated_at": "2026-04-16 14:38:40"}, {"id": 874, "content_hash": "b47844a7941433813c4f73b86f8286f9", "title": "崩坏·星穹铁道奇珍琳琅商店在哪-百度经验", "summary": "品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0", "game_name": "", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=87407cc49b6dc29150fc75038bb4a528d6832b1d32668f7e6eb2e19c75eab735JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=28a95ddb-80b0-6106-249d-4ae68155601d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzNhMmY3YzJlZWYxY2MzNjdhZWQ2MTE3YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:45", "updated_at": "2026-04-16 14:38:45"}, {"id": 876, "content_hash": "626b78e77783fd3642758d05bf723355", "title": "崩坏星穹铁道怎么看剧情回放-百度经验", "summary": "品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=03b17bff64ac8e184ae403b25be5d3ae020affd4a654fd6e1afe36dd1a843dcdJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=28a95ddb-80b0-6106-249d-4ae68155601d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE0YmQyNTZlZDc1OWU3ZmE2ZDI2MTJhYS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:45", "updated_at": "2026-04-16 14:38:45"}, {"id": 877, "content_hash": "d02b51953046ac34c783304a84e49fd9", "title": "崩坏星穹铁道怎么设置展示角色-百度经验", "summary": "2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d2432b81537a4ccae043524f12e4135834d371eadc0127b26cd5d133a2e45395JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=28a95ddb-80b0-6106-249d-4ae68155601d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NjIyZjI0ZGYwYWE3YmNmZGJlYTU2Zi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年4月30日", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:45", "updated_at": "2026-04-16 14:38:45"}, {"id": 879, "content_hash": "5e25f7b691dd2d6344d8b442a228a5a2", "title": "崩坏·星穹铁道奇珍琳琅商店在哪-百度经验", "summary": "品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0", "game_name": "", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8ce2d9022d23c97f9cccdf95997ef783599b1f63fc9d9978420d2fea2dd075feJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=246ffba7-d9c1-6018-3526-ec9ad8906150&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzNhMmY3YzJlZWYxY2MzNjdhZWQ2MTE3YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:49", "updated_at": "2026-04-16 14:38:49"}, {"id": 881, "content_hash": "696bd0955ee9c068da222f297be39130", "title": "崩坏星穹铁道怎么看剧情回放-百度经验", "summary": "品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c89efb16c74702b6e513613f03815472ae03ec250488d6e7693bbb4d6a7ea40eJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=246ffba7-d9c1-6018-3526-ec9ad8906150&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE0YmQyNTZlZDc1OWU3ZmE2ZDI2MTJhYS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:49", "updated_at": "2026-04-16 14:38:49"}, {"id": 882, "content_hash": "d59a2da36bdf6721cdd324db83c12c61", "title": "崩坏星穹铁道怎么设置展示角色-百度经验", "summary": "2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a5ada39f61eb0747a6e815a137f5723137130994514ece1033aaf2fa83618ab6JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=246ffba7-d9c1-6018-3526-ec9ad8906150&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NjIyZjI0ZGYwYWE3YmNmZGJlYTU2Zi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年4月30日", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:49", "updated_at": "2026-04-16 14:38:49"}, {"id": 884, "content_hash": "cb0fa74bc8c95c01b3c0280238615fe8", "title": "崩坏·星穹铁道奇珍琳琅商店在哪-百度经验", "summary": "品牌型号：华为nova10 系统版本：HarmonyOS4.0.0 软件版本：崩坏·星穹铁道1.6.0", "game_name": "", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=02424308ea5488d2f21e9fed2c5d8ff6f0093ef6fda9bc383829fd9d0ead409bJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=15449d5f-dbd4-6ab1-0627-8a62da336b63&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzNhMmY3YzJlZWYxY2MzNjdhZWQ2MTE3YS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:55", "updated_at": "2026-04-16 14:38:55"}, {"id": 886, "content_hash": "ca909d8107b54254fe10cb7dd7b84608", "title": "崩坏星穹铁道怎么看剧情回放-百度经验", "summary": "品牌型号：机械革命蛟龙16k 系统版本：Windows11 软件版本：崩坏星穹铁道2.7.1", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=70e496d52c39077ed3c5adfc0c7c8fff0c687620a10d6eb8c139ff53f953536dJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=15449d5f-dbd4-6ab1-0627-8a62da336b63&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE0YmQyNTZlZDc1OWU3ZmE2ZDI2MTJhYS5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:55", "updated_at": "2026-04-16 14:38:55"}, {"id": 887, "content_hash": "3afc14b80d9f24be3c9305454b97a7c9", "title": "崩坏星穹铁道怎么设置展示角色-百度经验", "summary": "2023年4月30日· 品牌型号：黑鲨3 系统版本：JOYUI12 软件版本：崩坏星穹铁道1.0.5", "game_name": "崩坏：星穹铁道", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=41cab4329dad80678ddcce62d88d381306b9a43793178a782a28319c3ac3b375JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=15449d5f-dbd4-6ab1-0627-8a62da336b63&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzE1NjIyZjI0ZGYwYWE3YmNmZGJlYTU2Zi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年4月30日", "collected_date": "2026-04-16", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:55", "updated_at": "2026-04-16 14:38:55"}, {"id": 865, "content_hash": "7f7bc58b09a9294cbb1e5661656d2e93", "title": "Apex英雄apex英雄段位等级如何划分？ - 知乎", "summary": "首先是每个分段所需要的分数： 菜鸟段位：1RP以上 青铜段位：1000RP以上 白银段位：3000RP以上 黄金段位：5400RP以上 白金段位：8200RP以上 钻石段位：11400RP以上 大师段位：15000RP以上  …", "game_name": "APEX英雄", "brand_name": "英雄apex英雄段位", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=6d17f5de44dcd7dda16d7af0bcae099b2787a5cfe6a39db636fadbcc01b8e5ecJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=009fdf1d-92b7-6043-22bd-c820932661f1&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzU5MDE2OTYwNy9hbnN3ZXJzL3VwZGF0ZWQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 35.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:29", "updated_at": "2026-04-16 14:38:29"}, {"id": 868, "content_hash": "7103b3083a927874482bba25c46967d5", "title": "Apex英雄apex英雄段位等级如何划分？ - 知乎", "summary": "首先是每个分段所需要的分数： 菜鸟段位：1RP以上 青铜段位：1000RP以上 白银段位：3000RP以上 黄金段位：5400RP以上 白金段位：8200RP以上 钻石段位：11400RP以上 大师段位：15000RP以上  …", "game_name": "APEX英雄", "brand_name": "英雄apex英雄段位", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a767dfa12d2f1f1399486b1e01fc7a1cb4f951f9067d252febb9c676926d98b5JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=34a58600-05b2-62c3-27b1-913d0455635c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzU5MDE2OTYwNy9hbnN3ZXJzL3VwZGF0ZWQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 35.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:34", "updated_at": "2026-04-16 14:38:34"}, {"id": 871, "content_hash": "76ad145b1a1071de322194e3e7b83cc8", "title": "Apex英雄apex英雄段位等级如何划分？ - 知乎", "summary": "首先是每个分段所需要的分数： 菜鸟段位：1RP以上 青铜段位：1000RP以上 白银段位：3000RP以上 黄金段位：5400RP以上 白金段位：8200RP以上 钻石段位：11400RP以上 大师段位：15000RP以上  …", "game_name": "APEX英雄", "brand_name": "英雄apex英雄段位", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=468bd99141ea67b581d83377120b9ef28398b9c24ce6daf706f3d052f1a7b82eJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=2e979c44-c7d2-641c-069f-8b79c6836589&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzU5MDE2OTYwNy9hbnN3ZXJzL3VwZGF0ZWQ&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-16", "hot_score": 35.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:38:40", "updated_at": "2026-04-16 14:38:40"}, {"id": 890, "content_hash": "86215561f161fc5f9cb95c2828792ca3", "title": "假期漫展一票难求 游戏IP商业价值持续挖掘", "summary": "1月4日，长达四天的第三届“原神FES”在上海国家会展中心落下帷幕。原神嘉年华线下活动负责人告白向《证券日报》记者介绍，此次参展人数超8万人次，八成观展人员来自上海以外的城市。 近两年，漫展经济持续升温，节假日更成为各地扎堆办展的高峰期。", "game_name": "原神", "brand_name": "", "brand_category": "", "collab_type": "线下活动", "source_url": "https://finance.people.com.cn/n1/2026/0106/c1004-40639824.html", "source_name": "人民网3 个月", "source_type": "bing_news", "image_url": "", "published_date": "3 个月", "collected_date": "2026-04-16", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:39:48", "updated_at": "2026-04-16 14:39:48"}, {"id": 815, "content_hash": "73b9826188b3327fa6286fc60e4925dc", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=07a7b7c8d7825f09f5671509e2aba2ad9bffc0d36c74d2b4ba1bfd5f08717e06JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=320b9617-342f-602d-20fe-812a357e61a5&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:35:04", "updated_at": "2026-04-16 14:35:04"}, {"id": 816, "content_hash": "1c44e7a3dcf194518e86e6a8fb3664c2", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a85916919ea66cba0240cea14edb026937a304cb5e5b197a04ebcd51a59ce3d9JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=145259a4-4d6c-69d6-30e7-4e994c3d680d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:35:07", "updated_at": "2026-04-16 14:35:07"}, {"id": 817, "content_hash": "06322fbe66a239113b57a0f3c0a01ec6", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3c5e69f70c491afe527ff04739720faa580c7c890ced54dde0c19885a8a7ef94JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=13d60ff0-33d4-616d-301d-18cd3285603f&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:35:11", "updated_at": "2026-04-16 14:35:11"}, {"id": 818, "content_hash": "e889422f26468f7b7679e8aa60477107", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=14051e1016bd2071fb9d9959565aaf6c71e7f6eee19b310222c91ce8d0be0109JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=24169b09-903f-6b64-34eb-8c34916e6a54&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:35:29", "updated_at": "2026-04-16 14:35:29"}, {"id": 819, "content_hash": "307d28c4922f6832d573046adf2498ef", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c4e42bb2102e30852ab77caf7eb5176bfc3485d72d5100e4c77fbb68d652e541JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=3b358949-2325-6723-160a-9e7422c06698&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:35:39", "updated_at": "2026-04-16 14:35:39"}, {"id": 820, "content_hash": "e9fc83a65563e4dd832dd7f01d9e93df", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1219cff88036a385ddb2f4afcd31034ae2144031fc63ae9860c664edfcb26c4bJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=231aa961-0e77-6350-0ca5-be5c0f9062fa&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:35:42", "updated_at": "2026-04-16 14:35:42"}, {"id": 821, "content_hash": "e6474b84a3d7eb49e00b8f0ce67e640d", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=30caccfa61206d1b701a6dd1bfb99f5350e149254ccc29dfc629af0a876498adJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=3b12811c-d5f2-6f8f-3bf9-9621d4636e0e&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:35:54", "updated_at": "2026-04-16 14:35:54"}, {"id": 822, "content_hash": "8a4f7fca91e65959234aa9aa0ab02cb1", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9177223edaad0bf4bac8080a15dd12e2a27ec0b9078eee316a0cfecd640f24d9JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=0279582d-51eb-6fb8-3647-4f10507a6e04&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:36:04", "updated_at": "2026-04-16 14:36:04"}, {"id": 823, "content_hash": "07c04797e4162e40c93d671007ae0890", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5c13ee9c72583d68642704cd29489713dd31a7e4856de458e8ddb6810f829bc3JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=155e0759-8e90-6e9b-080e-10648f776f3f&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:36:08", "updated_at": "2026-04-16 14:36:08"}, {"id": 824, "content_hash": "538d8873f4ea273bbd58cfc8edb1abb4", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3e6b99b650be430652378e7c278feeb16a0c2059f4e29de4547f9212ad751812JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1b890866-e145-6b20-13b6-1f5be0a26a67&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:36:17", "updated_at": "2026-04-16 14:36:17"}, {"id": 825, "content_hash": "5790b95e1a946808a0ad92f8d4ca06fb", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=6d6e92287d39c36893061dcbf4e0643dbac1241742de96182be3363b159fe5b1JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=31c19e68-1dc2-630c-352b-89551c536217&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:36:27", "updated_at": "2026-04-16 14:36:27"}, {"id": 826, "content_hash": "0ef2ee5fc7a717f73a15df449bf25998", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=36e49fafa41f2eea0ebb07b990a5dcd210dbaddbe1d5f31089c228791ab3e56bJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=094da139-3b22-6481-1145-b6043a7365b8&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:36:38", "updated_at": "2026-04-16 14:36:38"}, {"id": 828, "content_hash": "b3c5f085f2ac2f77b61a9515a9618771", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=2698fded3eb69d45786c5abcefebb12312776215df2b401c010affd90db72d8dJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=2d562e32-42be-6c54-1593-390f43596d89&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:36:57", "updated_at": "2026-04-16 14:36:57"}, {"id": 829, "content_hash": "3215e3666ffe5aba2319b8a6dde4adf4", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e6368f11f3069df66d5b780fc5747262133782d1d337118819ec87d099291401JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=3e5b62b4-315c-6b36-1bcc-758930bb6ae0&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:12", "updated_at": "2026-04-16 14:37:12"}, {"id": 830, "content_hash": "b5e8b21883f39a4ac31bb6ad684dff07", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=541639496ba1d6de8f1ae497d6c24fa363952654b9d97775ca64c3bb6553d978JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1aa56686-3a38-60f5-299b-71bb3b69617f&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:15", "updated_at": "2026-04-16 14:37:15"}, {"id": 831, "content_hash": "8053b6e63d26c00e16676bf763162f4a", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5c4a69ee462102b78989815de7bd5b492e751dcf6fa822524f4eb8dbf4eb67baJmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=1cf42efa-51ef-66eb-013a-39c750be67b0&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:22", "updated_at": "2026-04-16 14:37:22"}, {"id": 832, "content_hash": "6cca057fa6c440f5b738a39b8404ab71", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=53602bae7feb62ef70867da558dd1e58a3797ba4181bccf8e85b42528a497222JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=28583e8e-8378-6cde-1066-29b3829f6d9a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:32", "updated_at": "2026-04-16 14:37:32"}, {"id": 833, "content_hash": "7c7200170a0ad35035a97223133280d1", "title": "2026年4月 游戏手柄选购推荐——飞智北通国产双雄矩阵", "summary": "2026年4月6日· 另外不少国产品牌也是看到了游戏外设的蓬勃发展，所以游戏手柄也是卷起来啦。 目前国内消息前2位的就是飞智和北通，这2家的产品线是最全，产品力也始终第一梯队。 这2家最近几年 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=74a7c5d1b82473a8f78641a8d1e152423405e9be81509b71e51fcce2c9e80ff1JmltdHM9MTc3NjIxMTIwMA&ptn=3&ver=2&hsh=4&fclid=2afd82d0-4761-6300-0e77-95ed4686626f&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjg1MDM5MjYz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月6日", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:37:36", "updated_at": "2026-04-16 14:37:36"}, {"id": 889, "content_hash": "2dcd0c7b4beb88785c59c6c93e2b99b9", "title": "超越百亿赛道？游戏IP周边，格局再变", "summary": "最近几天，一则“叠纸游戏要做AI玩具/乙游机器人”的消息，引起不小的玩家轰动，各种猜测与调侃纷至沓来。话题在小红书 ...", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://finance.sina.com.cn/wm/2026-03-23/doc-inhrzcpi7649743.shtml", "source_name": "新浪网23 天", "source_type": "bing_news", "image_url": "", "published_date": "23 天", "collected_date": "2026-04-16", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-16 14:39:48", "updated_at": "2026-04-16 14:39:48"}];
+
+// 图表配置
+const chartColors = ['#6C5CE7','#FD79A8','#00B894','#FDCB6E','#74B9FF','#FF6B6B','#A29BFE','#55EFC4','#FAB1A0','#81ECEC'];
+const chartDefaults = {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#94A1B2', font: { size: 11 } } } }
+};
+
+// 游戏分布图
+new Chart(document.getElementById('gameChart'), {
+    type: 'bar',
+    data: {
+        labels: ["王者荣耀", "未知", "崩坏：星穹铁道", "APEX英雄", "英雄联盟", "原神"],
+        datasets: [{ data: [30, 24, 12, 6, 3, 1], backgroundColor: chartColors, borderRadius: 6 }]
+    },
+    options: { ...chartDefaults, indexAxis: 'y', plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } }, y: { ticks: { color: '#94A1B2' }, grid: { display: false } } }
+    }
+});
+
+// 品牌类别图
+new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["3C数码", "未知", "其他"],
+        datasets: [{ data: [41, 29, 6], backgroundColor: chartColors, borderWidth: 0 }]
+    },
+    options: { ...chartDefaults, cutout: '55%' }
+});
+
+// 合作类型图
+new Chart(document.getElementById('typeChart'), {
+    type: 'polarArea',
+    data: {
+        labels: ["其他", "线下活动"],
+        datasets: [{ data: [75, 1], backgroundColor: chartColors.map(c => c + '88') }]
+    },
+    options: { ...chartDefaults, scales: { r: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } } } }
+});
+
+// 趋势图
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: ["2026-03-20", "2026-03-21", "2026-03-22", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-28", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16"],
+        datasets: [{ data: [47, 47, 5, 4, 2, 5, 15, 11, 3, 5, 4, 6, 10, 55, 34, 71, 39, 88, 45, 77, 21, 69, 90, 61, 76], borderColor: '#6C5CE7', backgroundColor: 'rgba(108,92,231,0.1)',
+            fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6C5CE7' }]
+    },
+    options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2', maxTicksLimit: 10 }, grid: { color: '#2D2D52' } },
+                   y: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' }, beginAtZero: true } }
+    }
+});
+
+// 筛选功能
+function filterCards() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const game = document.getElementById('gameFilter').value;
+    const cat = document.getElementById('catFilter').value;
+    
+    document.querySelectorAll('.intel-card').forEach(card => {
+        const matchSearch = !search || card.textContent.toLowerCase().includes(search);
+        const matchGame = !game || card.dataset.game === game;
+        const matchCat = !cat || card.dataset.category === cat;
+        card.style.display = (matchSearch && matchGame && matchCat) ? '' : 'none';
+    });
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('gameFilter').value = '';
+    document.getElementById('catFilter').value = '';
+    filterCards();
+}
+
+// 详情弹窗
+function showDetail(id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    
+    let tagsHtml = '';
+    if (item.game_name) tagsHtml += '<span class="tag tag-game">' + item.game_name + '</span>';
+    if (item.brand_name) tagsHtml += '<span class="tag tag-brand">' + item.brand_name + '</span>';
+    if (item.brand_category) tagsHtml += '<span class="tag tag-cat">' + item.brand_category + '</span>';
+    if (item.collab_type) tagsHtml += '<span class="tag tag-type">' + item.collab_type + '</span>';
+    
+    let html = '<h2>' + item.title + '</h2>';
+    html += '<div class="card-tags" style="margin-bottom:16px">' + tagsHtml + '</div>';
+    
+    const fields = [
+        ['游戏', item.game_name],
+        ['品牌', item.brand_name],
+        ['品牌类别', item.brand_category],
+        ['合作类型', item.collab_type],
+        ['信息来源', item.source_name || item.source_type],
+        ['发布日期', item.published_date],
+        ['采集日期', item.collected_date],
+        ['热度评分', item.hot_score + '/100'],
+    ];
+    
+    fields.forEach(([label, value]) => {
+        if (value) {
+            html += '<div class="detail-row"><span class="detail-label">' + label + '：</span><span class="detail-value">' + value + '</span></div>';
+        }
+    });
+    
+    if (item.summary) {
+        html += '<div class="detail-row"><span class="detail-label">摘要：</span></div>';
+        html += '<div class="detail-content">' + item.summary + '</div>';
+    }
+    
+    if (item.full_content) {
+        html += '<div class="detail-row" style="margin-top:16px"><span class="detail-label">正文内容：</span></div>';
+        html += '<div class="detail-content">' + item.full_content + '</div>';
+    }
+    
+    if (item.source_url) {
+        html += '<a href="' + item.source_url + '" target="_blank" class="detail-link">🔗 查看原文</a>';
+    }
+    
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
