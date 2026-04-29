@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏异业合作日报 - 2026-04-29</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --bg: #0F0E17;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --border: #2D2D52;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #FF6B6B;
+            --gradient1: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            --gradient2: linear-gradient(135deg, #FD79A8, #FDCB6E);
+            --gradient3: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 顶部背景动画 */
+        .hero {
+            background: linear-gradient(135deg, #0F0E17 0%, #1A1A2E 50%, #16213E 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(253,121,168,0.08) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+        
+        .hero h1 {
+            font-size: 2.2em;
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .subtitle {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-card:nth-child(2) .stat-number {
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-card:nth-child(3) .stat-number {
+            background: var(--gradient3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        /* 图表区 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        .chart-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .chart-box h3 {
+            margin-bottom: 16px;
+            color: var(--primary-light);
+            font-size: 1em;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-bar label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .filter-bar select, .filter-bar input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-bar select:focus, .filter-bar input:focus {
+            border-color: var(--primary);
+        }
+        
+        .filter-bar .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-btn {
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .filter-btn:hover { opacity: 0.85; }
+        
+        .reset-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        /* 情报卡片 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .intel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .intel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(108,92,231,0.15);
+            border-color: var(--primary-light);
+            background: var(--bg-card-hover);
+        }
+        
+        .card-header {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .score-badge {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85em;
+        }
+        
+        .score-badge.hot {
+            background: linear-gradient(135deg, #FF6B6B, #FD79A8);
+            color: white;
+        }
+        
+        .score-badge.warm {
+            background: linear-gradient(135deg, #FDCB6E, #F39C12);
+            color: #333;
+        }
+        
+        .score-badge.cool {
+            background: rgba(108,92,231,0.2);
+            color: var(--primary-light);
+        }
+        
+        .card-title {
+            font-size: 1em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-body {
+            flex: 1;
+            margin: 12px 0;
+        }
+        
+        .card-summary {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .tag-game {
+            background: rgba(108,92,231,0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.3);
+        }
+        
+        .tag-brand {
+            background: rgba(253,121,168,0.15);
+            color: #FD79A8;
+            border: 1px solid rgba(253,121,168,0.3);
+        }
+        
+        .tag-cat {
+            background: rgba(0,184,148,0.15);
+            color: #00B894;
+            border: 1px solid rgba(0,184,148,0.3);
+        }
+        
+        .tag-type {
+            background: rgba(253,203,110,0.15);
+            color: #FDCB6E;
+            border: 1px solid rgba(253,203,110,0.3);
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        
+        /* 详情弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .modal h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            padding-right: 40px;
+            line-height: 1.4;
+        }
+        
+        .modal .detail-row {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+            align-items: baseline;
+        }
+        
+        .modal .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .modal .detail-value {
+            font-size: 0.95em;
+        }
+        
+        .modal .detail-content {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            line-height: 1.8;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .modal .detail-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--gradient1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .modal .detail-link:hover { opacity: 0.85; }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state .icon { font-size: 4em; margin-bottom: 16px; }
+        
+        /* 返回门户按钮 */
+        .back-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .back-portal:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        
+        /* ===== 联动速览模块 ===== */
+        .glance-section {
+            margin: 28px 0;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon { font-size: 1em; }
+        
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 18px;
+        }
+        
+        .section-desc strong {
+            color: var(--accent);
+        }
+        
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .glance-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .glance-box-title {
+            font-size: 1em;
+            color: var(--primary-light);
+            margin-bottom: 14px;
+        }
+        
+        .glance-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .glance-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .glance-tag:hover {
+            transform: translateY(-2px);
+        }
+        
+        .glance-tag em {
+            font-style: normal;
+            font-size: 0.85em;
+            opacity: 0.7;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        
+        .glance-game {
+            background: rgba(108,92,231,0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.25);
+        }
+        
+        .glance-brand {
+            background: rgba(253,121,168,0.08);
+            border: 1px solid rgba(253,121,168,0.2);
+        }
+        
+        .glance-brands {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .brand-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .brand-cat-label {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .glance-empty {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .glance-pairs-box {
+            margin-top: 0;
+        }
+        
+        .pairs-table-wrap {
+            overflow-x: auto;
+        }
+        
+        .pairs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+        }
+        
+        .pairs-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        
+        .pairs-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(45,45,82,0.5);
+            vertical-align: middle;
+        }
+        
+        .pairs-table tr:hover td {
+            background: rgba(108,92,231,0.05);
+        }
+        
+        .pair-game {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .pair-x {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1em;
+            padding: 10px 6px;
+        }
+        
+        .pair-brand {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .pair-cat {
+            font-size: 0.85em;
+        }
+        
+        .pair-type {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+        
+        .pair-count {
+            text-align: center;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5em; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .cards-container { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .glance-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<a href="../index.html" class="back-portal">← 返回情报站</a>
+
+<div class="hero">
+    <h1>🎮 游戏异业合作情报日报</h1>
+    <p class="subtitle">📅 2026-04-29 &nbsp;|&nbsp; 共收录 50 条情报</p>
+</div>
+
+<div class="container">
+    <!-- 核心统计 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">50</div>
+            <div class="stat-label">今日情报总数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">2</div>
+            <div class="stat-label">涉及游戏数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">3</div>
+            <div class="stat-label">品牌类别数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">1439</div>
+            <div class="stat-label">累计情报总量</div>
+        </div>
+    </div>
+
+    
+    <!-- 联动速览模块 -->
+    <div class="glance-section">
+        <h2 class="section-title"><span class="section-icon">🔗</span> 联动速览</h2>
+        <p class="section-desc">今日情报涉及 <strong>1</strong> 款游戏、<strong>3</strong> 个品牌，共 <strong>2</strong> 组联动配对</p>
+        
+        <div class="glance-grid">
+            <!-- 游戏清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🎮 涉及游戏 (1)</h3>
+                <div class="glance-tags"><span class="glance-tag glance-game">王者荣耀<em>31</em></span></div>
+            </div>
+            
+            <!-- 品牌清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🏢 涉及品牌 (3)</h3>
+                <div class="glance-brands"><div class="brand-group"><span class="brand-cat-label" style="background:#74B9FF22;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">荣耀<em>28</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">华为<em>3</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#94A1B222;color:#94A1B2;border:1px solid #94A1B240">其他</span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">5090Dv2&RX<em>18</em></span></div></div>
+            </div>
+        </div>
+        
+        <!-- 联动配对表 -->
+        
+        <div class="glance-box glance-pairs-box">
+            <h3 class="glance-box-title">🤝 联动配对一览 (2)</h3>
+            <div class="pairs-table-wrap">
+                <table class="pairs-table">
+                    <thead>
+                        <tr><th>游戏</th><th></th><th>品牌</th><th>类别</th><th>合作类型</th><th>情报数</th></tr>
+                    </thead>
+                    <tbody>
+        <tr>
+            <td><span class="pair-game">王者荣耀</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">AR互动、其他</span></td>
+            <td class="pair-count">28</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">王者荣耀</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">华为</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">3</td>
+        </tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- 图表 -->
+    <div class="charts-grid">
+        <div class="chart-box">
+            <h3>📊 游戏分布 TOP10</h3>
+            <canvas id="gameChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🏷️ 品牌类别分布</h3>
+            <canvas id="catChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🤝 合作类型分布</h3>
+            <canvas id="typeChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>📈 近30天采集趋势</h3>
+            <canvas id="trendChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="filter-bar">
+        <label>🔍</label>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、品牌、游戏..." oninput="filterCards()">
+        <select id="gameFilter" onchange="filterCards()">
+            <option value="">全部游戏</option>
+            <option value="王者荣耀">王者荣耀 (31)</option><option value="未知">未知 (19)</option>
+        </select>
+        <select id="catFilter" onchange="filterCards()">
+            <option value="">全部类别</option>
+            <option value="3C数码">3C数码 (31)</option><option value="其他">其他 (18)</option><option value="未知">未知 (1)</option>
+        </select>
+        <button class="reset-btn" onclick="resetFilters()">重置</button>
+    </div>
+
+    <!-- 情报卡片 -->
+    <div class="cards-container" id="cardsContainer">
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1411)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1413)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月2日· 如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 10 日上线？ 《王者荣耀世界》3月30日10 点开放昵称抢注，PC 端定档 4 月 10 日，移动端四月内上线。 这款开放世界新作能否延 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1415)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》新英雄「空空儿」？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者荣耀 52% 多人联机在线竞技游戏 (MOBA) / 2015-11-26 发布 / IOS ⋅ Android / 天美工作室 王者新英雄空空儿将上线体验服 显示全部 关注者 83 被浏览</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1417)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1421)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1423)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月2日· 如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 10 日上线？ 《王者荣耀世界》3月30日10 点开放昵称抢注，PC 端定档 4 月 10 日，移动端四月内上线。 这款开放世界新作能否延 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1425)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》新英雄「空空儿」？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者荣耀 52% 多人联机在线竞技游戏 (MOBA) / 2015-11-26 发布 / IOS ⋅ Android / 天美工作室 王者新英雄空空儿将上线体验服 显示全部 关注者 83 被浏览</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1427)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1431)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀》十周年官宣将推出新英雄「六 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年10月27</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1433)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月2日· 如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 10 日上线？ 《王者荣耀世界》3月30日10 点开放昵称抢注，PC 端定档 4 月 10 日，移动端四月内上线。 这款开放世界新作能否延 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1435)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">如何评价《王者荣耀》新英雄「空空儿」？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者荣耀 52% 多人联机在线竞技游戏 (MOBA) / 2015-11-26 发布 / IOS ⋅ Android / 天美工作室 王者新英雄空空儿将上线体验服 显示全部 关注者 83 被浏览</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1437)">
+            <div class="card-header">
+                <div class="score-badge hot">75.0</div>
+                <h3 class="card-title">《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年3月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1412)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀如何加入高校频道-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为NOVA 8 系统版本：安卓11 软件版本：王者荣耀3.81.1.8</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1422)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀如何加入高校频道-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为NOVA 8 系统版本：安卓11 软件版本：王者荣耀3.81.1.8</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1432)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀如何加入高校频道-百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">品牌型号：华为NOVA 8 系统版本：安卓11 软件版本：王者荣耀3.81.1.8</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">华为</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1402)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀世界》移动端已于 17 日 7 点开服，如何评价这款游戏在移 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月17日· 《王者荣耀世界》移动端已于 17 日 7 点开服，如何评价这款游戏在移动端的表现？</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月17日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1409)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">京ICP证110745号 · 京ICP备13052560号-1 · 京公网安备 11010802020088 号 · 互联网新闻信息服务许可证：11220250001 · 京网文 [2025]0422-132 号 · 药品医疗器械网络信息服务备案（京）网药械信息备 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1410)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀电脑版怎么操作 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2019年9月22日· 然后点击开始 3 输入王者荣耀的账号和密码，登陆到游戏里 4 键盘字幕W、S、A、D分别代表了四个方向，也就是前后左右 5 需要将这个开火功能开启 6 根据自己玩游戏的个人爱好以及习 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2019年9月22日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1414)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀无法自由选择微信双开的账号登录怎么办 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2021年4月2日· 王者荣耀无法自由选择微信双开的账号登录怎么办 天然很美丽 2021-04-02 70058人看过 很多朋友碰到玩王者荣耀时，无法自由选择微信双开的账号登录，每次系统都默认登录其中一个账 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2021年4月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="AR互动"
+             onclick="showDetail(1416)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成自己家私人物品，由着自己喜好天天瞎几把微操改来改去，崇祯好歹硬撑 17 年，这些扫码策划 17 天就能搞崩一个版 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">AR互动</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1418)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何玩好《王者荣耀》？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">索引 游戏的理解 英雄的相生相克 团战的前提与意义 进阶王者与荣耀王者 游戏的理解 小丑希望大家能明白MOBA类游戏本质就是推塔游戏，而推塔游戏的一个重要原则：以大欺小，以多欺少，团战胜利的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1419)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">京ICP证110745号 · 京ICP备13052560号-1 · 京公网安备 11010802020088 号 · 互联网新闻信息服务许可证：11220250001 · 京网文 [2025]0422-132 号 · 药品医疗器械网络信息服务备案（京）网药械信息备 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1420)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀电脑版怎么操作 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2019年9月22日· 然后点击开始 3 输入王者荣耀的账号和密码，登陆到游戏里 4 键盘字幕W、S、A、D分别代表了四个方向，也就是前后左右 5 需要将这个开火功能开启 6 根据自己玩游戏的个人爱好以及习 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2019年9月22日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1424)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀无法自由选择微信双开的账号登录怎么办 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2021年4月2日· 王者荣耀无法自由选择微信双开的账号登录怎么办 天然很美丽 2021-04-02 70058人看过 很多朋友碰到玩王者荣耀时，无法自由选择微信双开的账号登录，每次系统都默认登录其中一个账 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2021年4月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="AR互动"
+             onclick="showDetail(1426)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成自己家私人物品，由着自己喜好天天瞎几把微操改来改去，崇祯好歹硬撑 17 年，这些扫码策划 17 天就能搞崩一个版 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">AR互动</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1428)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何玩好《王者荣耀》？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">索引 游戏的理解 英雄的相生相克 团战的前提与意义 进阶王者与荣耀王者 游戏的理解 小丑希望大家能明白MOBA类游戏本质就是推塔游戏，而推塔游戏的一个重要原则：以大欺小，以多欺少，团战胜利的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1429)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">京ICP证110745号 · 京ICP备13052560号-1 · 京公网安备 11010802020088 号 · 互联网新闻信息服务许可证：11220250001 · 京网文 [2025]0422-132 号 · 药品医疗器械网络信息服务备案（京）网药械信息备 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1430)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀电脑版怎么操作 - 百度经验</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2019年9月22日· 然后点击开始 3 输入王者荣耀的账号和密码，登陆到游戏里 4 键盘字幕W、S、A、D分别代表了四个方向，也就是前后左右 5 需要将这个开火功能开启 6 根据自己玩游戏的个人爱好以及习 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2019年9月22日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1434)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀无法自由选择微信双开的账号登录怎么办 ...</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2021年4月2日· 王者荣耀无法自由选择微信双开的账号登录怎么办 天然很美丽 2021-04-02 70058人看过 很多朋友碰到玩王者荣耀时，无法自由选择微信双开的账号登录，每次系统都默认登录其中一个账 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2021年4月2日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="AR互动"
+             onclick="showDetail(1436)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">2025 年了，《王者荣耀》还火吗？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2025年2月5日· 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成自己家私人物品，由着自己喜好天天瞎几把微操改来改去，崇祯好歹硬撑 17 年，这些扫码策划 17 天就能搞崩一个版 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">AR互动</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2025年2月5日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1438)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">如何玩好《王者荣耀》？ - 知乎</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">索引 游戏的理解 英雄的相生相克 团战的前提与意义 进阶王者与荣耀王者 游戏的理解 小丑希望大家能明白MOBA类游戏本质就是推塔游戏，而推塔游戏的一个重要原则：以大欺小，以多欺少，团战胜利的 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-04-29</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1390)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1391)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1392)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1393)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1394)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1395)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1396)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1397)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1398)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1399)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1400)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1401)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1403)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1404)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1405)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1406)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1407)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1408)">
+            <div class="card-header">
+                <div class="score-badge warm">45.0</div>
+                <h3 class="card-title">2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …</p>
+                <div class="card-tags"><span class="tag tag-brand">5090Dv2&RX</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月9日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1439)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">筑就存量竞争护城河，祖龙娱乐以IP赋能游戏长效增长</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">据Sensor Tower发布的《2026年全球IP游戏市场洞察》，2025年全球授权IP手游内购收入达到了184亿美元，与2022年、2023年基本齐平。 与此同时，IP手游市场呈现出鲜明的“存量博弈”特征。尽管全球IP手游下载量持续下行，但平均单次下载收入却逆势上涨，2025年同比 ...</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">财经网28 天</span>
+                <span class="date">28 天</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeDetail(event)">
+    <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// 所有条目数据
+const allItems = [{"id": 1411, "content_hash": "77482bed5f0f7401a7bfecb81dca7634", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六 ...", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=fbd6608481779f41766504b42b11f8da4ff56008961483c7e9f9780688367e07JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:22", "updated_at": "2026-04-29 09:02:22"}, {"id": 1413, "content_hash": "b6ca89933a772ec06596f085da8e31e4", "title": "如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 ...", "summary": "2026年4月2日· 如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 10 日上线？ 《王者荣耀世界》3月30日10 点开放昵称抢注，PC 端定档 4 月 10 日，移动端四月内上线。 这款开放世界新作能否延 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ec56c1d3ee44c86e4287b4c6f37b898952c68c10c6edf8e9a18de66d18fcdc41JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjIwNjQyNDkzNjc3MDA4NTY&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月2日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:22", "updated_at": "2026-04-29 09:02:22"}, {"id": 1415, "content_hash": "82ef7301cc127132fa9a8af9eaa05392", "title": "如何评价《王者荣耀》新英雄「空空儿」？ - 知乎", "summary": "王者荣耀 52% 多人联机在线竞技游戏 (MOBA) / 2015-11-26 发布 / IOS ⋅ Android / 天美工作室 王者新英雄空空儿将上线体验服 显示全部 关注者 83 被浏览", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e055ea8ca3e921cb800ca72e57c5be53a22e0a5f8cee050b75c7b6934eb31199JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExNTMzMjAxMTM3&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:22", "updated_at": "2026-04-29 09:02:22"}, {"id": 1417, "content_hash": "54012b0f2b71e52db5a1bab2562f240c", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏 ...", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d3688f2ebf5b50a3fac014aa67ccf1988f06e122156d4298b73faa40dbcb75a9JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:23", "updated_at": "2026-04-29 09:02:23"}, {"id": 1421, "content_hash": "36474dc3002fb9e24ef08a10125dbe98", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六 ...", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=2e7e99527ca23802a11fde0faf8a98854bce10cf83496559ce55f2513eeb3b0eJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1423, "content_hash": "117590cc4a75f397e26d3e8dc41db9e0", "title": "如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 ...", "summary": "2026年4月2日· 如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 10 日上线？ 《王者荣耀世界》3月30日10 点开放昵称抢注，PC 端定档 4 月 10 日，移动端四月内上线。 这款开放世界新作能否延 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=97aaf71db06a94aae5010aeecdc05578efec256b9395dfe19940c7ac6572617fJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjIwNjQyNDkzNjc3MDA4NTY&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月2日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1425, "content_hash": "e5abca043d1f5c603500236bb80e10ec", "title": "如何评价《王者荣耀》新英雄「空空儿」？ - 知乎", "summary": "王者荣耀 52% 多人联机在线竞技游戏 (MOBA) / 2015-11-26 发布 / IOS ⋅ Android / 天美工作室 王者新英雄空空儿将上线体验服 显示全部 关注者 83 被浏览", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=acd01c222a796caebef827c17bd9961572a118fafa3428539170eb91e610e95cJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExNTMzMjAxMTM3&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1427, "content_hash": "154b57a0f775c754e89b8538fa41d979", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏 ...", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=dc953322be9a8235e2147ef48101a3869b51a0f3f3d008f71418c3772ae331c4JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1431, "content_hash": "d5d986b9ec81b369959d33c86cbf157f", "title": "如何看待《王者荣耀》十周年官宣将推出新英雄「六 ...", "summary": "2025年10月27日· 今日，王者荣耀官方发布新英雄“六耳”预告，预告片中“六耳”与孙悟空在王者峡谷上演真假美猴王之间的宿命对决！ 又来一只猴子？ 王者荣耀发布新英雄预告 “六… 显示全部 关注者 192  …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c8abe6e59c086fd5c5a14897dfd73c0546a313b6455a377a7a05ffd6a3f749bdJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NjU5MDM3NTM1NDM2NzI4NTU&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年10月27日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1433, "content_hash": "5513f1e1ed04526b46f54d6f20026603", "title": "如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 ...", "summary": "2026年4月2日· 如何看待《王者荣耀世界》开启昵称抢注，PC 端 4 月 10 日上线？ 《王者荣耀世界》3月30日10 点开放昵称抢注，PC 端定档 4 月 10 日，移动端四月内上线。 这款开放世界新作能否延 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3245c0cd5d6247b95412ebe9681f3ecca4f1e7795deaabf1ee773fb68710863dJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjIwNjQyNDkzNjc3MDA4NTY&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月2日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1435, "content_hash": "e5b277c66bf1c8a8baff44462c25e861", "title": "如何评价《王者荣耀》新英雄「空空儿」？ - 知乎", "summary": "王者荣耀 52% 多人联机在线竞技游戏 (MOBA) / 2015-11-26 发布 / IOS ⋅ Android / 天美工作室 王者新英雄空空儿将上线体验服 显示全部 关注者 83 被浏览", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8791b1b9ff58200d72b22a7f236586bffa90023d412eba67ff70118f44539409JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExNTMzMjAxMTM3&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1437, "content_hash": "c8b8eba557680fc6f6a6a7ed2894de83", "title": "《王者荣耀世界》宣布定档 2026 年 4 月上线，在游戏 ...", "summary": "2026年3月2日· 《王者荣耀世界》是由腾讯天美工作室研发的多人冒险游戏。游戏整体设计延用王者荣耀东方幻想美学思路，基于玩家对王者IP及英雄的熟悉感，构建世界风貌、讲述英雄故事，打造独具特 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=118b0ea6222f1bbf3e11e07f8f25fefa82a397db497a4c93e1a472a85af24439JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMTE3NTMzMjc5Njk0NjIwOTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年3月2日", "collected_date": "2026-04-29", "hot_score": 75.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1412, "content_hash": "dc52c133e7812a6e0fb440176a4f8e2c", "title": "王者荣耀如何加入高校频道-百度经验", "summary": "品牌型号：华为NOVA 8 系统版本：安卓11 软件版本：王者荣耀3.81.1.8", "game_name": "王者荣耀", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b96892f4c4581cd024357302ea36c9702e20b1b76e646de70e43a7c668a7bc4bJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzIyYTI5OWI1ZjVkZTdkZGYxODM3NmEzMi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:22", "updated_at": "2026-04-29 09:02:22"}, {"id": 1422, "content_hash": "85362b73218657bf277d41a47e49b1e9", "title": "王者荣耀如何加入高校频道-百度经验", "summary": "品牌型号：华为NOVA 8 系统版本：安卓11 软件版本：王者荣耀3.81.1.8", "game_name": "王者荣耀", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f54080f052692ebdbea03900fe12d69decdc96ec6a98f45138cfcae7e38f85aeJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzIyYTI5OWI1ZjVkZTdkZGYxODM3NmEzMi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1432, "content_hash": "a43a9e2715d0c34dc74992ce99615107", "title": "王者荣耀如何加入高校频道-百度经验", "summary": "品牌型号：华为NOVA 8 系统版本：安卓11 软件版本：王者荣耀3.81.1.8", "game_name": "王者荣耀", "brand_name": "华为", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=936814aea5299d1f2b34f584da654bae7e0d12fac3c86397f01b56dcdb048e41JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzIyYTI5OWI1ZjVkZTdkZGYxODM3NmEzMi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1402, "content_hash": "b1b788b4c98ec2097200a5c10f265bf4", "title": "《王者荣耀世界》移动端已于 17 日 7 点开服，如何评价这款游戏在移 …", "summary": "2026年4月17日· 《王者荣耀世界》移动端已于 17 日 7 点开服，如何评价这款游戏在移动端的表现？", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=01abde4ad885d54d916f8be58c95bde6c8f07460a7c4d48f2c466f8403a14993JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=3c1acdf9-845e-64ea-139d-dab385cf651c&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjg0MTgzMDc0MjY5NjgwMTg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月17日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:01:35", "updated_at": "2026-04-29 09:01:35"}, {"id": 1409, "content_hash": "134999794c8e30ab748f8c0778396c03", "title": "王者荣耀 - 知乎", "summary": "京ICP证110745号 · 京ICP备13052560号-1 · 京公网安备 11010802020088 号 · 互联网新闻信息服务许可证：11220250001 · 京网文 [2025]0422-132 号 · 药品医疗器械网络信息服务备案（京）网药械信息备 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b8bd53c224670458a9c495306a87f18b77fadf637255ff6b509090b176544037JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RvcGljLzIwMDM0MDE2&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:22", "updated_at": "2026-04-29 09:02:22"}, {"id": 1410, "content_hash": "90608b648dbe1741fb66a01baa10fb05", "title": "王者荣耀电脑版怎么操作 - 百度经验", "summary": "2019年9月22日· 然后点击开始 3 输入王者荣耀的账号和密码，登陆到游戏里 4 键盘字幕W、S、A、D分别代表了四个方向，也就是前后左右 5 需要将这个开火功能开启 6 根据自己玩游戏的个人爱好以及习 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a3c8bb13bf4b707dced074522e6d31903b5d275fdfbf4e9e31b2165364f3efe6JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlL2I3MDAxZmUxMjc1ZTQ2NGU3MjgyZGRiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2019年9月22日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:22", "updated_at": "2026-04-29 09:02:22"}, {"id": 1414, "content_hash": "3eafed5d21f71db1c7630ebe8157a4e5", "title": "王者荣耀无法自由选择微信双开的账号登录怎么办 ...", "summary": "2021年4月2日· 王者荣耀无法自由选择微信双开的账号登录怎么办 天然很美丽 2021-04-02 70058人看过 很多朋友碰到玩王者荣耀时，无法自由选择微信双开的账号登录，每次系统都默认登录其中一个账 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=35ca29b5f8aaf4a51dc43c9c91024e3e46ae9c93bf0d1aa9bdeb2fb0783009b0JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzBmNWZiMDk5ZjZmYTU3MmM4MzM0ZWFmNi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2021年4月2日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:22", "updated_at": "2026-04-29 09:02:22"}, {"id": 1416, "content_hash": "d7a5aefb261b4b63b94850ab578ac93b", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成自己家私人物品，由着自己喜好天天瞎几把微操改来改去，崇祯好歹硬撑 17 年，这些扫码策划 17 天就能搞崩一个版 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "AR互动", "source_url": "https://www.bing.com/ck/a?!&&p=695ae00f7a88a5c3681cdfc23474cd2eef25470ba4cd09c57d9b13f4650181eaJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:23", "updated_at": "2026-04-29 09:02:23"}, {"id": 1418, "content_hash": "12121dba1447c7b60588161163bf4d52", "title": "如何玩好《王者荣耀》？ - 知乎", "summary": "索引 游戏的理解 英雄的相生相克 团战的前提与意义 进阶王者与荣耀王者 游戏的理解 小丑希望大家能明白MOBA类游戏本质就是推塔游戏，而推塔游戏的一个重要原则：以大欺小，以多欺少，团战胜利的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=dd053d21f7857cf0c7cabc30079c501db5ec128f36891fddb345c4acda3aa82bJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=2f479ae2-01b9-627b-362e-8da800e863c4&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzMzMjU2MzYwMg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:23", "updated_at": "2026-04-29 09:02:23"}, {"id": 1419, "content_hash": "b647ec3e734d361cde908686aa7a2f5a", "title": "王者荣耀 - 知乎", "summary": "京ICP证110745号 · 京ICP备13052560号-1 · 京公网安备 11010802020088 号 · 互联网新闻信息服务许可证：11220250001 · 京网文 [2025]0422-132 号 · 药品医疗器械网络信息服务备案（京）网药械信息备 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=91a3eb8be3c4db1cff580b4916441feb40ea252aafb301bfba88a565ba566683JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RvcGljLzIwMDM0MDE2&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1420, "content_hash": "0aa62124b66b8e12893d2dfc36b42289", "title": "王者荣耀电脑版怎么操作 - 百度经验", "summary": "2019年9月22日· 然后点击开始 3 输入王者荣耀的账号和密码，登陆到游戏里 4 键盘字幕W、S、A、D分别代表了四个方向，也就是前后左右 5 需要将这个开火功能开启 6 根据自己玩游戏的个人爱好以及习 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=93ec7935765eea185bd26a156ef25f6609b9bbad74854b9ef61a40b5a4a08f52JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlL2I3MDAxZmUxMjc1ZTQ2NGU3MjgyZGRiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2019年9月22日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1424, "content_hash": "fbd91e1e8ca01f81b1b614f3362908a2", "title": "王者荣耀无法自由选择微信双开的账号登录怎么办 ...", "summary": "2021年4月2日· 王者荣耀无法自由选择微信双开的账号登录怎么办 天然很美丽 2021-04-02 70058人看过 很多朋友碰到玩王者荣耀时，无法自由选择微信双开的账号登录，每次系统都默认登录其中一个账 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=544d59254d642a53a67b1fc27a875ca4a23adcded221054c7ae27dca79ba61efJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzBmNWZiMDk5ZjZmYTU3MmM4MzM0ZWFmNi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2021年4月2日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1426, "content_hash": "8e9c8fad9ab9275cecc9125fd2b00dc0", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成自己家私人物品，由着自己喜好天天瞎几把微操改来改去，崇祯好歹硬撑 17 年，这些扫码策划 17 天就能搞崩一个版 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "AR互动", "source_url": "https://www.bing.com/ck/a?!&&p=92dcb8fb3392fca644ed74395f073665cde6abe66a3bb4c3d73f350e16a343bdJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1428, "content_hash": "07f2ac7629d79a97605bad46a49bb79f", "title": "如何玩好《王者荣耀》？ - 知乎", "summary": "索引 游戏的理解 英雄的相生相克 团战的前提与意义 进阶王者与荣耀王者 游戏的理解 小丑希望大家能明白MOBA类游戏本质就是推塔游戏，而推塔游戏的一个重要原则：以大欺小，以多欺少，团战胜利的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=09fbc791f82c940c93431a4cca985b4bd6476fc13e3c6d85e4fb98e2b4a95adbJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=18003a09-836c-629e-0314-2d43828b635d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzMzMjU2MzYwMg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:27", "updated_at": "2026-04-29 09:02:27"}, {"id": 1429, "content_hash": "a7bf7f2551e69264fa565c424cb0c073", "title": "王者荣耀 - 知乎", "summary": "京ICP证110745号 · 京ICP备13052560号-1 · 京公网安备 11010802020088 号 · 互联网新闻信息服务许可证：11220250001 · 京网文 [2025]0422-132 号 · 药品医疗器械网络信息服务备案（京）网药械信息备 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=abaef48f337c1d4fb77d5c88039164c4205312faf9429f62b2ef0f1ee677f2b1JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RvcGljLzIwMDM0MDE2&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1430, "content_hash": "1c471778afae5b3a987cca0e972cadab", "title": "王者荣耀电脑版怎么操作 - 百度经验", "summary": "2019年9月22日· 然后点击开始 3 输入王者荣耀的账号和密码，登陆到游戏里 4 键盘字幕W、S、A、D分别代表了四个方向，也就是前后左右 5 需要将这个开火功能开启 6 根据自己玩游戏的个人爱好以及习 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1c216d079dcf8a5f582f9afeb166c36a6b3fdf6a6452774ea29329a63e115277JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlL2I3MDAxZmUxMjc1ZTQ2NGU3MjgyZGRiOC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2019年9月22日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1434, "content_hash": "464cc400a540db72985cee4497ca25fb", "title": "王者荣耀无法自由选择微信双开的账号登录怎么办 ...", "summary": "2021年4月2日· 王者荣耀无法自由选择微信双开的账号登录怎么办 天然很美丽 2021-04-02 70058人看过 很多朋友碰到玩王者荣耀时，无法自由选择微信双开的账号登录，每次系统都默认登录其中一个账 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5faaf1dfa46ec5bde8af5d8b5bbb38f7b7dfed2500f3ca2e7ca16576767ca808JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly9qaW5neWFuLmJhaWR1LmNvbS9hcnRpY2xlLzBmNWZiMDk5ZjZmYTU3MmM4MzM0ZWFmNi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2021年4月2日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1436, "content_hash": "7d3b40700d5060a182ad81b4278ebdb0", "title": "2025 年了，《王者荣耀》还火吗？ - 知乎", "summary": "2025年2月5日· 现在的王者荣耀是明末的崇祯皇帝挺像，扫码策划把腾讯王者荣耀当成自己家私人物品，由着自己喜好天天瞎几把微操改来改去，崇祯好歹硬撑 17 年，这些扫码策划 17 天就能搞崩一个版 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "AR互动", "source_url": "https://www.bing.com/ck/a?!&&p=6f59c68c8f47daf86b390300483ca61ed21a082662e700138f11bceb734f6058JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzExMjY5MjY2NTI0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2025年2月5日", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1438, "content_hash": "a63fb458191fd9143f82bcc629727004", "title": "如何玩好《王者荣耀》？ - 知乎", "summary": "索引 游戏的理解 英雄的相生相克 团战的前提与意义 进阶王者与荣耀王者 游戏的理解 小丑希望大家能明白MOBA类游戏本质就是推塔游戏，而推塔游戏的一个重要原则：以大欺小，以多欺少，团战胜利的 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=45a0664321dd8907f9c977aa1858eb3c4093385c23b242fcb93f12241b7da773JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1240da8d-a793-6a11-2a6b-cdc7a6766b08&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzMzMjU2MzYwMg&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-04-29", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:30", "updated_at": "2026-04-29 09:02:30"}, {"id": 1390, "content_hash": "c540296559849c7c4331f567e848e55b", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=fa872831c3353be10e23e97160d7c1ea83aaf33f7a0a0820aa4a8f9c7cc5ed3cJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1f716e48-b722-6f78-194c-7902b6b36e45&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:00:05", "updated_at": "2026-04-29 09:00:05"}, {"id": 1391, "content_hash": "88482c7d466dfd59cd11d6996ae97030", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=01525934010cc9335bcf06b57c5fa7195827e3c24d256291d3127934fec46031JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=01181931-9040-6303-0c56-0e7b91a7623d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:00:08", "updated_at": "2026-04-29 09:00:08"}, {"id": 1392, "content_hash": "38b4c4b80118e8edbdb527413392adfa", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0f7fff32264db5c95f3372d75b808dc235d6b3623526a7a9ca04901d31f6f544JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1446d8f5-29d8-6674-034d-cfbf288967ac&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:00:12", "updated_at": "2026-04-29 09:00:12"}, {"id": 1393, "content_hash": "769f682c99528a67d7772a5ea31273f0", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=08fcc34f646a5381618e973b890c269d89fb8744e4173e798c336d7b62515248JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=332f46fb-307f-668b-1bd9-51b131ee67de&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:00:32", "updated_at": "2026-04-29 09:00:32"}, {"id": 1394, "content_hash": "97d799110de34406397804b1d3f5d8b5", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=4fd52a648178876ae18bc2ae555c65663ee073a1bb20943ac4c4143c9157b88fJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=38e97876-6321-69d7-26bd-6f3c6270682e&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:00:41", "updated_at": "2026-04-29 09:00:41"}, {"id": 1395, "content_hash": "3c957ab33d2cc7ada3d7af40bf2428b6", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8d7b93ef29c560e9256a61fbc7c9773dbddfa28076686945e0ed0c62031bb99aJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=275c128d-6a61-64ca-2859-05c76b8665b3&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:00:46", "updated_at": "2026-04-29 09:00:46"}, {"id": 1396, "content_hash": "7c1769d3d7ebfef5a09a2e9445e23dbe", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d9ff68ff147632c0381bce72c3940179468e3a70cf051593c6ac1c45b749fafeJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1e784128-a7eb-6edf-10df-5662a60c6f02&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:00:52", "updated_at": "2026-04-29 09:00:52"}, {"id": 1397, "content_hash": "de6a7d2839f15edc5eccb9e2a8619adf", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=de051de3843d987b828c1d9e5787c5d7d42389ab9fb5e88ccec88d780dac8b74JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=01cba19e-2832-683a-3e4f-b6d429636944&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:00:55", "updated_at": "2026-04-29 09:00:55"}, {"id": 1398, "content_hash": "400be834ab89b00f5cff51066a235c6e", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a2566fb4e3e3c7b56794775f942f7c9895988ae9f5ad79eb7eedf4caf27de7bbJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=0b803dd3-9d0a-65ab-3590-2a999ced6441&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:01:00", "updated_at": "2026-04-29 09:01:00"}, {"id": 1399, "content_hash": "8683343950e3e5136d4e16dbf5b67824", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=7b4790bb196ffdec9ba8357e91951d96d0600ff967d9ecd048296aa7481c2065JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=15a87199-ec7a-6017-3d53-66d3ed9d6106&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:01:11", "updated_at": "2026-04-29 09:01:11"}, {"id": 1400, "content_hash": "68fe51128052ab6794a3079779efeecb", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a46157ee98c60a49857d5897196fcc8a69defdeb8e2db1545a55c936b050a40fJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=0461193a-b1a1-6259-0d6d-0e70b046637d&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:01:16", "updated_at": "2026-04-29 09:01:16"}, {"id": 1401, "content_hash": "1e4c7acf0675a66c2f79c559e5006cf2", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f1cd59847ca90d8f5ceaf2c3787b0875c8fcedcd0dc638a835bf767cb0751594JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=23df1a38-0a5a-6460-0dac-0d720bcb6571&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:01:26", "updated_at": "2026-04-29 09:01:26"}, {"id": 1403, "content_hash": "4bc912af62f141055fa13bab5a66291e", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=78e48768677f4c1dc7dd717486f5ae509c194136e6b77a9d224548ca6e6e9555JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=3a9c7b3b-39d9-6c14-2b59-6c71383e6d2a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:01:44", "updated_at": "2026-04-29 09:01:44"}, {"id": 1404, "content_hash": "d0fd92ec7235adf338ef7eeeccbe6b9b", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=2fcd23da3894494e2a34c0bc16a5898225a22d75529f57df1c5e7b699fd1252eJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=03cc64a0-5879-6d7f-1801-73ea599c6cbf&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:01:58", "updated_at": "2026-04-29 09:01:58"}, {"id": 1405, "content_hash": "f5d8a9d447eb9d51f3046a3498ebbbcd", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=35eb249cd05bd55218dd0eb51f3ad3b11038c5f4b45be5c4052b00d57227b2aaJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=3afbcdf3-a64b-634b-3994-dab9a7ac621b&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:03", "updated_at": "2026-04-29 09:02:03"}, {"id": 1406, "content_hash": "4a6edd0afbff83d2dbd3d150cca22b07", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=38fb08ee52d8594a7b71b3c2a1cea6039e8ab89e315562e5449e94f511c85276JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=272b8700-3c29-6fd2-3df3-904a3dce6e69&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:07", "updated_at": "2026-04-29 09:02:07"}, {"id": 1407, "content_hash": "03e432d7d2b78dc5f2826f1cb2e20274", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e2c4d3cee95a90360187272f7762ad9c97077a1f96de26db361948f14861cab2JmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=354e2057-24e6-66bb-2a48-371d25036729&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:15", "updated_at": "2026-04-29 09:02:15"}, {"id": 1408, "content_hash": "76bbb3c8b6188260dc7164ce5f0117a2", "title": "2026年 4月 显卡天梯图（更新RTX 5090Dv2&RX 9060）", "summary": "2026年4月9日· 数据来源于：TechPowerUp 桌面端显卡天梯图： 作者：秋刀鱼半藏 （原帖地址） 显卡Time Spy分数天梯图 3DMark Time Spy跑分成绩代表DX12下的游戏性能，具有一定的参考价值。 显 …", "game_name": "", "brand_name": "5090Dv2&RX", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ddaad8c07c4cc3f924434232f87fec943117f2ed4c387bf969f270f0a24f213cJmltdHM9MTc3NzMzNDQwMA&ptn=3&ver=2&hsh=4&fclid=1004c5c4-c287-6cc0-1843-d28ec3606d6b&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvMjk0MjgzMzg0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月9日", "collected_date": "2026-04-29", "hot_score": 45.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:02:19", "updated_at": "2026-04-29 09:02:19"}, {"id": 1439, "content_hash": "654577966090d7774462362e5aaaea6f", "title": "筑就存量竞争护城河，祖龙娱乐以IP赋能游戏长效增长", "summary": "据Sensor Tower发布的《2026年全球IP游戏市场洞察》，2025年全球授权IP手游内购收入达到了184亿美元，与2022年、2023年基本齐平。 与此同时，IP手游市场呈现出鲜明的“存量博弈”特征。尽管全球IP手游下载量持续下行，但平均单次下载收入却逆势上涨，2025年同比 ...", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://industry.caijing.com.cn/20260331/5151229.shtml", "source_name": "财经网28 天", "source_type": "bing_news", "image_url": "", "published_date": "28 天", "collected_date": "2026-04-29", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-04-29 09:04:21", "updated_at": "2026-04-29 09:04:21"}];
+
+// 图表配置
+const chartColors = ['#6C5CE7','#FD79A8','#00B894','#FDCB6E','#74B9FF','#FF6B6B','#A29BFE','#55EFC4','#FAB1A0','#81ECEC'];
+const chartDefaults = {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#94A1B2', font: { size: 11 } } } }
+};
+
+// 游戏分布图
+new Chart(document.getElementById('gameChart'), {
+    type: 'bar',
+    data: {
+        labels: ["王者荣耀", "未知"],
+        datasets: [{ data: [31, 19], backgroundColor: chartColors, borderRadius: 6 }]
+    },
+    options: { ...chartDefaults, indexAxis: 'y', plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } }, y: { ticks: { color: '#94A1B2' }, grid: { display: false } } }
+    }
+});
+
+// 品牌类别图
+new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["3C数码", "其他", "未知"],
+        datasets: [{ data: [31, 18, 1], backgroundColor: chartColors, borderWidth: 0 }]
+    },
+    options: { ...chartDefaults, cutout: '55%' }
+});
+
+// 合作类型图
+new Chart(document.getElementById('typeChart'), {
+    type: 'polarArea',
+    data: {
+        labels: ["其他", "AR互动"],
+        datasets: [{ data: [47, 3], backgroundColor: chartColors.map(c => c + '88') }]
+    },
+    options: { ...chartDefaults, scales: { r: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } } } }
+});
+
+// 趋势图
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: ["2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-19", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-29"],
+        datasets: [{ data: [5, 4, 6, 10, 55, 34, 71, 39, 88, 45, 77, 21, 69, 90, 61, 76, 69, 23, 43, 47, 79, 67, 73, 87, 11, 50], borderColor: '#6C5CE7', backgroundColor: 'rgba(108,92,231,0.1)',
+            fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6C5CE7' }]
+    },
+    options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2', maxTicksLimit: 10 }, grid: { color: '#2D2D52' } },
+                   y: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' }, beginAtZero: true } }
+    }
+});
+
+// 筛选功能
+function filterCards() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const game = document.getElementById('gameFilter').value;
+    const cat = document.getElementById('catFilter').value;
+    
+    document.querySelectorAll('.intel-card').forEach(card => {
+        const matchSearch = !search || card.textContent.toLowerCase().includes(search);
+        const matchGame = !game || card.dataset.game === game;
+        const matchCat = !cat || card.dataset.category === cat;
+        card.style.display = (matchSearch && matchGame && matchCat) ? '' : 'none';
+    });
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('gameFilter').value = '';
+    document.getElementById('catFilter').value = '';
+    filterCards();
+}
+
+// 详情弹窗
+function showDetail(id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    
+    let tagsHtml = '';
+    if (item.game_name) tagsHtml += '<span class="tag tag-game">' + item.game_name + '</span>';
+    if (item.brand_name) tagsHtml += '<span class="tag tag-brand">' + item.brand_name + '</span>';
+    if (item.brand_category) tagsHtml += '<span class="tag tag-cat">' + item.brand_category + '</span>';
+    if (item.collab_type) tagsHtml += '<span class="tag tag-type">' + item.collab_type + '</span>';
+    
+    let html = '<h2>' + item.title + '</h2>';
+    html += '<div class="card-tags" style="margin-bottom:16px">' + tagsHtml + '</div>';
+    
+    const fields = [
+        ['游戏', item.game_name],
+        ['品牌', item.brand_name],
+        ['品牌类别', item.brand_category],
+        ['合作类型', item.collab_type],
+        ['信息来源', item.source_name || item.source_type],
+        ['发布日期', item.published_date],
+        ['采集日期', item.collected_date],
+        ['热度评分', item.hot_score + '/100'],
+    ];
+    
+    fields.forEach(([label, value]) => {
+        if (value) {
+            html += '<div class="detail-row"><span class="detail-label">' + label + '：</span><span class="detail-value">' + value + '</span></div>';
+        }
+    });
+    
+    if (item.summary) {
+        html += '<div class="detail-row"><span class="detail-label">摘要：</span></div>';
+        html += '<div class="detail-content">' + item.summary + '</div>';
+    }
+    
+    if (item.full_content) {
+        html += '<div class="detail-row" style="margin-top:16px"><span class="detail-label">正文内容：</span></div>';
+        html += '<div class="detail-content">' + item.full_content + '</div>';
+    }
+    
+    if (item.source_url) {
+        html += '<a href="' + item.source_url + '" target="_blank" class="detail-link">🔗 查看原文</a>';
+    }
+    
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
