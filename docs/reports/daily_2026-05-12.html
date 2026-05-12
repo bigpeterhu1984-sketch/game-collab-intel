@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏异业合作日报 - 2026-05-12</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --bg: #0F0E17;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --border: #2D2D52;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #FF6B6B;
+            --gradient1: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            --gradient2: linear-gradient(135deg, #FD79A8, #FDCB6E);
+            --gradient3: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 顶部背景动画 */
+        .hero {
+            background: linear-gradient(135deg, #0F0E17 0%, #1A1A2E 50%, #16213E 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(253,121,168,0.08) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+        
+        .hero h1 {
+            font-size: 2.2em;
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .subtitle {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-card:nth-child(2) .stat-number {
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-card:nth-child(3) .stat-number {
+            background: var(--gradient3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        /* 图表区 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        .chart-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .chart-box h3 {
+            margin-bottom: 16px;
+            color: var(--primary-light);
+            font-size: 1em;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-bar label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .filter-bar select, .filter-bar input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-bar select:focus, .filter-bar input:focus {
+            border-color: var(--primary);
+        }
+        
+        .filter-bar .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-btn {
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .filter-btn:hover { opacity: 0.85; }
+        
+        .reset-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        /* 情报卡片 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .intel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .intel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(108,92,231,0.15);
+            border-color: var(--primary-light);
+            background: var(--bg-card-hover);
+        }
+        
+        .card-header {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .score-badge {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85em;
+        }
+        
+        .score-badge.hot {
+            background: linear-gradient(135deg, #FF6B6B, #FD79A8);
+            color: white;
+        }
+        
+        .score-badge.warm {
+            background: linear-gradient(135deg, #FDCB6E, #F39C12);
+            color: #333;
+        }
+        
+        .score-badge.cool {
+            background: rgba(108,92,231,0.2);
+            color: var(--primary-light);
+        }
+        
+        .card-title {
+            font-size: 1em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-body {
+            flex: 1;
+            margin: 12px 0;
+        }
+        
+        .card-summary {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .tag-game {
+            background: rgba(108,92,231,0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.3);
+        }
+        
+        .tag-brand {
+            background: rgba(253,121,168,0.15);
+            color: #FD79A8;
+            border: 1px solid rgba(253,121,168,0.3);
+        }
+        
+        .tag-cat {
+            background: rgba(0,184,148,0.15);
+            color: #00B894;
+            border: 1px solid rgba(0,184,148,0.3);
+        }
+        
+        .tag-type {
+            background: rgba(253,203,110,0.15);
+            color: #FDCB6E;
+            border: 1px solid rgba(253,203,110,0.3);
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        
+        /* 详情弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .modal h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            padding-right: 40px;
+            line-height: 1.4;
+        }
+        
+        .modal .detail-row {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+            align-items: baseline;
+        }
+        
+        .modal .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .modal .detail-value {
+            font-size: 0.95em;
+        }
+        
+        .modal .detail-content {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            line-height: 1.8;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .modal .detail-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--gradient1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .modal .detail-link:hover { opacity: 0.85; }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state .icon { font-size: 4em; margin-bottom: 16px; }
+        
+        /* 返回门户按钮 */
+        .back-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .back-portal:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        
+        /* ===== 联动速览模块 ===== */
+        .glance-section {
+            margin: 28px 0;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon { font-size: 1em; }
+        
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 18px;
+        }
+        
+        .section-desc strong {
+            color: var(--accent);
+        }
+        
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .glance-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .glance-box-title {
+            font-size: 1em;
+            color: var(--primary-light);
+            margin-bottom: 14px;
+        }
+        
+        .glance-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .glance-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .glance-tag:hover {
+            transform: translateY(-2px);
+        }
+        
+        .glance-tag em {
+            font-style: normal;
+            font-size: 0.85em;
+            opacity: 0.7;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        
+        .glance-game {
+            background: rgba(108,92,231,0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.25);
+        }
+        
+        .glance-brand {
+            background: rgba(253,121,168,0.08);
+            border: 1px solid rgba(253,121,168,0.2);
+        }
+        
+        .glance-brands {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .brand-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .brand-cat-label {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .glance-empty {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .glance-pairs-box {
+            margin-top: 0;
+        }
+        
+        .pairs-table-wrap {
+            overflow-x: auto;
+        }
+        
+        .pairs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+        }
+        
+        .pairs-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        
+        .pairs-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(45,45,82,0.5);
+            vertical-align: middle;
+        }
+        
+        .pairs-table tr:hover td {
+            background: rgba(108,92,231,0.05);
+        }
+        
+        .pair-game {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .pair-x {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1em;
+            padding: 10px 6px;
+        }
+        
+        .pair-brand {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .pair-cat {
+            font-size: 0.85em;
+        }
+        
+        .pair-type {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+        
+        .pair-count {
+            text-align: center;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5em; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .cards-container { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .glance-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<a href="../index.html" class="back-portal">← 返回情报站</a>
+
+<div class="hero">
+    <h1>🎮 游戏异业合作情报日报</h1>
+    <p class="subtitle">📅 2026-05-12 &nbsp;|&nbsp; 共收录 24 条情报</p>
+</div>
+
+<div class="container">
+    <!-- 核心统计 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">24</div>
+            <div class="stat-label">今日情报总数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">1</div>
+            <div class="stat-label">涉及游戏数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">5</div>
+            <div class="stat-label">品牌类别数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">1601</div>
+            <div class="stat-label">累计情报总量</div>
+        </div>
+    </div>
+
+    
+    <!-- 联动速览模块 -->
+    <div class="glance-section">
+        <h2 class="section-title"><span class="section-icon">🔗</span> 联动速览</h2>
+        <p class="section-desc">今日情报涉及 <strong>0</strong> 款游戏、<strong>6</strong> 个品牌，共 <strong>0</strong> 组联动配对</p>
+        
+        <div class="glance-grid">
+            <!-- 游戏清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🎮 涉及游戏 (0)</h3>
+                <div class="glance-tags"><span class="glance-empty">暂无</span></div>
+            </div>
+            
+            <!-- 品牌清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🏢 涉及品牌 (6)</h3>
+                <div class="glance-brands"><div class="brand-group"><span class="brand-cat-label" style="background:#74B9FF22;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">HyperX<em>1</em></span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">联想<em>1</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#00CEC922;color:#00CEC9;border:1px solid #00CEC940">零售电商</span><span class="glance-tag glance-brand" style="border-color:#00CEC940;color:#00CEC9">京东<em>1</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#94A1B222;color:#94A1B2;border:1px solid #94A1B240">其他</span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">en<em>1</em></span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">的定义域是什么<em>1</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#A29BFE22;color:#A29BFE;border:1px solid #A29BFE40">服饰潮牌</span><span class="glance-tag glance-brand" style="border-color:#A29BFE40;color:#A29BFE">Champion<em>1</em></span></div></div>
+            </div>
+        </div>
+        
+        <!-- 联动配对表 -->
+        
+    </div>
+    
+
+    <!-- 图表 -->
+    <div class="charts-grid">
+        <div class="chart-box">
+            <h3>📊 游戏分布 TOP10</h3>
+            <canvas id="gameChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🏷️ 品牌类别分布</h3>
+            <canvas id="catChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🤝 合作类型分布</h3>
+            <canvas id="typeChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>📈 近30天采集趋势</h3>
+            <canvas id="trendChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="filter-bar">
+        <label>🔍</label>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、品牌、游戏..." oninput="filterCards()">
+        <select id="gameFilter" onchange="filterCards()">
+            <option value="">全部游戏</option>
+            <option value="未知">未知 (24)</option>
+        </select>
+        <select id="catFilter" onchange="filterCards()">
+            <option value="">全部类别</option>
+            <option value="未知">未知 (18)</option><option value="其他">其他 (2)</option><option value="3C数码">3C数码 (2)</option><option value="零售电商">零售电商 (1)</option><option value="服饰潮牌">服饰潮牌 (1)</option>
+        </select>
+        <button class="reset-btn" onclick="resetFilters()">重置</button>
+    </div>
+
+    <!-- 情报卡片 -->
+    <div class="cards-container" id="cardsContainer">
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1601)">
+            <div class="card-header">
+                <div class="score-badge warm">55.0</div>
+                <h3 class="card-title">HyperX游戏家族全新亮相，发布2026新品，深化多场景游戏生态布局</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">4月20日，惠普举办“玩亦有道——HyperX游戏家族2026新品解密”活动。作为惠普旗下游戏品牌战略升级后核心打造的游戏生态品牌，HyperX游戏家族此次集中登场，发布覆盖高性能游戏本、台式电脑、显示器及专业外设等多款新品，进一步完善其在桌面端与移动端的 ...</p>
+                <div class="card-tags"><span class="tag tag-brand">HyperX</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">腾讯网20 天</span>
+                <span class="date">20 天</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1591)">
+            <div class="card-header">
+                <div class="score-badge warm">40.0</div>
+                <h3 class="card-title">【台式电脑推荐】品牌台式整机怎么选择？ 2026.05月 [高性价比 高性能主机…</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">联想售后，不用多说，遍布全国，售后不用担心。 这款主机，算是笔记本魔改，但是做到了70瓦的性能释放，性能比较强。 真正的8核CPU，加上24G的内存，多开网页办公Office没问题。 本身自带的接 …</p>
+                <div class="card-tags"><span class="tag tag-brand">联想</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="零售电商" 
+             data-type="其他"
+             onclick="showDetail(1590)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">【主机】价格_品牌_推荐_怎么样-什么值得买</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">AMD 电脑迷你主机ITX整机 R5-9600X RTX 5060 京东 0 6444元 AMD 9600X 5060TI 8G高配1TB 高速固态台式电脑主机海景房DIY电竞游戏主机 拼多多 5 1549元 天虹 高性能 迷你主机 核芯显卡 R7-8745HS</p>
+                <div class="card-tags"><span class="tag tag-brand">京东</span><span class="tag tag-cat">零售电商</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1593)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">Rocket League epic game ne se lance pas - Forum jeux en ligne</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2021年2月14日· Bonjour, J'ai un problème avec mon rocket League sur le launcher epic game, Quand je le lance il démarre et s'éteins juste après, j'ai rie</p>
+                <div class="card-tags"><span class="tag tag-brand">en</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2021年2月14日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="服饰潮牌" 
+             data-type="其他"
+             onclick="showDetail(1594)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">Votre RANK Rocket League + Temps de jeux - jeuxvideo.com</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2022年7月4日· perso 11 jours et 6 heures rang Champion 1 - Topic Votre RANK Rocket League + Temps de jeux du 04-07-2022 19:34:17 sur les forums de jeuxvi</p>
+                <div class="card-tags"><span class="tag tag-brand">Champion</span><span class="tag tag-cat">服饰潮牌</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2022年7月4日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1600)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">y= tanx的定义域是什么？值域是什么？_百度知道</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2023年9月29日· 我们要找出函数 y = tanx 的定义域和值域。 首先，我们需要了解正切函数（tanx）的基本性质。 正切函数 y = tanx 的定义域是所有不等于 (kπ + π/2) 的实数，其中 k 是整数。 这是因为当 …</p>
+                <div class="card-tags"><span class="tag tag-brand">的定义域是什么</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2023年9月29日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1578)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1579)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1580)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1581)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1582)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1583)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1584)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1585)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1586)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1587)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1588)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1589)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1592)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1595)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1596)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1597)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1598)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1599)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-12</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeDetail(event)">
+    <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// 所有条目数据
+const allItems = [{"id": 1601, "content_hash": "8a8ed2bf30d317c4164f67231e041731", "title": "HyperX游戏家族全新亮相，发布2026新品，深化多场景游戏生态布局", "summary": "4月20日，惠普举办“玩亦有道——HyperX游戏家族2026新品解密”活动。作为惠普旗下游戏品牌战略升级后核心打造的游戏生态品牌，HyperX游戏家族此次集中登场，发布覆盖高性能游戏本、台式电脑、显示器及专业外设等多款新品，进一步完善其在桌面端与移动端的 ...", "game_name": "", "brand_name": "HyperX", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://news.qq.com/rain/a/20260421A01C0U00", "source_name": "腾讯网20 天", "source_type": "bing_news", "image_url": "", "published_date": "20 天", "collected_date": "2026-05-12", "hot_score": 55.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:04:02", "updated_at": "2026-05-12 09:04:02"}, {"id": 1591, "content_hash": "113d1e9d013bdfc709729096db3b22a8", "title": "【台式电脑推荐】品牌台式整机怎么选择？ 2026.05月 [高性价比 高性能主机…", "summary": "联想售后，不用多说，遍布全国，售后不用担心。 这款主机，算是笔记本魔改，但是做到了70瓦的性能释放，性能比较强。 真正的8核CPU，加上24G的内存，多开网页办公Office没问题。 本身自带的接 …", "game_name": "", "brand_name": "联想", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f35e45aafebb0b8c8b5b32be34a37344b7f4b36babbf5f568e6d729b956de406JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=15b71dfa-6128-64bd-1b23-0aad60cf653b&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3RhcmRpcy96bS9hcnQvNjMwMTQ2NDQ4&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 40.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:25", "updated_at": "2026-05-12 09:01:25"}, {"id": 1590, "content_hash": "70ce8414f969cb2c9ad016ed170b1543", "title": "【主机】价格_品牌_推荐_怎么样-什么值得买", "summary": "AMD 电脑迷你主机ITX整机 R5-9600X RTX 5060 京东 0 6444元 AMD 9600X 5060TI 8G高配1TB 高速固态台式电脑主机海景房DIY电竞游戏主机 拼多多 5 1549元 天虹 高性能 迷你主机 核芯显卡 R7-8745HS", "game_name": "", "brand_name": "京东", "brand_category": "零售电商", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d51e416d4f413623c3391dca9f7164f8720a949fdd1f10dab330195509627ff1JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=15b71dfa-6128-64bd-1b23-0aad60cf653b&u=a1aHR0cHM6Ly93d3cuc216ZG0uY29tL2p1L3NwM3J6MDIv&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:25", "updated_at": "2026-05-12 09:01:25"}, {"id": 1593, "content_hash": "d3db8165a702f5300e4def8158a7b0a8", "title": "Rocket League epic game ne se lance pas - Forum jeux en ligne", "summary": "2021年2月14日· Bonjour, J'ai un problème avec mon rocket League sur le launcher epic game, Quand je le lance il démarre et s'éteins juste après, j'ai rien trouver qui ma aider sur les autre forum.", "game_name": "", "brand_name": "en", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=36fe2c53ed274cb1214e96b1c933969cc3f49aa2f6dfeb6be707e282d0ab75feJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=0ab2e935-008b-6835-0b26-fe62016e69d9&u=a1aHR0cHM6Ly9mb3J1bXMuY29tbWVudGNhbWFyY2hlLm5ldC9mb3J1bS9hZmZpY2gtMzcwOTMyMzQtcm9ja2V0LWxlYWd1ZS1lcGljLWdhbWUtbmUtc2UtbGFuY2UtcGFz&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2021年2月14日", "collected_date": "2026-05-12", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:35", "updated_at": "2026-05-12 09:01:35"}, {"id": 1594, "content_hash": "e647a285c93ed0f9a696d2012b983e97", "title": "Votre RANK Rocket League + Temps de jeux - jeuxvideo.com", "summary": "2022年7月4日· perso 11 jours et 6 heures rang Champion 1 - Topic Votre RANK Rocket League + Temps de jeux du 04-07-2022 19:34:17 sur les forums de jeuxvideo.com", "game_name": "", "brand_name": "Champion", "brand_category": "服饰潮牌", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f7f585404582e97b5dbffb4b5253729b875cf4001426304584e6e055f637f424JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=0ab2e935-008b-6835-0b26-fe62016e69d9&u=a1aHR0cHM6Ly93d3cuamV1eHZpZGVvLmNvbS9mb3J1bXMvNDItNTEtNzAxMzMxNTUtMS0wLTEtMC12b3RyZS1yYW5rLXJvY2tldC1sZWFndWUtdGVtcHMtZGUtamV1eC5odG0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2022年7月4日", "collected_date": "2026-05-12", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:35", "updated_at": "2026-05-12 09:01:35"}, {"id": 1600, "content_hash": "a5f00b61eacca2c32cf302e0fa6cd6f6", "title": "y= tanx的定义域是什么？值域是什么？_百度知道", "summary": "2023年9月29日· 我们要找出函数 y = tanx 的定义域和值域。 首先，我们需要了解正切函数（tanx）的基本性质。 正切函数 y = tanx 的定义域是所有不等于 (kπ + π/2) 的实数，其中 k 是整数。 这是因为当 …", "game_name": "", "brand_name": "的定义域是什么", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f92f81b468c31e114872ddcde2925e17e41ee747b756d566167122960baa143eJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=1f57fa5f-6cf3-6036-1abe-ed086da26145&u=a1aHR0cHM6Ly96aGlkYW8uYmFpZHUuY29tL3F1ZXN0aW9uLzg4NDI0NzQ3OTc3NDQyMDY5Mi5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2023年9月29日", "collected_date": "2026-05-12", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:02:35", "updated_at": "2026-05-12 09:02:35"}, {"id": 1578, "content_hash": "4a4e45f646a45e1cd17abbc3ce2505a3", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=65a91f9024e77170d20bf587a630fd9521ff98d55d69065ecbcb1e6b06903eadJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=304f5b14-b954-66bb-146e-4c43b8b36703&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:08", "updated_at": "2026-05-12 09:00:08"}, {"id": 1579, "content_hash": "cf9bb810c8bc1b7feceb4f24bcdc646a", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d9d25022f6505cc227d4f01451a870e119e9d3023990aeee3fd854cd4fe0d9d4JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=3e3f23cd-6e96-6dfd-02d4-349a6fc76c3e&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:13", "updated_at": "2026-05-12 09:00:13"}, {"id": 1580, "content_hash": "928c0620ad43b2141818fa38ef7a12c1", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=07a3f7d338180fdf2519602321c7e50ebe345f006b5b5448d276750125d8ca82JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=0d5162e8-2a87-633f-3063-75bf2b626280&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:18", "updated_at": "2026-05-12 09:00:18"}, {"id": 1581, "content_hash": "bc2b94771c60cb4da26a5f0f529c4275", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=6c269172c8101cc334409235be7548d76c8efee543fde8d92ee479441f3be21bJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=3d2addc2-aa1d-67f6-3867-ca95abf86627&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:36", "updated_at": "2026-05-12 09:00:36"}, {"id": 1582, "content_hash": "a8e56deaabffea4bf7fcd7e95342bea5", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d1e90f7b532fcc227757e79db9b30e987dadc170efd8a34ff4ebb3f0018cf271JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=02fee8fa-a8bf-66f5-1aa8-ffada9ee6726&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:43", "updated_at": "2026-05-12 09:00:43"}, {"id": 1583, "content_hash": "fc0fb42094506fe6d58abeb57003a4e0", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a7273ac23cfe6fc10af24741aa2cc093b4d9ebf76ef0cf05bfd1d339ca846ab4JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=2b8a9668-584a-6852-088c-813f59ad69dd&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:46", "updated_at": "2026-05-12 09:00:46"}, {"id": 1584, "content_hash": "9ca35d8951d533bf08fbee8d7b6941bf", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9d57a1ee6fd9ee516f1604219f657aa6443764fde26c6a8a5e0247d28e445b06JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=24a8601c-d3b3-6026-033e-774bd254614e&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:49", "updated_at": "2026-05-12 09:00:49"}, {"id": 1585, "content_hash": "d83eff9e749e9f57d176620ef7593cf2", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5f0e427c664d8c6ef356f0f22f009a3344eaab4ed194b16da2ee46be74b787b6JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=32f720cb-3321-62b7-1867-379c32b0638b&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:52", "updated_at": "2026-05-12 09:00:52"}, {"id": 1586, "content_hash": "09c179e7565f04187d60181c333521e7", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=68391ca70e7d961d1aef5087c42d9e2fe0caa788b1e6ac9bfd7cd8fe3bace98cJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=0e86fa78-3c39-65b0-3b46-ed2f3da86436&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:00:56", "updated_at": "2026-05-12 09:00:56"}, {"id": 1587, "content_hash": "c5c1521c3bf298ef99af21a2ec43acfc", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ae5b779bfb6c162819408fd785ebc31075a9745f6c9a004d927b0153ec3001bcJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=22f34708-0808-65ca-0b2c-505f09996466&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:02", "updated_at": "2026-05-12 09:01:02"}, {"id": 1588, "content_hash": "6c46cda44d60bb2ad21019eea244d4e6", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=de1bc2f5b11b1b37171a1be12c09b8ce8dd7a92d39d55491418378a5ffd99abcJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=0db6ffe8-c995-605c-061d-e8bfc8046127&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:05", "updated_at": "2026-05-12 09:01:05"}, {"id": 1589, "content_hash": "a7ff410e344d975f361aed86b9493b28", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c7bfd17b46832e49442147388f45e997f4ce82df7f7b798a9a18912b08255accJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=1e246d6a-75a6-63d7-13b6-7a3d74f76219&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:12", "updated_at": "2026-05-12 09:01:12"}, {"id": 1592, "content_hash": "8d3549ea9a278378d1ca6617b7f8d006", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=abffc99f04b779502df2c3bf87088bf0074b1297b057d69fbba9c37f3047db2cJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=3a449c5b-ea2a-6283-3b6e-8b0ceb7b63d9&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:30", "updated_at": "2026-05-12 09:01:30"}, {"id": 1595, "content_hash": "e4a630e234c361af4956d6f3b6df229d", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=2bb0c90668efd35e702cc39888f935930712a17256a130772d11cbbc3a86e99dJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=0ddb13b4-c8ff-6dce-11b4-04e3c96e6cf3&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:44", "updated_at": "2026-05-12 09:01:44"}, {"id": 1596, "content_hash": "c1056ecb82cf9df4a5b4ddcf2b5cbb45", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d4c9e952b961d24d05a0d597fffc0296ae9fb44bcfa6cda7a7df3644809de268JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=104e4082-9edb-6d68-08a4-57d59f8a6c59&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:47", "updated_at": "2026-05-12 09:01:47"}, {"id": 1597, "content_hash": "b36df3b8d3c077a20ee992e9caf271fc", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=4811e704253eaccbc2e017a94b84067ae9c1e4bfc2643d484e1220917b5319f6JmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=2814cc02-6c2d-6982-1eea-db556dca689b&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:51", "updated_at": "2026-05-12 09:01:51"}, {"id": 1598, "content_hash": "bf6061c9869255d4872a150ec99eeb9d", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=32eec539a120a3de59198c0d6f0bba4ce3dcbacfbe5b9e501bfc2c2808fb8c0aJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=1ecfd7b2-db82-6067-07b2-c0e5da6561e0&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:01:59", "updated_at": "2026-05-12 09:01:59"}, {"id": 1599, "content_hash": "16163593db86eea72b96d85732e663d3", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a9673f25c06d725af77c77401a763cde217f1379f811bd0a147e13964b4201feJmltdHM9MTc3ODQ1NzYwMA&ptn=3&ver=2&hsh=4&fclid=0fb800ab-57dc-6a29-37b2-17fc56396be6&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-12", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-12 09:02:01", "updated_at": "2026-05-12 09:02:01"}];
+
+// 图表配置
+const chartColors = ['#6C5CE7','#FD79A8','#00B894','#FDCB6E','#74B9FF','#FF6B6B','#A29BFE','#55EFC4','#FAB1A0','#81ECEC'];
+const chartDefaults = {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#94A1B2', font: { size: 11 } } } }
+};
+
+// 游戏分布图
+new Chart(document.getElementById('gameChart'), {
+    type: 'bar',
+    data: {
+        labels: ["未知"],
+        datasets: [{ data: [24], backgroundColor: chartColors, borderRadius: 6 }]
+    },
+    options: { ...chartDefaults, indexAxis: 'y', plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } }, y: { ticks: { color: '#94A1B2' }, grid: { display: false } } }
+    }
+});
+
+// 品牌类别图
+new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["未知", "其他", "3C数码", "零售电商", "服饰潮牌"],
+        datasets: [{ data: [18, 2, 2, 1, 1], backgroundColor: chartColors, borderWidth: 0 }]
+    },
+    options: { ...chartDefaults, cutout: '55%' }
+});
+
+// 合作类型图
+new Chart(document.getElementById('typeChart'), {
+    type: 'polarArea',
+    data: {
+        labels: ["其他"],
+        datasets: [{ data: [24], backgroundColor: chartColors.map(c => c + '88') }]
+    },
+    options: { ...chartDefaults, scales: { r: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } } } }
+});
+
+// 趋势图
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: ["2026-04-12", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-19", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-29", "2026-05-08", "2026-05-09", "2026-05-12"],
+        datasets: [{ data: [21, 69, 90, 61, 76, 69, 23, 43, 47, 79, 67, 73, 87, 11, 50, 87, 51, 24], borderColor: '#6C5CE7', backgroundColor: 'rgba(108,92,231,0.1)',
+            fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6C5CE7' }]
+    },
+    options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2', maxTicksLimit: 10 }, grid: { color: '#2D2D52' } },
+                   y: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' }, beginAtZero: true } }
+    }
+});
+
+// 筛选功能
+function filterCards() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const game = document.getElementById('gameFilter').value;
+    const cat = document.getElementById('catFilter').value;
+    
+    document.querySelectorAll('.intel-card').forEach(card => {
+        const matchSearch = !search || card.textContent.toLowerCase().includes(search);
+        const matchGame = !game || card.dataset.game === game;
+        const matchCat = !cat || card.dataset.category === cat;
+        card.style.display = (matchSearch && matchGame && matchCat) ? '' : 'none';
+    });
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('gameFilter').value = '';
+    document.getElementById('catFilter').value = '';
+    filterCards();
+}
+
+// 详情弹窗
+function showDetail(id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    
+    let tagsHtml = '';
+    if (item.game_name) tagsHtml += '<span class="tag tag-game">' + item.game_name + '</span>';
+    if (item.brand_name) tagsHtml += '<span class="tag tag-brand">' + item.brand_name + '</span>';
+    if (item.brand_category) tagsHtml += '<span class="tag tag-cat">' + item.brand_category + '</span>';
+    if (item.collab_type) tagsHtml += '<span class="tag tag-type">' + item.collab_type + '</span>';
+    
+    let html = '<h2>' + item.title + '</h2>';
+    html += '<div class="card-tags" style="margin-bottom:16px">' + tagsHtml + '</div>';
+    
+    const fields = [
+        ['游戏', item.game_name],
+        ['品牌', item.brand_name],
+        ['品牌类别', item.brand_category],
+        ['合作类型', item.collab_type],
+        ['信息来源', item.source_name || item.source_type],
+        ['发布日期', item.published_date],
+        ['采集日期', item.collected_date],
+        ['热度评分', item.hot_score + '/100'],
+    ];
+    
+    fields.forEach(([label, value]) => {
+        if (value) {
+            html += '<div class="detail-row"><span class="detail-label">' + label + '：</span><span class="detail-value">' + value + '</span></div>';
+        }
+    });
+    
+    if (item.summary) {
+        html += '<div class="detail-row"><span class="detail-label">摘要：</span></div>';
+        html += '<div class="detail-content">' + item.summary + '</div>';
+    }
+    
+    if (item.full_content) {
+        html += '<div class="detail-row" style="margin-top:16px"><span class="detail-label">正文内容：</span></div>';
+        html += '<div class="detail-content">' + item.full_content + '</div>';
+    }
+    
+    if (item.source_url) {
+        html += '<a href="' + item.source_url + '" target="_blank" class="detail-link">🔗 查看原文</a>';
+    }
+    
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
