@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏异业合作日报 - 2026-05-13</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --bg: #0F0E17;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --border: #2D2D52;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #FF6B6B;
+            --gradient1: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            --gradient2: linear-gradient(135deg, #FD79A8, #FDCB6E);
+            --gradient3: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 顶部背景动画 */
+        .hero {
+            background: linear-gradient(135deg, #0F0E17 0%, #1A1A2E 50%, #16213E 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(253,121,168,0.08) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+        
+        .hero h1 {
+            font-size: 2.2em;
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .subtitle {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-card:nth-child(2) .stat-number {
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-card:nth-child(3) .stat-number {
+            background: var(--gradient3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        /* 图表区 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        .chart-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .chart-box h3 {
+            margin-bottom: 16px;
+            color: var(--primary-light);
+            font-size: 1em;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-bar label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .filter-bar select, .filter-bar input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-bar select:focus, .filter-bar input:focus {
+            border-color: var(--primary);
+        }
+        
+        .filter-bar .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-btn {
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .filter-btn:hover { opacity: 0.85; }
+        
+        .reset-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        /* 情报卡片 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .intel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .intel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(108,92,231,0.15);
+            border-color: var(--primary-light);
+            background: var(--bg-card-hover);
+        }
+        
+        .card-header {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .score-badge {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85em;
+        }
+        
+        .score-badge.hot {
+            background: linear-gradient(135deg, #FF6B6B, #FD79A8);
+            color: white;
+        }
+        
+        .score-badge.warm {
+            background: linear-gradient(135deg, #FDCB6E, #F39C12);
+            color: #333;
+        }
+        
+        .score-badge.cool {
+            background: rgba(108,92,231,0.2);
+            color: var(--primary-light);
+        }
+        
+        .card-title {
+            font-size: 1em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-body {
+            flex: 1;
+            margin: 12px 0;
+        }
+        
+        .card-summary {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .tag-game {
+            background: rgba(108,92,231,0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.3);
+        }
+        
+        .tag-brand {
+            background: rgba(253,121,168,0.15);
+            color: #FD79A8;
+            border: 1px solid rgba(253,121,168,0.3);
+        }
+        
+        .tag-cat {
+            background: rgba(0,184,148,0.15);
+            color: #00B894;
+            border: 1px solid rgba(0,184,148,0.3);
+        }
+        
+        .tag-type {
+            background: rgba(253,203,110,0.15);
+            color: #FDCB6E;
+            border: 1px solid rgba(253,203,110,0.3);
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        
+        /* 详情弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .modal h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            padding-right: 40px;
+            line-height: 1.4;
+        }
+        
+        .modal .detail-row {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+            align-items: baseline;
+        }
+        
+        .modal .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .modal .detail-value {
+            font-size: 0.95em;
+        }
+        
+        .modal .detail-content {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            line-height: 1.8;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .modal .detail-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--gradient1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .modal .detail-link:hover { opacity: 0.85; }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state .icon { font-size: 4em; margin-bottom: 16px; }
+        
+        /* 返回门户按钮 */
+        .back-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .back-portal:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        
+        /* ===== 联动速览模块 ===== */
+        .glance-section {
+            margin: 28px 0;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon { font-size: 1em; }
+        
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 18px;
+        }
+        
+        .section-desc strong {
+            color: var(--accent);
+        }
+        
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .glance-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .glance-box-title {
+            font-size: 1em;
+            color: var(--primary-light);
+            margin-bottom: 14px;
+        }
+        
+        .glance-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .glance-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .glance-tag:hover {
+            transform: translateY(-2px);
+        }
+        
+        .glance-tag em {
+            font-style: normal;
+            font-size: 0.85em;
+            opacity: 0.7;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        
+        .glance-game {
+            background: rgba(108,92,231,0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.25);
+        }
+        
+        .glance-brand {
+            background: rgba(253,121,168,0.08);
+            border: 1px solid rgba(253,121,168,0.2);
+        }
+        
+        .glance-brands {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .brand-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .brand-cat-label {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .glance-empty {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .glance-pairs-box {
+            margin-top: 0;
+        }
+        
+        .pairs-table-wrap {
+            overflow-x: auto;
+        }
+        
+        .pairs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+        }
+        
+        .pairs-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        
+        .pairs-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(45,45,82,0.5);
+            vertical-align: middle;
+        }
+        
+        .pairs-table tr:hover td {
+            background: rgba(108,92,231,0.05);
+        }
+        
+        .pair-game {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .pair-x {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1em;
+            padding: 10px 6px;
+        }
+        
+        .pair-brand {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .pair-cat {
+            font-size: 0.85em;
+        }
+        
+        .pair-type {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+        
+        .pair-count {
+            text-align: center;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5em; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .cards-container { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .glance-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<a href="../index.html" class="back-portal">← 返回情报站</a>
+
+<div class="hero">
+    <h1>🎮 游戏异业合作情报日报</h1>
+    <p class="subtitle">📅 2026-05-13 &nbsp;|&nbsp; 共收录 50 条情报</p>
+</div>
+
+<div class="container">
+    <!-- 核心统计 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">50</div>
+            <div class="stat-label">今日情报总数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">3</div>
+            <div class="stat-label">涉及游戏数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">3</div>
+            <div class="stat-label">品牌类别数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">1651</div>
+            <div class="stat-label">累计情报总量</div>
+        </div>
+    </div>
+
+    
+    <!-- 联动速览模块 -->
+    <div class="glance-section">
+        <h2 class="section-title"><span class="section-icon">🔗</span> 联动速览</h2>
+        <p class="section-desc">今日情报涉及 <strong>2</strong> 款游戏、<strong>2</strong> 个品牌，共 <strong>2</strong> 组联动配对</p>
+        
+        <div class="glance-grid">
+            <!-- 游戏清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🎮 涉及游戏 (2)</h3>
+                <div class="glance-tags"><span class="glance-tag glance-game">王者荣耀<em>30</em></span><span class="glance-tag glance-game">DOTA2<em>2</em></span></div>
+            </div>
+            
+            <!-- 品牌清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🏢 涉及品牌 (2)</h3>
+                <div class="glance-brands"><div class="brand-group"><span class="brand-cat-label" style="background:#74B9FF22;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">荣耀<em>32</em></span></div><div class="brand-group"><span class="brand-cat-label" style="background:#94A1B222;color:#94A1B2;border:1px solid #94A1B240">其他</span><span class="glance-tag glance-brand" style="border-color:#94A1B240;color:#94A1B2">penses<em>1</em></span></div></div>
+            </div>
+        </div>
+        
+        <!-- 联动配对表 -->
+        
+        <div class="glance-box glance-pairs-box">
+            <h3 class="glance-box-title">🤝 联动配对一览 (2)</h3>
+            <div class="pairs-table-wrap">
+                <table class="pairs-table">
+                    <thead>
+                        <tr><th>游戏</th><th></th><th>品牌</th><th>类别</th><th>合作类型</th><th>情报数</th></tr>
+                    </thead>
+                    <tbody>
+        <tr>
+            <td><span class="pair-game">王者荣耀</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">30</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">DOTA2</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">2</td>
+        </tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- 图表 -->
+    <div class="charts-grid">
+        <div class="chart-box">
+            <h3>📊 游戏分布 TOP10</h3>
+            <canvas id="gameChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🏷️ 品牌类别分布</h3>
+            <canvas id="catChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🤝 合作类型分布</h3>
+            <canvas id="typeChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>📈 近30天采集趋势</h3>
+            <canvas id="trendChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="filter-bar">
+        <label>🔍</label>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、品牌、游戏..." oninput="filterCards()">
+        <select id="gameFilter" onchange="filterCards()">
+            <option value="">全部游戏</option>
+            <option value="王者荣耀">王者荣耀 (30)</option><option value="未知">未知 (18)</option><option value="DOTA2">DOTA2 (2)</option>
+        </select>
+        <select id="catFilter" onchange="filterCards()">
+            <option value="">全部类别</option>
+            <option value="3C数码">3C数码 (32)</option><option value="未知">未知 (17)</option><option value="其他">其他 (1)</option>
+        </select>
+        <button class="reset-btn" onclick="resetFilters()">重置</button>
+    </div>
+
+    <!-- 情报卡片 -->
+    <div class="cards-container" id="cardsContainer">
+        
+        <div class="intel-card" data-game="DOTA2" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1606)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">电竞新闻 - 中国电竞网 - 最专业的电子竞技门户网站！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">中国电竞网【电竞新闻】栏目聚焦国内电竞前沿资讯，涵盖《英雄联盟》《王者荣耀》《DOTA2》《Csgo》等热门赛事动态、战队转会、版本更新及行业趋势。 通过赛事速报、独家专访、战队解析与 …</p>
+                <div class="card-tags"><span class="tag tag-game">DOTA2</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="DOTA2" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1619)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">电竞新闻 - 中国电竞网 - 最专业的电子竞技门户网站！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">中国电竞网【电竞新闻】栏目聚焦国内电竞前沿资讯，涵盖《英雄联盟》《王者荣耀》《DOTA2》《Csgo》等热门赛事动态、战队转会、版本更新及行业趋势。 通过赛事速报、独家专访、战队解析与 …</p>
+                <div class="card-tags"><span class="tag tag-game">DOTA2</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1622)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1623)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1624)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">‎王者荣耀 App - App Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1625)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 官方下载 - TapTap</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2016年4月7日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1626)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀世界》是由腾讯天美研发的王者世界多人冒险游戏。延续东方美学，构建王者大陆；与英雄相遇，与伙伴冒险 ...</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1627)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀挑战者杯_2026挑战者杯直播_王者荣耀官方赛事直播_王者荣 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">观看2025EWC电竞世界杯KPL常规赛第二轮卡位赛重播，体验精彩赛事瞬间！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1628)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1629)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 更有边境突围、五军对决等丰富的游戏模式，体验突破传 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1630)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">英雄资料列表页-英雄介绍-王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者荣耀英雄介绍,全部英雄大全,英雄属性，英雄图片,英雄技能定位，英雄故事，英雄图文视频攻略，助您荣登最强王者宝座!</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1631)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">游戏介绍-王者荣耀官方网站-腾讯游戏 - QQ</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，于10月28日开启不限号测试！ 5V5王者峡谷（含迷雾模式）、5V5深渊大乱斗、以及3V3、1V1等多样模式一键体验，热血竞技尽享快感！ 海量英雄随心选 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1632)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1633)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1634)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">‎王者荣耀 App - App Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1635)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 官方下载 - TapTap</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2016年4月7日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1636)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀世界》是由腾讯天美研发的王者世界多人冒险游戏。延续东方美学，构建王者大陆；与英雄相遇，与伙伴冒险 ...</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1637)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀挑战者杯_2026挑战者杯直播_王者荣耀官方赛事直播_王者荣 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">观看2025EWC电竞世界杯KPL常规赛第二轮卡位赛重播，体验精彩赛事瞬间！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1638)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1639)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 更有边境突围、五军对决等丰富的游戏模式，体验突破传 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1640)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">英雄资料列表页-英雄介绍-王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者荣耀英雄介绍,全部英雄大全,英雄属性，英雄图片,英雄技能定位，英雄故事，英雄图文视频攻略，助您荣登最强王者宝座!</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1641)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">游戏介绍-王者荣耀官方网站-腾讯游戏 - QQ</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，于10月28日开启不限号测试！ 5V5王者峡谷（含迷雾模式）、5V5深渊大乱斗、以及3V3、1V1等多样模式一键体验，热血竞技尽享快感！ 海量英雄随心选 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1642)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1643)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1644)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">‎王者荣耀 App - App Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1645)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 官方下载 - TapTap</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2016年4月7日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1646)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀世界》是由腾讯天美研发的王者世界多人冒险游戏。延续东方美学，构建王者大陆；与英雄相遇，与伙伴冒险 ...</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1647)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀挑战者杯_2026挑战者杯直播_王者荣耀官方赛事直播_王者荣 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">观看2025EWC电竞世界杯KPL常规赛第二轮卡位赛重播，体验精彩赛事瞬间！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1648)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1649)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 更有边境突围、五军对决等丰富的游戏模式，体验突破传 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1650)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">英雄资料列表页-英雄介绍-王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">王者荣耀英雄介绍,全部英雄大全,英雄属性，英雄图片,英雄技能定位，英雄故事，英雄图文视频攻略，助您荣登最强王者宝座!</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1651)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">游戏介绍-王者荣耀官方网站-腾讯游戏 - QQ</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，于10月28日开启不限号测试！ 5V5王者峡谷（含迷雾模式）、5V5深渊大乱斗、以及3V3、1V1等多样模式一键体验，热血竞技尽享快感！ 海量英雄随心选 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="其他" 
+             data-type="其他"
+             onclick="showDetail(1616)">
+            <div class="card-header">
+                <div class="score-badge warm">30.0</div>
+                <h3 class="card-title">Packers MoversCostCalculator| Estimate Moving Expenses</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">The Packers and Movers Cost Calculator is an online calculator that helps you calculate approx relocation cost for household goods and vehicle transpo</p>
+                <div class="card-tags"><span class="tag tag-brand">penses</span><span class="tag tag-cat">其他</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1602)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1603)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1604)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1605)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1607)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1608)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1609)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1610)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1611)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1612)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1613)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1614)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1615)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1617)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1618)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1620)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="" 
+             data-category="" 
+             data-type="其他"
+             onclick="showDetail(1621)">
+            <div class="card-header">
+                <div class="score-badge cool">10.0</div>
+                <h3 class="card-title">Yuppiy 小游戏- 免费在线小游戏- 立即游玩！</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …</p>
+                <div class="card-tags"><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-13</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeDetail(event)">
+    <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// 所有条目数据
+const allItems = [{"id": 1606, "content_hash": "096258af921244f6d2c272be685f7d37", "title": "电竞新闻 - 中国电竞网 - 最专业的电子竞技门户网站！", "summary": "中国电竞网【电竞新闻】栏目聚焦国内电竞前沿资讯，涵盖《英雄联盟》《王者荣耀》《DOTA2》《Csgo》等热门赛事动态、战队转会、版本更新及行业趋势。 通过赛事速报、独家专访、战队解析与 …", "game_name": "DOTA2", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=4be2cd1d58999efa41e7a85321677559ef61ccc8ddef5a5f80850d7a613944b2JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=09062611-2d4a-656a-3495-31492c1b6474&u=a1aHR0cDovL3d3dy41YXNqLmNvbS9uZXdzLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:35", "updated_at": "2026-05-13 09:00:35"}, {"id": 1619, "content_hash": "c23af990da4ea3c256b9ab6f44916e1a", "title": "电竞新闻 - 中国电竞网 - 最专业的电子竞技门户网站！", "summary": "中国电竞网【电竞新闻】栏目聚焦国内电竞前沿资讯，涵盖《英雄联盟》《王者荣耀》《DOTA2》《Csgo》等热门赛事动态、战队转会、版本更新及行业趋势。 通过赛事速报、独家专访、战队解析与 …", "game_name": "DOTA2", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=94478035a0f19bb29ddb592fe3689bd8e11022a5cc13733599ea98e60eb2578aJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=33abcdb4-01d3-6865-350e-daec00366964&u=a1aHR0cDovL3d3dy41YXNqLmNvbS9uZXdzLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:54", "updated_at": "2026-05-13 09:01:54"}, {"id": 1622, "content_hash": "8caf6448745fc83cbbd7658164c6d726", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=140a0c896c7dd022dbb3ff72777b871d186df0190bc638d64fa62f0fcfc8645dJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly9wdnAucXEuY29tLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1623, "content_hash": "961c014f5ee32f98dbe5ba1f62c96eb8", "title": "王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=2c5fb2545a6a2736c76f4e24e4ded3363e2b20e9b73f3431bfc6cdff48d2c091JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGM5eDZwM2JzeDN6P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1624, "content_hash": "e7d3b70a79da34b6e1aaddf081388bfd", "title": "‎王者荣耀 App - App Store", "summary": "在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8091f3a604bfb03a1266906a44f7b2030902f06c29994388ad23dfbc8c6cbd7bJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly9hcHBzLmFwcGxlLmNvbS9jbi9hcHAvJUU3JThFJThCJUU4JTgwJTg1JUU4JThEJUEzJUU4JTgwJTgwL2lkOTg5NjczOTY0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1625, "content_hash": "708a0b20f7dc7b4ec18f97500b272894", "title": "王者荣耀 - 官方下载 - TapTap", "summary": "2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8fa59de7f3a4b586fae8a3370f61f9a2652afdc1d65546adfeb092bbc9e6314cJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly93d3cudGFwdGFwLmNuL2FwcC8yMzAx&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2016年4月7日", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1626, "content_hash": "c08f21b5096b551091b419882c205827", "title": "王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏", "summary": "《王者荣耀世界》是由腾讯天美研发的王者世界多人冒险游戏。延续东方美学，构建王者大陆；与英雄相遇，与伙伴冒险 ...", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=02c95031aab323ddfbff1427d7721df57b5e0b13b6874dc1405e7aa77b37cb1aJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly93b3JsZC5xcS5jb20vd2ViMjAyNjAzL2luZGV4Lmh0bWw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1627, "content_hash": "2b0f1454f5a16203973156d47a4a5fe7", "title": "王者荣耀挑战者杯_2026挑战者杯直播_王者荣耀官方赛事直播_王者荣 …", "summary": "观看2025EWC电竞世界杯KPL常规赛第二轮卡位赛重播，体验精彩赛事瞬间！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9044127b40a165baedc8aefdc6d841d747edcdf5f76389e49c38eaa322b435a5JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly93d3cuZG91eXUuY29tLzk5OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1628, "content_hash": "0877c1a5030656b9e3f12feb3608cc03", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=08fb88042a7f3fc07e654d8d87a3d4ff326c132cd5bab3ea2d14e45f5e1c467fJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly9wdnAucXEuY29tL2NwL2EyMDE3MDgyOWJiZ3hzbS9pbmRleC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1629, "content_hash": "5d6592050c7dd6666458e3acccecca2a", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 更有边境突围、五军对决等丰富的游戏模式，体验突破传 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=82d0231410922b3c56805d3e096165d9ace6c78ee6d64ed53b85779b186364dcJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cDovL2FydC51ZXVvLmNvbS8&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1630, "content_hash": "2acd55f8ae4c3fdbc5bc6ae6c96635b5", "title": "英雄资料列表页-英雄介绍-王者荣耀官方网站-腾讯游戏", "summary": "王者荣耀英雄介绍,全部英雄大全,英雄属性，英雄图片,英雄技能定位，英雄故事，英雄图文视频攻略，助您荣登最强王者宝座!", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0916441a41d412ec1825a66b809adabc24b119f9d292aef5dc265ab8ec9a118cJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly9wdnAucXEuY29tL3dlYjIwMTYwNS9oZXJvbGlzdC5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1631, "content_hash": "a412da5774d4cc2a2cb1eb851a7acf7f", "title": "游戏介绍-王者荣耀官方网站-腾讯游戏 - QQ", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，于10月28日开启不限号测试！ 5V5王者峡谷（含迷雾模式）、5V5深渊大乱斗、以及3V3、1V1等多样模式一键体验，热血竞技尽享快感！ 海量英雄随心选 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=436a6cee7dc82c8e28bfe39312d513e4ff2e0f3d8f7f0360bad4451d2a960cd3JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=265aabc3-bd1f-6f6e-2020-bc9bbcf86e11&u=a1aHR0cHM6Ly8yLnB2cC5xcS5jb20vd2ViMjAxNjA1L2ludHJvZHVjZS5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:04", "updated_at": "2026-05-13 09:02:04"}, {"id": 1632, "content_hash": "e21c818820056c3f5d4164b134a77959", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=44171dd291d6ec6217a87b38ebaa76f0565d137a751e0c14d1f3148f0ff5815aJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly9wdnAucXEuY29tLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1633, "content_hash": "bf8d4744f3475468e1bb2017e124004f", "title": "王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a08f5c065f720e6b500280871fd274d16030148268650f684f13151598f5e2e4JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGM5eDZwM2JzeDN6P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1634, "content_hash": "5279343b7e09b31570c9a1fd2a2615ac", "title": "‎王者荣耀 App - App Store", "summary": "在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=cd3c1a78180ee031db05b403aa6a4e3c78a93663278ab59d2754acf56362c3b1JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly9hcHBzLmFwcGxlLmNvbS9jbi9hcHAvJUU3JThFJThCJUU4JTgwJTg1JUU4JThEJUEzJUU4JTgwJTgwL2lkOTg5NjczOTY0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1635, "content_hash": "894898b255cd1fbcfdf002c927279f38", "title": "王者荣耀 - 官方下载 - TapTap", "summary": "2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1a2d3a4e251d7e3bfc95f4b16a734c41cfbdc2c7ce5e2d41697937793304ba24JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly93d3cudGFwdGFwLmNuL2FwcC8yMzAx&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2016年4月7日", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1636, "content_hash": "d54b03d849d8cf2e280c977d386c4a1c", "title": "王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏", "summary": "《王者荣耀世界》是由腾讯天美研发的王者世界多人冒险游戏。延续东方美学，构建王者大陆；与英雄相遇，与伙伴冒险 ...", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=2f41954f213ab0a25d3c598a345a71e1f63e1a08ff177e6f8f6f2477520c8625JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly93b3JsZC5xcS5jb20vd2ViMjAyNjAzL2luZGV4Lmh0bWw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1637, "content_hash": "5dd9b507049c8878c6261ba93bf1c6e0", "title": "王者荣耀挑战者杯_2026挑战者杯直播_王者荣耀官方赛事直播_王者荣 …", "summary": "观看2025EWC电竞世界杯KPL常规赛第二轮卡位赛重播，体验精彩赛事瞬间！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b25d67f83c0124ce07dea1a75ff61d1188e1a88113e90032ad60c80e30d903a9JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly93d3cuZG91eXUuY29tLzk5OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1638, "content_hash": "f7a9f9a202e86338c3af2c2b3f521371", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=cbd3440edda5f429f38cfa2befe51bbfa70afa8a73dd0cd25481e972752c1b6fJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly9wdnAucXEuY29tL2NwL2EyMDE3MDgyOWJiZ3hzbS9pbmRleC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1639, "content_hash": "bd3259b12c772e47f616fbd3dd317513", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 更有边境突围、五军对决等丰富的游戏模式，体验突破传 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ac16ead0dd3b4aae561171f6f76459e66e18138385975a8c52ccb5fa56ab6df1JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cDovL2FydC51ZXVvLmNvbS8&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1640, "content_hash": "fb0c83288a90c4dda5f5f748c8b059ef", "title": "英雄资料列表页-英雄介绍-王者荣耀官方网站-腾讯游戏", "summary": "王者荣耀英雄介绍,全部英雄大全,英雄属性，英雄图片,英雄技能定位，英雄故事，英雄图文视频攻略，助您荣登最强王者宝座!", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0c7e09ca1a35b6478d83ac5246adddb5544ef2f3ff57dff9a9df7454d04d7d8eJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly9wdnAucXEuY29tL3dlYjIwMTYwNS9oZXJvbGlzdC5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1641, "content_hash": "b5756c0ba11e99993d72bf0c3f0799aa", "title": "游戏介绍-王者荣耀官方网站-腾讯游戏 - QQ", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，于10月28日开启不限号测试！ 5V5王者峡谷（含迷雾模式）、5V5深渊大乱斗、以及3V3、1V1等多样模式一键体验，热血竞技尽享快感！ 海量英雄随心选 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9aa9179d77aae6d38cfdb2019b8681497d1e8420074f9faafde55edbcc2b47dfJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2a286314-94fb-6ccd-020d-744c951c6dfb&u=a1aHR0cHM6Ly8yLnB2cC5xcS5jb20vd2ViMjAxNjA1L2ludHJvZHVjZS5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:09", "updated_at": "2026-05-13 09:02:09"}, {"id": 1642, "content_hash": "792a1e7a2027c0dc8c363552169e9b96", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=452c1982edf3e556a174593064cbab2d6a9440e90d8fa7c5c9f6bd399a9d17e9JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly9wdnAucXEuY29tLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1643, "content_hash": "14d18ad8c4cd44ce6c3bc5fac07278bc", "title": "王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=6b0bfdb244bbdc96e17a24067bfdac0840ed456a0efbfa9edf0b00862a6ad712JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGM5eDZwM2JzeDN6P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1644, "content_hash": "1cbfe8c23f386f8a91d9a8fe4959f4a5", "title": "‎王者荣耀 App - App Store", "summary": "在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d0badddc5f14702c571f0aa4708b2c38963e1154dbeda4671960f32e9bb14a21JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly9hcHBzLmFwcGxlLmNvbS9jbi9hcHAvJUU3JThFJThCJUU4JTgwJTg1JUU4JThEJUEzJUU4JTgwJTgwL2lkOTg5NjczOTY0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1645, "content_hash": "a22a2481b26d21b59370b52821538725", "title": "王者荣耀 - 官方下载 - TapTap", "summary": "2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0c2058f096a45b5c8e15cab3fcf3423972647fb57879e5a8295d969d6880a60dJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly93d3cudGFwdGFwLmNuL2FwcC8yMzAx&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2016年4月7日", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1646, "content_hash": "54d684789c272cea2a53480550139162", "title": "王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏", "summary": "《王者荣耀世界》是由腾讯天美研发的王者世界多人冒险游戏。延续东方美学，构建王者大陆；与英雄相遇，与伙伴冒险 ...", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5ffbb9bd19c7436179f490c16b5291c9374ccdaea85b798a442f120a56068b73JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly93b3JsZC5xcS5jb20vd2ViMjAyNjAzL2luZGV4Lmh0bWw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1647, "content_hash": "6a9e6aae6e05213e5f8d0c89dcadbf19", "title": "王者荣耀挑战者杯_2026挑战者杯直播_王者荣耀官方赛事直播_王者荣 …", "summary": "观看2025EWC电竞世界杯KPL常规赛第二轮卡位赛重播，体验精彩赛事瞬间！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9e68f8ac9e72d96c6d64b66b19718ae29d2b56ba95136028f6315611455938aeJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly93d3cuZG91eXUuY29tLzk5OA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1648, "content_hash": "9bd53e1f884621ba6d76f58e761dbe95", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=38bb1533cdd2606fffd597d943def8c93b708828a3acc228558ad0c4d7d76a3aJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly9wdnAucXEuY29tL2NwL2EyMDE3MDgyOWJiZ3hzbS9pbmRleC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1649, "content_hash": "9c65e1dfaff49cb7953a62b9983d4b11", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 更有边境突围、五军对决等丰富的游戏模式，体验突破传 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=39a8772d3548973e2c5131f61013ed15b65b5416c9732e43895cfb57855a3cf2JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cDovL2FydC51ZXVvLmNvbS8&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1650, "content_hash": "f62b02759b3bbad71a4bb52ec5a34160", "title": "英雄资料列表页-英雄介绍-王者荣耀官方网站-腾讯游戏", "summary": "王者荣耀英雄介绍,全部英雄大全,英雄属性，英雄图片,英雄技能定位，英雄故事，英雄图文视频攻略，助您荣登最强王者宝座!", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=be0c6f1dbe7757f89afa9d751e7f8c2ac760738ecdfa63c0e1adb528d025eef1JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly9wdnAucXEuY29tL3dlYjIwMTYwNS9oZXJvbGlzdC5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1651, "content_hash": "72ef6940cbb63317d3ffb11094de5233", "title": "游戏介绍-王者荣耀官方网站-腾讯游戏 - QQ", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，于10月28日开启不限号测试！ 5V5王者峡谷（含迷雾模式）、5V5深渊大乱斗、以及3V3、1V1等多样模式一键体验，热血竞技尽享快感！ 海量英雄随心选 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=780641762690568c50babb8fe6f82c6f7f26ddee733c9566dff70e3d0550f08dJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=296b6cd4-5eff-659d-0fe3-7b8c5f1864a4&u=a1aHR0cHM6Ly8yLnB2cC5xcS5jb20vd2ViMjAxNjA1L2ludHJvZHVjZS5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:14", "updated_at": "2026-05-13 09:02:14"}, {"id": 1616, "content_hash": "1b4a08b5e633692ec45fe4d85152f94a", "title": "Packers MoversCostCalculator| Estimate Moving Expenses", "summary": "The Packers and Movers Cost Calculator is an online calculator that helps you calculate approx relocation cost for household goods and vehicle transportation with ease.", "game_name": "", "brand_name": "penses", "brand_category": "其他", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9e78eff3674c0ff505771e43549012069e824f7a9bb10c185789969f88effd07JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=16adce83-eed0-60d9-2ee0-d9dbef81618b&u=a1aHR0cHM6Ly93d3cuc2VydmljZXN1dHJhLmNvbS9wYWNrZXJzLW1vdmVycy9jb3N0LWNhbGN1bGF0b3I&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 30.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:35", "updated_at": "2026-05-13 09:01:35"}, {"id": 1602, "content_hash": "110632416fa4e583c825813c1832d97a", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5723b21f74c0976058be34c0ce026191990d5dc1e7ed0887a1e8da3b92069c19JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=3a272cd8-aff9-6e16-2ca1-3b80ae686f39&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:06", "updated_at": "2026-05-13 09:00:06"}, {"id": 1603, "content_hash": "257c5a781400c71df01aa9e45f684450", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9e17c7e98ca681068eea6b1c527f122d653dd326ff7fbffb838057ef0912421eJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=006795bd-7c2d-648d-3cfc-82e57dca650f&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:10", "updated_at": "2026-05-13 09:00:10"}, {"id": 1604, "content_hash": "d6324458ed00d057774ce912bf6bc7ae", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d61b50dcf6fc30d14c77a0ef2c137712bc8c7d7cc73630acaa9f90ce90718998JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=0f7645f8-6d53-6089-3497-52a06cc26100&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:13", "updated_at": "2026-05-13 09:00:13"}, {"id": 1605, "content_hash": "a8fa182ea9243808ff7a3295af937edc", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e7bd026b38d079a42869d9aa4cc65d434e2da4cfd4e32bdb55d834de506ba03aJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=29717665-cd9d-60e1-0c2f-613dcc7a611a&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:31", "updated_at": "2026-05-13 09:00:31"}, {"id": 1607, "content_hash": "032839c5e45a9f7c9ffd9edd3d9631a5", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c9f7b989760d719b9b015cbc84145766e73f5a32835f900344c118ce672ef655JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=2220b185-6581-619b-011c-a6dd6466608a&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:39", "updated_at": "2026-05-13 09:00:39"}, {"id": 1608, "content_hash": "fa98bf0a4976f86472bd3b4d3c6dbe33", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=adb99dc0e5843dca86c227164d2618e63b6779be393c41c92b3c42070cddf1ffJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=049e3208-146a-646b-1ce8-2550158d6564&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:44", "updated_at": "2026-05-13 09:00:44"}, {"id": 1609, "content_hash": "647d6f83334ab880365bfadd3be09f36", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9580ab9268144deae9a873a2e54ae4cdd96ee28c53b4dfc31dc11f3d2f05c24fJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=0abeea94-d55c-60c2-0434-fdccd4cd61f1&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:47", "updated_at": "2026-05-13 09:00:47"}, {"id": 1610, "content_hash": "8537985de75373a0dce98c1a8a8ec907", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=26ddc2832f5a884a3b6db8af12e16186bf25bc46df36c0cd0d4a90fec2d4ce29JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=275f10d3-789f-6fae-0315-078b79786ecd&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:50", "updated_at": "2026-05-13 09:00:50"}, {"id": 1611, "content_hash": "39e5ea5bcc6f96d53cdd1d10b9fc6917", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b7f7fbd7762b36822b751abd6ede647b73f7191bed4b6f455ab232f9b6e54a5fJmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=31370aa5-21ab-60f3-35ac-1dfd20fa6164&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:00:55", "updated_at": "2026-05-13 09:00:55"}, {"id": 1612, "content_hash": "5f5611a5b2f1e174fb655a5c98c811ac", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=91b7b3e4dbf625ea0f4a4733a8154a227fb765ef06d7f1c4c9b8ffc3aa971396JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=1fdbec6c-263a-6ec2-155e-fb3427ab6fb1&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:04", "updated_at": "2026-05-13 09:01:04"}, {"id": 1613, "content_hash": "30364f242b689cc125be4e31f96510dd", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=5f180b510e04098e51213942972907293c9e09d1e6a1416619f242f3685d0164JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=32e8be53-f3c3-6404-31b2-a90bf25265ac&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:07", "updated_at": "2026-05-13 09:01:07"}, {"id": 1614, "content_hash": "f8a2664e9facb88a847c09ddfc5723aa", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d4b9884b626d3717c669e4f31415dbc1893389028664650a08cbbbb9fd4c5029JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=0c4fbce2-6a2f-6bf5-24d7-abba6bbe6a41&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:14", "updated_at": "2026-05-13 09:01:14"}, {"id": 1615, "content_hash": "0d5c430318ee941b15b31cecab54ef2f", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d130605b1afffbf6c50b719ac980da7b0015664c9ea3e7af35eda22b2a124cd0JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=18a19b08-5069-675f-2b23-8c505138660d&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:30", "updated_at": "2026-05-13 09:01:30"}, {"id": 1617, "content_hash": "2508cc19a2f3f09400d4cdc914244d0b", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3091300e8fbe8325e2aba7613f2eb70bf0f6137e1fd870d94a221f37b3585d26JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=1a4116d1-de0d-6a14-2f6c-0189dfea6b71&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:46", "updated_at": "2026-05-13 09:01:46"}, {"id": 1618, "content_hash": "0f6814ca00fb46914f143acb89c98727", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=c7ed4a2297a78c9829d460738fbedb311065fb0a29d8782dbaf72e1fe7cf8449JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=1b45e47a-3006-60e8-1856-f32231e36140&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:50", "updated_at": "2026-05-13 09:01:50"}, {"id": 1620, "content_hash": "152ea09c8fe2ee95e30f884991ff29fc", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=0d0028be30fd40b78a3812da1419f3e23143dc0ea9f762af945b8c023a81e478JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=27b580e8-94bb-6208-1756-97b095ea63da&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:01:58", "updated_at": "2026-05-13 09:01:58"}, {"id": 1621, "content_hash": "f51e2470309d7482b89837b8783f50a7", "title": "Yuppiy 小游戏- 免费在线小游戏- 立即游玩！", "summary": "和朋友比拼可以增加乐趣，但别忘了游戏的初衷是娱乐。 若想挑战自己，可以为每次游戏设定限定条件，比如不使用提示或在限定时间内完成，这类自设规则会让重玩价值变高。 随时记得，轻松愉快才 …", "game_name": "", "brand_name": "", "brand_category": "", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f449e2f14a1b6f78cfbe7cbea8b56b1570b7db052dd26e5982507eede9e70e59JmltdHM9MTc3ODU0NDAwMA&ptn=3&ver=2&hsh=4&fclid=38abf553-dcae-63a3-1eea-e20bdd3f6287&u=a1aHR0cHM6Ly95dXBwaXkuY29tL2NuLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-13", "hot_score": 10.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-13 09:02:01", "updated_at": "2026-05-13 09:02:01"}];
+
+// 图表配置
+const chartColors = ['#6C5CE7','#FD79A8','#00B894','#FDCB6E','#74B9FF','#FF6B6B','#A29BFE','#55EFC4','#FAB1A0','#81ECEC'];
+const chartDefaults = {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#94A1B2', font: { size: 11 } } } }
+};
+
+// 游戏分布图
+new Chart(document.getElementById('gameChart'), {
+    type: 'bar',
+    data: {
+        labels: ["王者荣耀", "未知", "DOTA2"],
+        datasets: [{ data: [30, 18, 2], backgroundColor: chartColors, borderRadius: 6 }]
+    },
+    options: { ...chartDefaults, indexAxis: 'y', plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } }, y: { ticks: { color: '#94A1B2' }, grid: { display: false } } }
+    }
+});
+
+// 品牌类别图
+new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["3C数码", "未知", "其他"],
+        datasets: [{ data: [32, 17, 1], backgroundColor: chartColors, borderWidth: 0 }]
+    },
+    options: { ...chartDefaults, cutout: '55%' }
+});
+
+// 合作类型图
+new Chart(document.getElementById('typeChart'), {
+    type: 'polarArea',
+    data: {
+        labels: ["其他"],
+        datasets: [{ data: [50], backgroundColor: chartColors.map(c => c + '88') }]
+    },
+    options: { ...chartDefaults, scales: { r: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } } } }
+});
+
+// 趋势图
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: ["2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-19", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-29", "2026-05-08", "2026-05-09", "2026-05-12", "2026-05-13"],
+        datasets: [{ data: [69, 90, 61, 76, 69, 23, 43, 47, 79, 67, 73, 87, 11, 50, 87, 51, 24, 50], borderColor: '#6C5CE7', backgroundColor: 'rgba(108,92,231,0.1)',
+            fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6C5CE7' }]
+    },
+    options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2', maxTicksLimit: 10 }, grid: { color: '#2D2D52' } },
+                   y: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' }, beginAtZero: true } }
+    }
+});
+
+// 筛选功能
+function filterCards() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const game = document.getElementById('gameFilter').value;
+    const cat = document.getElementById('catFilter').value;
+    
+    document.querySelectorAll('.intel-card').forEach(card => {
+        const matchSearch = !search || card.textContent.toLowerCase().includes(search);
+        const matchGame = !game || card.dataset.game === game;
+        const matchCat = !cat || card.dataset.category === cat;
+        card.style.display = (matchSearch && matchGame && matchCat) ? '' : 'none';
+    });
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('gameFilter').value = '';
+    document.getElementById('catFilter').value = '';
+    filterCards();
+}
+
+// 详情弹窗
+function showDetail(id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    
+    let tagsHtml = '';
+    if (item.game_name) tagsHtml += '<span class="tag tag-game">' + item.game_name + '</span>';
+    if (item.brand_name) tagsHtml += '<span class="tag tag-brand">' + item.brand_name + '</span>';
+    if (item.brand_category) tagsHtml += '<span class="tag tag-cat">' + item.brand_category + '</span>';
+    if (item.collab_type) tagsHtml += '<span class="tag tag-type">' + item.collab_type + '</span>';
+    
+    let html = '<h2>' + item.title + '</h2>';
+    html += '<div class="card-tags" style="margin-bottom:16px">' + tagsHtml + '</div>';
+    
+    const fields = [
+        ['游戏', item.game_name],
+        ['品牌', item.brand_name],
+        ['品牌类别', item.brand_category],
+        ['合作类型', item.collab_type],
+        ['信息来源', item.source_name || item.source_type],
+        ['发布日期', item.published_date],
+        ['采集日期', item.collected_date],
+        ['热度评分', item.hot_score + '/100'],
+    ];
+    
+    fields.forEach(([label, value]) => {
+        if (value) {
+            html += '<div class="detail-row"><span class="detail-label">' + label + '：</span><span class="detail-value">' + value + '</span></div>';
+        }
+    });
+    
+    if (item.summary) {
+        html += '<div class="detail-row"><span class="detail-label">摘要：</span></div>';
+        html += '<div class="detail-content">' + item.summary + '</div>';
+    }
+    
+    if (item.full_content) {
+        html += '<div class="detail-row" style="margin-top:16px"><span class="detail-label">正文内容：</span></div>';
+        html += '<div class="detail-content">' + item.full_content + '</div>';
+    }
+    
+    if (item.source_url) {
+        html += '<a href="' + item.source_url + '" target="_blank" class="detail-link">🔗 查看原文</a>';
+    }
+    
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
