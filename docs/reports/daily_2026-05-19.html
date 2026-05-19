@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏异业合作日报 - 2026-05-19</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --accent: #FD79A8;
+            --accent2: #FDCB6E;
+            --bg: #0F0E17;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #232347;
+            --text: #FFFFFE;
+            --text-muted: #94A1B2;
+            --border: #2D2D52;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #FF6B6B;
+            --gradient1: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            --gradient2: linear-gradient(135deg, #FD79A8, #FDCB6E);
+            --gradient3: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 顶部背景动画 */
+        .hero {
+            background: linear-gradient(135deg, #0F0E17 0%, #1A1A2E 50%, #16213E 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(253,121,168,0.08) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+        
+        .hero h1 {
+            font-size: 2.2em;
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .subtitle {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-card:nth-child(2) .stat-number {
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-card:nth-child(3) .stat-number {
+            background: var(--gradient3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        /* 图表区 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        .chart-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .chart-box h3 {
+            margin-bottom: 16px;
+            color: var(--primary-light);
+            font-size: 1em;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-bar label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .filter-bar select, .filter-bar input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-bar select:focus, .filter-bar input:focus {
+            border-color: var(--primary);
+        }
+        
+        .filter-bar .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-btn {
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .filter-btn:hover { opacity: 0.85; }
+        
+        .reset-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        /* 情报卡片 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .intel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .intel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(108,92,231,0.15);
+            border-color: var(--primary-light);
+            background: var(--bg-card-hover);
+        }
+        
+        .card-header {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .score-badge {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85em;
+        }
+        
+        .score-badge.hot {
+            background: linear-gradient(135deg, #FF6B6B, #FD79A8);
+            color: white;
+        }
+        
+        .score-badge.warm {
+            background: linear-gradient(135deg, #FDCB6E, #F39C12);
+            color: #333;
+        }
+        
+        .score-badge.cool {
+            background: rgba(108,92,231,0.2);
+            color: var(--primary-light);
+        }
+        
+        .card-title {
+            font-size: 1em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-body {
+            flex: 1;
+            margin: 12px 0;
+        }
+        
+        .card-summary {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .tag-game {
+            background: rgba(108,92,231,0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.3);
+        }
+        
+        .tag-brand {
+            background: rgba(253,121,168,0.15);
+            color: #FD79A8;
+            border: 1px solid rgba(253,121,168,0.3);
+        }
+        
+        .tag-cat {
+            background: rgba(0,184,148,0.15);
+            color: #00B894;
+            border: 1px solid rgba(0,184,148,0.3);
+        }
+        
+        .tag-type {
+            background: rgba(253,203,110,0.15);
+            color: #FDCB6E;
+            border: 1px solid rgba(253,203,110,0.3);
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        
+        /* 详情弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .modal h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            padding-right: 40px;
+            line-height: 1.4;
+        }
+        
+        .modal .detail-row {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+            align-items: baseline;
+        }
+        
+        .modal .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .modal .detail-value {
+            font-size: 0.95em;
+        }
+        
+        .modal .detail-content {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            line-height: 1.8;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .modal .detail-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--gradient1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+        
+        .modal .detail-link:hover { opacity: 0.85; }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state .icon { font-size: 4em; margin-bottom: 16px; }
+        
+        /* 返回门户按钮 */
+        .back-portal {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85em;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .back-portal:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        
+        /* ===== 联动速览模块 ===== */
+        .glance-section {
+            margin: 28px 0;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon { font-size: 1em; }
+        
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 18px;
+        }
+        
+        .section-desc strong {
+            color: var(--accent);
+        }
+        
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .glance-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .glance-box-title {
+            font-size: 1em;
+            color: var(--primary-light);
+            margin-bottom: 14px;
+        }
+        
+        .glance-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .glance-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .glance-tag:hover {
+            transform: translateY(-2px);
+        }
+        
+        .glance-tag em {
+            font-style: normal;
+            font-size: 0.85em;
+            opacity: 0.7;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        
+        .glance-game {
+            background: rgba(108,92,231,0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(108,92,231,0.25);
+        }
+        
+        .glance-brand {
+            background: rgba(253,121,168,0.08);
+            border: 1px solid rgba(253,121,168,0.2);
+        }
+        
+        .glance-brands {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .brand-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .brand-cat-label {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .glance-empty {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .glance-pairs-box {
+            margin-top: 0;
+        }
+        
+        .pairs-table-wrap {
+            overflow-x: auto;
+        }
+        
+        .pairs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+        }
+        
+        .pairs-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        
+        .pairs-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(45,45,82,0.5);
+            vertical-align: middle;
+        }
+        
+        .pairs-table tr:hover td {
+            background: rgba(108,92,231,0.05);
+        }
+        
+        .pair-game {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .pair-x {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1em;
+            padding: 10px 6px;
+        }
+        
+        .pair-brand {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .pair-cat {
+            font-size: 0.85em;
+        }
+        
+        .pair-type {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+        
+        .pair-count {
+            text-align: center;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5em; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .cards-container { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .glance-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<a href="../index.html" class="back-portal">← 返回情报站</a>
+
+<div class="hero">
+    <h1>🎮 游戏异业合作情报日报</h1>
+    <p class="subtitle">📅 2026-05-19 &nbsp;|&nbsp; 共收录 33 条情报</p>
+</div>
+
+<div class="container">
+    <!-- 核心统计 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">33</div>
+            <div class="stat-label">今日情报总数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">2</div>
+            <div class="stat-label">涉及游戏数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">1</div>
+            <div class="stat-label">品牌类别数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">1689</div>
+            <div class="stat-label">累计情报总量</div>
+        </div>
+    </div>
+
+    
+    <!-- 联动速览模块 -->
+    <div class="glance-section">
+        <h2 class="section-title"><span class="section-icon">🔗</span> 联动速览</h2>
+        <p class="section-desc">今日情报涉及 <strong>2</strong> 款游戏、<strong>1</strong> 个品牌，共 <strong>2</strong> 组联动配对</p>
+        
+        <div class="glance-grid">
+            <!-- 游戏清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🎮 涉及游戏 (2)</h3>
+                <div class="glance-tags"><span class="glance-tag glance-game">王者荣耀<em>30</em></span><span class="glance-tag glance-game">和平精英<em>3</em></span></div>
+            </div>
+            
+            <!-- 品牌清单 -->
+            <div class="glance-box">
+                <h3 class="glance-box-title">🏢 涉及品牌 (1)</h3>
+                <div class="glance-brands"><div class="brand-group"><span class="brand-cat-label" style="background:#74B9FF22;color:#74B9FF;border:1px solid #74B9FF40">3C数码</span><span class="glance-tag glance-brand" style="border-color:#74B9FF40;color:#74B9FF">荣耀<em>33</em></span></div></div>
+            </div>
+        </div>
+        
+        <!-- 联动配对表 -->
+        
+        <div class="glance-box glance-pairs-box">
+            <h3 class="glance-box-title">🤝 联动配对一览 (2)</h3>
+            <div class="pairs-table-wrap">
+                <table class="pairs-table">
+                    <thead>
+                        <tr><th>游戏</th><th></th><th>品牌</th><th>类别</th><th>合作类型</th><th>情报数</th></tr>
+                    </thead>
+                    <tbody>
+        <tr>
+            <td><span class="pair-game">王者荣耀</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">30</td>
+        </tr>
+        <tr>
+            <td><span class="pair-game">和平精英</span></td>
+            <td class="pair-x">×</td>
+            <td><span class="pair-brand">荣耀</span></td>
+            <td><span class="pair-cat" style="color:#74B9FF">3C数码</span></td>
+            <td><span class="pair-type">其他</span></td>
+            <td class="pair-count">3</td>
+        </tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- 图表 -->
+    <div class="charts-grid">
+        <div class="chart-box">
+            <h3>📊 游戏分布 TOP10</h3>
+            <canvas id="gameChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🏷️ 品牌类别分布</h3>
+            <canvas id="catChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>🤝 合作类型分布</h3>
+            <canvas id="typeChart" height="200"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>📈 近30天采集趋势</h3>
+            <canvas id="trendChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="filter-bar">
+        <label>🔍</label>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、品牌、游戏..." oninput="filterCards()">
+        <select id="gameFilter" onchange="filterCards()">
+            <option value="">全部游戏</option>
+            <option value="王者荣耀">王者荣耀 (30)</option><option value="和平精英">和平精英 (3)</option>
+        </select>
+        <select id="catFilter" onchange="filterCards()">
+            <option value="">全部类别</option>
+            <option value="3C数码">3C数码 (33)</option>
+        </select>
+        <button class="reset-btn" onclick="resetFilters()">重置</button>
+    </div>
+
+    <!-- 情报卡片 -->
+    <div class="cards-container" id="cardsContainer">
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1661)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀赛事直播_KPL赛事直播_挑战者杯_虎牙直播</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026王者荣耀挑战者杯，锁定虎牙直播【660002】，观赛赢荣耀水晶、抽海量皮肤道具、战队周边及明星选手签名照！谁将登顶巅峰？让我们拭目以待！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1671)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀赛事直播_KPL赛事直播_挑战者杯_虎牙直播</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026王者荣耀挑战者杯，锁定虎牙直播【660002】，观赛赢荣耀水晶、抽海量皮肤道具、战队周边及明星选手签名照！谁将登顶巅峰？让我们拭目以待！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1681)">
+            <div class="card-header">
+                <div class="score-badge hot">70.0</div>
+                <h3 class="card-title">王者荣耀赛事直播_KPL赛事直播_挑战者杯_虎牙直播</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026王者荣耀挑战者杯，锁定虎牙直播【660002】，观赛赢荣耀水晶、抽海量皮肤道具、战队周边及明星选手签名照！谁将登顶巅峰？让我们拭目以待！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1657)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1658)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 安卓官方下载 - TapTap</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2016年4月7日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1659)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1660)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">‎王者荣耀 App - App Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1662)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">1）本游戏是一款玩法相对复杂的角色扮演类游戏，适用于年满12周岁及以上的用户，建议未成年人在家长监护下使用游戏产品。 2）本游戏基于架空的故事背景和东方幻想世界观，画面色彩鲜明、配乐活 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1663)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀世界》已正式公测，PC 端玩家体验怎么样？玩过的玩家如 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月10日· 《王者荣耀：世界》总体框架上是开放世界+RPG+养成， 但是PVE和PVP共存（甚至后者占有相当比重），社交属性极强，还有各种“4人组队”+家园+偷菜， 基本看做一个带有鲜明腾讯 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月10日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1664)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">腾讯《王者荣耀世界》移动端今日开服：与 PC 端数据同步、登录 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月17日· 腾讯《#王者荣耀世界#》移动端今日正式上线，首发 Android 和 iOS 平台（鸿蒙端已开启邀测），正式开服时间预计为 4 月 17 日 7:00。另外，本作支持 PC / Android / iOS 多端互通。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月17日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1665)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1666)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">3 分钟看懂！刚公测的《王者荣耀・世界》，到底值不值得玩？_网络 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月11日· 17173 新闻导语 《王者荣耀・世界》公测值不值得玩？3分钟看懂开放世界MMO玩法、零氪付费体系、双技能组战斗系统，王者IP情怀拉满，优缺点全解析！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月11日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1667)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1668)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 安卓官方下载 - TapTap</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2016年4月7日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1669)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1670)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">‎王者荣耀 App - App Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1672)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">1）本游戏是一款玩法相对复杂的角色扮演类游戏，适用于年满12周岁及以上的用户，建议未成年人在家长监护下使用游戏产品。 2）本游戏基于架空的故事背景和东方幻想世界观，画面色彩鲜明、配乐活 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1673)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀世界》已正式公测，PC 端玩家体验怎么样？玩过的玩家如 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月10日· 《王者荣耀：世界》总体框架上是开放世界+RPG+养成， 但是PVE和PVP共存（甚至后者占有相当比重），社交属性极强，还有各种“4人组队”+家园+偷菜， 基本看做一个带有鲜明腾讯 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月10日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1674)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">腾讯《王者荣耀世界》移动端今日开服：与 PC 端数据同步、登录 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月17日· 腾讯《#王者荣耀世界#》移动端今日正式上线，首发 Android 和 iOS 平台（鸿蒙端已开启邀测），正式开服时间预计为 4 月 17 日 7:00。另外，本作支持 PC / Android / iOS 多端互通。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月17日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1675)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1676)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">3 分钟看懂！刚公测的《王者荣耀・世界》，到底值不值得玩？_网络 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月11日· 17173 新闻导语 《王者荣耀・世界》公测值不值得玩？3分钟看懂开放世界MMO玩法、零氪付费体系、双技能组战斗系统，王者IP情怀拉满，优缺点全解析！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月11日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1677)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1678)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - 安卓官方下载 - TapTap</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2016年4月7日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1679)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1680)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">‎王者荣耀 App - App Store</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1682)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">1）本游戏是一款玩法相对复杂的角色扮演类游戏，适用于年满12周岁及以上的用户，建议未成年人在家长监护下使用游戏产品。 2）本游戏基于架空的故事背景和东方幻想世界观，画面色彩鲜明、配乐活 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1683)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">《王者荣耀世界》已正式公测，PC 端玩家体验怎么样？玩过的玩家如 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月10日· 《王者荣耀：世界》总体框架上是开放世界+RPG+养成， 但是PVE和PVP共存（甚至后者占有相当比重），社交属性极强，还有各种“4人组队”+家园+偷菜， 基本看做一个带有鲜明腾讯 …</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月10日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1684)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">腾讯《王者荣耀世界》移动端今日开服：与 PC 端数据同步、登录 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月17日· 腾讯《#王者荣耀世界#》移动端今日正式上线，首发 Android 和 iOS 平台（鸿蒙端已开启邀测），正式开服时间预计为 4 月 17 日 7:00。另外，本作支持 PC / Android / iOS 多端互通。</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月17日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1685)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">王者荣耀官方网站-腾讯游戏</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="王者荣耀" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1686)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">3 分钟看懂！刚公测的《王者荣耀・世界》，到底值不值得玩？_网络 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">2026年4月11日· 17173 新闻导语 《王者荣耀・世界》公测值不值得玩？3分钟看懂开放世界MMO玩法、零氪付费体系、双技能组战斗系统，王者IP情怀拉满，优缺点全解析！</p>
+                <div class="card-tags"><span class="tag tag-game">王者荣耀</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026年4月11日</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="和平精英" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1687)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">和平精英-登录领荣耀勋章&典藏币 - Windows官方下载 | 微软应用商店 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《和平精英》是腾讯光子工作室群自研打造的战术竞技手游。虚幻引擎4研发，次世代完美画质，极致视听感受；超大实景地图，打造指尖战场，全方面自由施展战术；百人同场竞技，真实弹道，完美的射 …</p>
+                <div class="card-tags"><span class="tag tag-game">和平精英</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="和平精英" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1688)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">和平精英-登录领荣耀勋章&典藏币 - Windows官方下载 | 微软应用商店 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《和平精英》是腾讯光子工作室群自研打造的战术竞技手游。虚幻引擎4研发，次世代完美画质，极致视听感受；超大实景地图，打造指尖战场，全方面自由施展战术；百人同场竞技，真实弹道，完美的射 …</p>
+                <div class="card-tags"><span class="tag tag-game">和平精英</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+        <div class="intel-card" data-game="和平精英" 
+             data-category="3C数码" 
+             data-type="其他"
+             onclick="showDetail(1689)">
+            <div class="card-header">
+                <div class="score-badge hot">60.0</div>
+                <h3 class="card-title">和平精英-登录领荣耀勋章&典藏币 - Windows官方下载 | 微软应用商店 …</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-summary">《和平精英》是腾讯光子工作室群自研打造的战术竞技手游。虚幻引擎4研发，次世代完美画质，极致视听感受；超大实景地图，打造指尖战场，全方面自由施展战术；百人同场竞技，真实弹道，完美的射 …</p>
+                <div class="card-tags"><span class="tag tag-game">和平精英</span><span class="tag tag-brand">荣耀</span><span class="tag tag-cat">3C数码</span><span class="tag tag-type">其他</span></div>
+            </div>
+            <div class="card-footer">
+                <span class="source">Bing搜索</span>
+                <span class="date">2026-05-19</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeDetail(event)">
+    <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// 所有条目数据
+const allItems = [{"id": 1661, "content_hash": "9023f7ce10de33d78e38c65e9e986f90", "title": "王者荣耀赛事直播_KPL赛事直播_挑战者杯_虎牙直播", "summary": "2026王者荣耀挑战者杯，锁定虎牙直播【660002】，观赛赢荣耀水晶、抽海量皮肤道具、战队周边及明星选手签名照！谁将登顶巅峰？让我们拭目以待！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=568abe7997609101db7f73dec78510e1904c3428a604e6c4e176f368c60a98f1JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly93d3cuaHV5YS5jb20vNjYwMDAy&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1671, "content_hash": "963673612f6c28348b8ba32be1f20130", "title": "王者荣耀赛事直播_KPL赛事直播_挑战者杯_虎牙直播", "summary": "2026王者荣耀挑战者杯，锁定虎牙直播【660002】，观赛赢荣耀水晶、抽海量皮肤道具、战队周边及明星选手签名照！谁将登顶巅峰？让我们拭目以待！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=15088dc988e1f126d7217a797138e55ff3108fdac080c5f07902459f5deccd2aJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly93d3cuaHV5YS5jb20vNjYwMDAy&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1681, "content_hash": "da27b95db650167a237a5325f184e273", "title": "王者荣耀赛事直播_KPL赛事直播_挑战者杯_虎牙直播", "summary": "2026王者荣耀挑战者杯，锁定虎牙直播【660002】，观赛赢荣耀水晶、抽海量皮肤道具、战队周边及明星选手签名照！谁将登顶巅峰？让我们拭目以待！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=bcce85a843755188dd87943331ccb9ef57c9ed209e55bd1c2869a98859163925JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly93d3cuaHV5YS5jb20vNjYwMDAy&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 70.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1657, "content_hash": "178973d630e9bf4e4a26e1186b399e82", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=fad0f1c738f5df775c1b677605c85ab1cdc086da8e8ba9ab82057caeb934e621JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly9wdnAucXEuY29tLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1658, "content_hash": "a9a16162f96897bc259296d06aaf9240", "title": "王者荣耀 - 安卓官方下载 - TapTap", "summary": "2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=960bfc563fe33c900629cf9eef8828a2ec821c5f48616957913bd4ce4d37ff66JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly93d3cudGFwdGFwLmNuL2FwcC8yMzAx&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2016年4月7日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1659, "content_hash": "c69ea140a2c2dacf620de60ea6db965a", "title": "王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8788230c8bac0c00ad37d246cf486952ddd958b40977189f04bf6206685831cdJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGM5eDZwM2JzeDN6P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1660, "content_hash": "931f15e383c5d46d3e080dc56d517cbc", "title": "‎王者荣耀 App - App Store", "summary": "在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=725a3b4d18b34432c5f97b74ba53d7725d221b2fbfcde0adc645872e8ab77120JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly9hcHBzLmFwcGxlLmNvbS9jbi9hcHAvJUU3JThFJThCJUU4JTgwJTg1JUU4JThEJUEzJUU4JTgwJTgwL2lkOTg5NjczOTY0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1662, "content_hash": "1920fc80bab6404239e42ad1e7c379af", "title": "王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏", "summary": "1）本游戏是一款玩法相对复杂的角色扮演类游戏，适用于年满12周岁及以上的用户，建议未成年人在家长监护下使用游戏产品。 2）本游戏基于架空的故事背景和东方幻想世界观，画面色彩鲜明、配乐活 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=24e50673dd394fae9b0be9ba56e0c8ea3eee716316085eefcacf732ecbd137b0JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly93b3JsZC5xcS5jb20vd2ViMjAyNjAzL2luZGV4Lmh0bWw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1663, "content_hash": "146cf6600df83a6ec3dad89618516b3d", "title": "《王者荣耀世界》已正式公测，PC 端玩家体验怎么样？玩过的玩家如 …", "summary": "2026年4月10日· 《王者荣耀：世界》总体框架上是开放世界+RPG+养成， 但是PVE和PVP共存（甚至后者占有相当比重），社交属性极强，还有各种“4人组队”+家园+偷菜， 基本看做一个带有鲜明腾讯 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=13ff3b0c05e4f3aaf2063acfb5421eeeadedcd90cb4ac3d2c7d71d83a3875abeJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODQ5MDM0MjI2NTQyMDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月10日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1664, "content_hash": "66584c60b7040eb4760fb757534f09d8", "title": "腾讯《王者荣耀世界》移动端今日开服：与 PC 端数据同步、登录 …", "summary": "2026年4月17日· 腾讯《#王者荣耀世界#》移动端今日正式上线，首发 Android 和 iOS 平台（鸿蒙端已开启邀测），正式开服时间预计为 4 月 17 日 7:00。另外，本作支持 PC / Android / iOS 多端互通。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=575c70d48d0a08af70d36d8688f8b7555b001eb3f4730e145bbcb61c2b265459JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly93d3cuaXRob21lLmNvbS8wLzk0MC8xMDIuaHRt&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月17日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1665, "content_hash": "8048ed083ed00282a9778bbb9a2c8502", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=81eb44487188e91995ea9c449dee8f5457ea92b4be932350e5dee3ba8eaaf894JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly9wdnAucXEuY29tL2NwL2EyMDE3MDgyOWJiZ3hzbS9pbmRleC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1666, "content_hash": "45af4f19ac204294df7674315cd78a28", "title": "3 分钟看懂！刚公测的《王者荣耀・世界》，到底值不值得玩？_网络 …", "summary": "2026年4月11日· 17173 新闻导语 《王者荣耀・世界》公测值不值得玩？3分钟看懂开放世界MMO玩法、零氪付费体系、双技能组战斗系统，王者IP情怀拉满，优缺点全解析！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=9686c0e7a0333c92fd3b1ce0c10d534183e5c356c4f40f8d7e980c5ff063c9a5JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c7c2eb2-40a5-6e91-3c48-39ec41f46fe9&u=a1aHR0cHM6Ly9uZXdzLjE3MTczLmNvbS9jb250ZW50LzA0MTEyMDI2LzAxMzQyMjk0My5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月11日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:40", "updated_at": "2026-05-19 10:28:40"}, {"id": 1667, "content_hash": "b49ee14e6e27fe36999de53e42cf3b91", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=686cb907b2aba4cdf48a1893226048a98ef7403006d33d4afef38fbda96ccc05JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly9wdnAucXEuY29tLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1668, "content_hash": "45226960b28d15d164f78a69a1e433e3", "title": "王者荣耀 - 安卓官方下载 - TapTap", "summary": "2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=30d4c9968ceafeaf64bee99534d3bb6629f2e56c0d911cd0c3d9d1d76ab03940JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly93d3cudGFwdGFwLmNuL2FwcC8yMzAx&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2016年4月7日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1669, "content_hash": "0e50ef6c5678be85679355afee2397a7", "title": "王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=85a6dc573bc53c444b4d80038cde5ee8f64e18fd538f171dca422dee31cd7a8cJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGM5eDZwM2JzeDN6P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1670, "content_hash": "d2848be1315d49aaadcf92e7799cc1f3", "title": "‎王者荣耀 App - App Store", "summary": "在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=d874aee22f08b3a0100baac5e2d16ab08a3b435193a08dcaf9a8829342583c3fJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly9hcHBzLmFwcGxlLmNvbS9jbi9hcHAvJUU3JThFJThCJUU4JTgwJTg1JUU4JThEJUEzJUU4JTgwJTgwL2lkOTg5NjczOTY0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1672, "content_hash": "63e49915be777101de6304219ca9b9c2", "title": "王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏", "summary": "1）本游戏是一款玩法相对复杂的角色扮演类游戏，适用于年满12周岁及以上的用户，建议未成年人在家长监护下使用游戏产品。 2）本游戏基于架空的故事背景和东方幻想世界观，画面色彩鲜明、配乐活 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=6781a501cbf9852e5f6233b71d0aaa4f997458680ee0794874e13e94c8c9a281JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly93b3JsZC5xcS5jb20vd2ViMjAyNjAzL2luZGV4Lmh0bWw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1673, "content_hash": "73e2fbb18df1b591fa227dd78f092eea", "title": "《王者荣耀世界》已正式公测，PC 端玩家体验怎么样？玩过的玩家如 …", "summary": "2026年4月10日· 《王者荣耀：世界》总体框架上是开放世界+RPG+养成， 但是PVE和PVP共存（甚至后者占有相当比重），社交属性极强，还有各种“4人组队”+家园+偷菜， 基本看做一个带有鲜明腾讯 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=4e55b43c9963b1461dfae1073cc4730a4566807371a88406f2021712da86e9efJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODQ5MDM0MjI2NTQyMDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月10日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1674, "content_hash": "655cbdb0e48b526999c6dc0a48301d27", "title": "腾讯《王者荣耀世界》移动端今日开服：与 PC 端数据同步、登录 …", "summary": "2026年4月17日· 腾讯《#王者荣耀世界#》移动端今日正式上线，首发 Android 和 iOS 平台（鸿蒙端已开启邀测），正式开服时间预计为 4 月 17 日 7:00。另外，本作支持 PC / Android / iOS 多端互通。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b6ccd01369a439eb10d645dd486cb3152a5c8a6a21ce387098427db5f6d54fb0JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly93d3cuaXRob21lLmNvbS8wLzk0MC8xMDIuaHRt&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月17日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1675, "content_hash": "070e3d06490572158fd16eb179b3c4d2", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=3297f25b2886dc5516d02017af4f430e6e43833a7f5df737fe0301e89509d80bJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly9wdnAucXEuY29tL2NwL2EyMDE3MDgyOWJiZ3hzbS9pbmRleC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1676, "content_hash": "d971e1da7095f60070e1e4eb0b15ffd1", "title": "3 分钟看懂！刚公测的《王者荣耀・世界》，到底值不值得玩？_网络 …", "summary": "2026年4月11日· 17173 新闻导语 《王者荣耀・世界》公测值不值得玩？3分钟看懂开放世界MMO玩法、零氪付费体系、双技能组战斗系统，王者IP情怀拉满，优缺点全解析！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=dbc87f1bfe345166cccdf6ab2f381bf6501b675454a95a63d9527552b4516be2JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=2aaad581-96af-64d1-1505-c2df97fe658b&u=a1aHR0cHM6Ly9uZXdzLjE3MTczLmNvbS9jb250ZW50LzA0MTEyMDI2LzAxMzQyMjk0My5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月11日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:46", "updated_at": "2026-05-19 10:28:46"}, {"id": 1677, "content_hash": "6c5e386c631436ab5fe7aa3fcace9284", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室推出的英雄竞技手游，不是一个人的王者，而是团队的荣耀！ 5v5王者峡谷PVP对战，领略英雄竞技的酣畅淋漓！ 丰富的游戏模式等你参与，体验突破传统、英雄竞技新形态！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=a3de0209ed060cdf5f394fa2f736e7f76bf676b568d4cc9b5336e57541e54b7aJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly9wdnAucXEuY29tLw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1678, "content_hash": "184f4783ad03287cb644663dbced56f8", "title": "王者荣耀 - 安卓官方下载 - TapTap", "summary": "2016年4月7日· 《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=add17054db01116549a6d3d0f1a0947783d02af31bd2c75bccecdc7f04339d2dJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly93d3cudGFwdGFwLmNuL2FwcC8yMzAx&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2016年4月7日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1679, "content_hash": "ad2b694e7f6ed3900fcf696d59a69952", "title": "王者荣耀 - Windows官方下载 | 微软应用商店 | Microsoft Store", "summary": "《王者荣耀》是腾讯第一5V5团队公平竞技手游，国民MOBA手游大作！ 5V5王者峡谷、公平对战，还原MOBA经典体验；契约之战、五军对决、边境突围等，带来花式作战乐趣！ 10秒实时跨区匹配，与 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=8b33a364b5d34792d1ec4c3f82a5604b38d2945326eaea3110303b9a143931c7JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGM5eDZwM2JzeDN6P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1680, "content_hash": "0b8ee9dd37c5904ad0a59303c6492f46", "title": "‎王者荣耀 App - App Store", "summary": "在 App Store 下载“Shenzhen Tencent Tianyou Technology Ltd”的“王者荣耀”。 查看截屏、评分及评论、用户提示以及更多类似“王者荣耀”的 App。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=1fab592cbb3941dfcd9da38a72d3c33db70b78113e8725fd4c78a1a261d1d842JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly9hcHBzLmFwcGxlLmNvbS9jbi9hcHAvJUU3JThFJThCJUU4JTgwJTg1JUU4JThEJUEzJUU4JTgwJTgwL2lkOTg5NjczOTY0&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1682, "content_hash": "dd57821871d313047d2380cc466fbb58", "title": "王者荣耀世界官网-王者世界多人冒险游戏-腾讯游戏", "summary": "1）本游戏是一款玩法相对复杂的角色扮演类游戏，适用于年满12周岁及以上的用户，建议未成年人在家长监护下使用游戏产品。 2）本游戏基于架空的故事背景和东方幻想世界观，画面色彩鲜明、配乐活 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=ef7a9968fcad4e36d01e295721261109e03912e4d8a5a9326b80878f6df892fdJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly93b3JsZC5xcS5jb20vd2ViMjAyNjAzL2luZGV4Lmh0bWw&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1683, "content_hash": "d5f10afe6c7a9bca234eac2f88f1e43e", "title": "《王者荣耀世界》已正式公测，PC 端玩家体验怎么样？玩过的玩家如 …", "summary": "2026年4月10日· 《王者荣耀：世界》总体框架上是开放世界+RPG+养成， 但是PVE和PVP共存（甚至后者占有相当比重），社交属性极强，还有各种“4人组队”+家园+偷菜， 基本看做一个带有鲜明腾讯 …", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=b267cd2139fd09dbc16160a5fed7531bfcc2cf912a3bf0e60a9489a4f873e047JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIwMjU4ODQ5MDM0MjI2NTQyMDA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月10日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1684, "content_hash": "36760cd8214b523831b37dcac017afe4", "title": "腾讯《王者荣耀世界》移动端今日开服：与 PC 端数据同步、登录 …", "summary": "2026年4月17日· 腾讯《#王者荣耀世界#》移动端今日正式上线，首发 Android 和 iOS 平台（鸿蒙端已开启邀测），正式开服时间预计为 4 月 17 日 7:00。另外，本作支持 PC / Android / iOS 多端互通。", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=2c2554bee4e0a3a90cc9733f43cdd0ee192907557c9fb1f751216392e162beceJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly93d3cuaXRob21lLmNvbS8wLzk0MC8xMDIuaHRt&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月17日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1685, "content_hash": "59181deb2859ab8211cd0b02461581bf", "title": "王者荣耀官方网站-腾讯游戏", "summary": "《王者荣耀》是腾讯天美工作室历时3年推出的东方英雄即时对战手游大作，抗塔强杀、团灭超神，领略爽热血竞技的酣畅淋漓！ 1v1、3v3、5v5、闯关等丰富游戏模式，随时战，更自由！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=63ab1c370d7d9e231eda49c047a9de13924c676ac936e330ec9b4ce62f3cd42cJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly9wdnAucXEuY29tL2NwL2EyMDE3MDgyOWJiZ3hzbS9pbmRleC5odG1s&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1686, "content_hash": "f42d9ce9bf373f62465d4a823a956cd8", "title": "3 分钟看懂！刚公测的《王者荣耀・世界》，到底值不值得玩？_网络 …", "summary": "2026年4月11日· 17173 新闻导语 《王者荣耀・世界》公测值不值得玩？3分钟看懂开放世界MMO玩法、零氪付费体系、双技能组战斗系统，王者IP情怀拉满，优缺点全解析！", "game_name": "王者荣耀", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=cb2e1daff08019c58a16cb3d4caf80a9daa9791fe2940e0530119318d7fe295eJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=354cdd5a-f511-60ef-230a-ca04f4f4612a&u=a1aHR0cHM6Ly9uZXdzLjE3MTczLmNvbS9jb250ZW50LzA0MTEyMDI2LzAxMzQyMjk0My5zaHRtbA&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "2026年4月11日", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:28:51", "updated_at": "2026-05-19 10:28:51"}, {"id": 1687, "content_hash": "8050b016c88793873a509e6bb5d9f4a7", "title": "和平精英-登录领荣耀勋章&典藏币 - Windows官方下载 | 微软应用商店 …", "summary": "《和平精英》是腾讯光子工作室群自研打造的战术竞技手游。虚幻引擎4研发，次世代完美画质，极致视听感受；超大实景地图，打造指尖战场，全方面自由施展战术；百人同场竞技，真实弹道，完美的射 …", "game_name": "和平精英", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=e632a8277abf3ceb3def882e32b1f8ac3abd26d2ef1c1aa984d0c83770b24460JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0bec4037-63e7-61a9-0975-576962b6608c&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGY1azZsNnpjcG45P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:29:13", "updated_at": "2026-05-19 10:29:13"}, {"id": 1688, "content_hash": "d542293c11c593b6977e45e4539c4f37", "title": "和平精英-登录领荣耀勋章&典藏币 - Windows官方下载 | 微软应用商店 …", "summary": "《和平精英》是腾讯光子工作室群自研打造的战术竞技手游。虚幻引擎4研发，次世代完美画质，极致视听感受；超大实景地图，打造指尖战场，全方面自由施展战术；百人同场竞技，真实弹道，完美的射 …", "game_name": "和平精英", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=f926d9bdde48c40bc3886cf1a21eb19d581badb69f3f61f1a901524b46da22bbJmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=14f14f7c-69dc-65b6-2361-5822688d6409&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGY1azZsNnpjcG45P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:29:16", "updated_at": "2026-05-19 10:29:16"}, {"id": 1689, "content_hash": "44ef70012628cf759fec8684b1737439", "title": "和平精英-登录领荣耀勋章&典藏币 - Windows官方下载 | 微软应用商店 …", "summary": "《和平精英》是腾讯光子工作室群自研打造的战术竞技手游。虚幻引擎4研发，次世代完美画质，极致视听感受；超大实景地图，打造指尖战场，全方面自由施展战术；百人同场竞技，真实弹道，完美的射 …", "game_name": "和平精英", "brand_name": "荣耀", "brand_category": "3C数码", "collab_type": "其他", "source_url": "https://www.bing.com/ck/a?!&&p=6674da7440c5670a5edbc657e9c4f25baebdc3100a554c4ec1ece9c3ec6ae474JmltdHM9MTc3OTA2MjQwMA&ptn=3&ver=2&hsh=4&fclid=0c0f7185-2b31-60d0-1a2f-66db2ad461ff&u=a1aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsL3hwZGY1azZsNnpjcG45P2hsPXpoLWNuJmdsPUNO&ntb=1", "source_name": "Bing搜索", "source_type": "bing_search", "image_url": "", "published_date": "", "collected_date": "2026-05-19", "hot_score": 60.0, "tags": "[]", "full_content": "", "extra_data": "{}", "is_verified": 0, "is_featured": 0, "view_count": 0, "created_at": "2026-05-19 10:29:20", "updated_at": "2026-05-19 10:29:20"}];
+
+// 图表配置
+const chartColors = ['#6C5CE7','#FD79A8','#00B894','#FDCB6E','#74B9FF','#FF6B6B','#A29BFE','#55EFC4','#FAB1A0','#81ECEC'];
+const chartDefaults = {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#94A1B2', font: { size: 11 } } } }
+};
+
+// 游戏分布图
+new Chart(document.getElementById('gameChart'), {
+    type: 'bar',
+    data: {
+        labels: ["王者荣耀", "和平精英"],
+        datasets: [{ data: [30, 3], backgroundColor: chartColors, borderRadius: 6 }]
+    },
+    options: { ...chartDefaults, indexAxis: 'y', plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } }, y: { ticks: { color: '#94A1B2' }, grid: { display: false } } }
+    }
+});
+
+// 品牌类别图
+new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["3C数码"],
+        datasets: [{ data: [33], backgroundColor: chartColors, borderWidth: 0 }]
+    },
+    options: { ...chartDefaults, cutout: '55%' }
+});
+
+// 合作类型图
+new Chart(document.getElementById('typeChart'), {
+    type: 'polarArea',
+    data: {
+        labels: ["其他"],
+        datasets: [{ data: [33], backgroundColor: chartColors.map(c => c + '88') }]
+    },
+    options: { ...chartDefaults, scales: { r: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' } } } }
+});
+
+// 趋势图
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: ["2026-04-19", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-29", "2026-05-08", "2026-05-09", "2026-05-12", "2026-05-13", "2026-05-18", "2026-05-19"],
+        datasets: [{ data: [23, 43, 47, 79, 67, 73, 87, 11, 50, 87, 51, 24, 50, 5, 33], borderColor: '#6C5CE7', backgroundColor: 'rgba(108,92,231,0.1)',
+            fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6C5CE7' }]
+    },
+    options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, legend: { display: false } },
+        scales: { x: { ticks: { color: '#94A1B2', maxTicksLimit: 10 }, grid: { color: '#2D2D52' } },
+                   y: { ticks: { color: '#94A1B2' }, grid: { color: '#2D2D52' }, beginAtZero: true } }
+    }
+});
+
+// 筛选功能
+function filterCards() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const game = document.getElementById('gameFilter').value;
+    const cat = document.getElementById('catFilter').value;
+    
+    document.querySelectorAll('.intel-card').forEach(card => {
+        const matchSearch = !search || card.textContent.toLowerCase().includes(search);
+        const matchGame = !game || card.dataset.game === game;
+        const matchCat = !cat || card.dataset.category === cat;
+        card.style.display = (matchSearch && matchGame && matchCat) ? '' : 'none';
+    });
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('gameFilter').value = '';
+    document.getElementById('catFilter').value = '';
+    filterCards();
+}
+
+// 详情弹窗
+function showDetail(id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    
+    let tagsHtml = '';
+    if (item.game_name) tagsHtml += '<span class="tag tag-game">' + item.game_name + '</span>';
+    if (item.brand_name) tagsHtml += '<span class="tag tag-brand">' + item.brand_name + '</span>';
+    if (item.brand_category) tagsHtml += '<span class="tag tag-cat">' + item.brand_category + '</span>';
+    if (item.collab_type) tagsHtml += '<span class="tag tag-type">' + item.collab_type + '</span>';
+    
+    let html = '<h2>' + item.title + '</h2>';
+    html += '<div class="card-tags" style="margin-bottom:16px">' + tagsHtml + '</div>';
+    
+    const fields = [
+        ['游戏', item.game_name],
+        ['品牌', item.brand_name],
+        ['品牌类别', item.brand_category],
+        ['合作类型', item.collab_type],
+        ['信息来源', item.source_name || item.source_type],
+        ['发布日期', item.published_date],
+        ['采集日期', item.collected_date],
+        ['热度评分', item.hot_score + '/100'],
+    ];
+    
+    fields.forEach(([label, value]) => {
+        if (value) {
+            html += '<div class="detail-row"><span class="detail-label">' + label + '：</span><span class="detail-value">' + value + '</span></div>';
+        }
+    });
+    
+    if (item.summary) {
+        html += '<div class="detail-row"><span class="detail-label">摘要：</span></div>';
+        html += '<div class="detail-content">' + item.summary + '</div>';
+    }
+    
+    if (item.full_content) {
+        html += '<div class="detail-row" style="margin-top:16px"><span class="detail-label">正文内容：</span></div>';
+        html += '<div class="detail-content">' + item.full_content + '</div>';
+    }
+    
+    if (item.source_url) {
+        html += '<a href="' + item.source_url + '" target="_blank" class="detail-link">🔗 查看原文</a>';
+    }
+    
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
